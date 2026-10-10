@@ -1,0 +1,102 @@
+"""The Armenian fold: one index form for every spelling of a word.
+
+For what a fold is for, see :mod:`tetrak_translit.fold`. This module is
+the Armenian rules. In order:
+
+1. **Armenian input** is normalised across the 1922 reform, towards the
+   reformed spelling: ``եւ`` becomes ``և``, ``է`` becomes ``ե``, ``եա``
+   becomes ``յա`` and ``իւ`` becomes ``յու`` (the classical digraphs for
+   *ya* and *yu*), ``եո`` becomes ``եվո`` (*Գէորգ* is *Gevorg*), and a
+   word-final ``յ`` after a vowel is dropped (``ծառայ`` is ``ծառա``).
+   Then it is rendered through ALA-LC, so that Armenian and ALA-LC Latin
+   reach the next step by the same road.
+2. **Latin** is lowercased and stripped of every diacritic and
+   aspiration mark, then its digraphs are collapsed onto one spelling
+   each (``ž``/``zh``, ``x``/``kh``, ``ł``/``gh``, ``ow``/``ou``/``oo``/``u``,
+   ``w``/``v``), the voiced and voiceless pairs are merged (``b``/``p``,
+   ``d``/``t``, ``g``/``k``, ``dz``/``ts``/``c``, ``j``/``ch``) because
+   Eastern and Western pronunciation spellings disagree on exactly those,
+   the glides are regularised (initial ``ye``/``e``, initial ``vo``/``o``,
+   initial ``y``/``h``, ``ya``/``ea``/``ia``), a final ``y`` after a vowel
+   is dropped, doubled letters are collapsed and anything that is not a
+   letter or digit is removed.
+
+Known gaps, because a fold that claims there is a single right answer is
+lying (LREC 2020, *cross-script name matching*, cited in Tetrak's
+research): popular spellings that insert an unwritten schwa (*Megerdich*
+for ``Մկրտիչ``) or come through Russian (*Khachaturian* for
+``Խաչատրյան``) do not fold to the Armenian; a classical ``աւ`` that
+reformed spelling turned into ``օ`` (``աւր``/``օր``) does not either;
+and ISO 9985 or Hübschmann-Meillet ``j`` (which is ``ձ``) folds as if it
+were ALA-LC ``j`` (which is ``ջ``) unless ``scheme=`` says otherwise. The
+test set in ``tests/data/hy_fold_cases.tsv`` is the published claim; what
+is not in it is not claimed.
+"""
+
+from __future__ import annotations
+
+import re
+
+from ..engine import render
+from ..latin import FINISH, Rules, apply, clean
+from .ala_lc import ALA_LC
+from .descriptor import SCRIPT
+
+# Classical-orthography spellings, lowercase, towards their reformed forms.
+_ORTHOGRAPHY: Rules = (
+    (re.compile(r"եւ"), "և"),
+    (re.compile(r"է"), "ե"),
+    (re.compile(r"եա"), "յա"),
+    (re.compile(r"իւ"), "յու"),
+    (re.compile(r"եո"), "եվո"),
+    (re.compile(r"(?<=[աոեիօ])յ(?![ա-ֈ])"), ""),
+)
+
+# Letters outside ASCII that NFKD does not decompose, and the ISO 9985 and
+# Hübschmann-Meillet letters whose diacritic carries the whole distinction.
+_LETTERS = {
+    "ž": "zh",
+    "š": "sh",
+    "č": "ch",
+    "ǰ": "j",
+    "ġ": "gh",
+    "ł": "gh",
+    "ç": "c",
+    "ə": "e",
+    "x": "kh",
+}
+
+# The Latin skeleton rules, applied in this order to one lowercase token.
+_LATIN: Rules = (
+    (re.compile(r"ow|ou|oo"), "u"),
+    (re.compile(r"ew"), "ev"),
+    (re.compile(r"w"), "v"),
+    (re.compile(r"^yev"), "ev"),
+    (re.compile(r"^ye"), "e"),
+    (re.compile(r"^vo"), "o"),
+    (re.compile(r"^y(?=[aeiou])"), "h"),
+    (re.compile(r"dz"), "ts"),
+    (re.compile(r"ts|tz"), "c"),
+    (re.compile(r"j"), "ch"),
+    (re.compile(r"gh"), "\x01"),  # protected while g is merged into k
+    (re.compile(r"b"), "p"),
+    (re.compile(r"d"), "t"),
+    (re.compile(r"g"), "k"),
+    (re.compile(r"\x01"), "gh"),
+    (re.compile(r"eo"), "evo"),
+    (re.compile(r"ya|ea"), "ia"),
+    (re.compile(r"yo"), "io"),
+    (re.compile(r"yu|eu"), "iu"),
+    (re.compile(r"(?<=[aeiou])y$"), ""),
+    *FINISH,
+)
+
+
+def fold_token(token: str) -> str:
+    """Fold one whitespace-free token, Armenian or Latin, to its key."""
+    if SCRIPT.has_letters(token):
+        token = render(apply(token.lower(), _ORTHOGRAPHY), ALA_LC)
+    return apply(clean(token, _LETTERS), _LATIN)
+
+
+__all__ = ["fold_token"]

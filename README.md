@@ -1,14 +1,16 @@
 # tetrak-translit
 
-Detect, transliterate and fold Armenian text. A dependency-free Python
-library and command-line tool for the problem every Armenian catalogue
-has: the same name exists in Armenian script in two orthographies and in
-four or five Latin spellings, and no stock search engine treats them as
-one word.
+Detect, transliterate and fold text in scripts that have several
+romanisations: Armenian and Georgian so far. A dependency-free Python
+library and command-line tool for the problem every catalogue of such
+material has: the same name exists in its own script, sometimes in more
+than one orthography, and in three or five Latin spellings, and no stock
+search engine treats them as one word.
 
-> **Status: alpha.** The tables and the fold are tested against the set in
-> [`tests/data/fold_cases.tsv`](tests/data/fold_cases.tsv); what is not in
-> that set is not claimed. See [known gaps](#what-it-does-not-do).
+> **Status: alpha.** The tables and the folds are tested against the sets
+> in [`tests/data/`](tests/data/); what is not in them is not claimed.
+> See [known gaps](#what-it-does-not-do). The API may still change before
+> 1.0.
 
 ```bash
 pip install tetrak-translit
@@ -24,20 +26,25 @@ pip install tetrak-translit
 'Yerevan'
 >>> tt.transliterate("Յակոբ", "western")
 'Hagop'
->>> tt.fold("Yerevan") == tt.fold("Երեւան") == tt.fold("Erewan")
+>>> tt.transliterate("თბილისი", "national")
+'tbilisi'
+>>> tt.fold("Yerevan", script="hy") == tt.fold("Երեւան") == tt.fold("Erewan", script="hy")
 True
->>> tt.fold("Boghossian") == tt.fold("Պօղոսեան") == tt.fold("Poghosyan")
+>>> tt.fold("Boghossian", script="hy") == tt.fold("Պօղոսեան") == tt.fold("Poghosyan", script="hy")
+True
+>>> tt.fold("Chavchavadze", script="ka") == tt.fold("ჭავჭავაძე") == tt.fold("Ch'avch'avadze", script="ka")
 True
 ```
 
 ```bash
-$ tetrak-translit detect "Ազգ եւ հայրենիք"
+$ tetrak-translit detect "Ազգ եւ հայրենիք" "თბილისი"
 armenian (classical)	Ազգ եւ հայրենիք
+georgian	თბილისი
 $ tetrak-translit transliterate --scheme iso_9985 "Չարենց"
 Čarenc'
-$ tetrak-translit transliterate --scheme iso_9985 --to armenian "Čarenc'"
-Չարենց
-$ cut -f2 titles.tsv | tetrak-translit fold
+$ tetrak-translit transliterate --scheme iso_9984 --to script "T'bilisi"
+თბილისი
+$ cut -f2 titles.tsv | tetrak-translit fold --script hy
 ```
 
 ## Three jobs
@@ -45,29 +52,37 @@ $ cut -f2 titles.tsv | tetrak-translit fold
 **Detection.** Which script a string is in and, for Armenian, which
 orthography: *classical* (everything printed before the 1922 reform, and
 the diaspora still), *reformed* (Soviet and post-Soviet Armenia) or
-*indeterminate* (the string reads the same under both). Character ranges
-plus a few orthographic tells, chiefly a free `ւ` outside the `ու`
+*indeterminate* (the string reads the same under both). Unicode character
+names plus a few orthographic tells, chiefly a free `ւ` outside the `ու`
 digraph.
 
-**Transliteration**, between Armenian and five named Latin schemes, each a
+**Transliteration**, between a script and its named Latin schemes, each a
 versioned, tested table written from its published standard:
 
-| Key | Scheme | Where you meet it | Reversible |
+| Id | Scheme | Where you meet it | Reversible |
 |---|---|---|---|
-| `ala_lc` | ALA-LC (2011) | Library catalogues: Koha, WorldCat, the Library of Congress | no |
-| `iso_9985` | ISO 9985:1996 | Data exchange; one letter per letter | **yes** |
-| `bgn_pcgn` | BGN/PCGN 1981 | Maps and place names: *Yerevan*, *Gyumri* | no |
-| `hubschmann_meillet` | Hübschmann-Meillet | Linguistics and classical scholarship | **yes** |
-| `western` | Western Armenian pronunciation | Diaspora names: *Hagop*, *Kevork*, *Boghosian* | no |
+| `hy/ala_lc` | ALA-LC Armenian (2011) | Library catalogues: Koha, WorldCat, the Library of Congress | no |
+| `hy/iso_9985` | ISO 9985:1996 | Data exchange; one letter per letter | **yes** |
+| `hy/bgn_pcgn` | BGN/PCGN 1981 | Maps and place names: *Yerevan*, *Gyumri* | no |
+| `hy/hubschmann_meillet` | Hübschmann-Meillet | Linguistics and classical scholarship | **yes** |
+| `hy/western` | Western Armenian pronunciation | Diaspora names: *Hagop*, *Kevork*, *Boghosian* | no |
+| `ka/ala_lc` | ALA-LC Georgian (2011) | Library catalogues | no |
+| `ka/iso_9984` | ISO 9984:1996 | Data exchange; one letter per letter | **yes** |
+| `ka/national` | Georgian national system (2002) | Road signs, passports, maps: *Tbilisi*, *Kutaisi* | no |
 
-Reversible where the standard is one-to-one; the others are documented as
-lossy and the library refuses to guess rather than reverse them.
+A scheme key alone is enough when the text or the key settles the script;
+otherwise say `script="ka"` or use the qualified id. Reversible where the
+standard is one-to-one; the others are documented as lossy and the library
+refuses to guess rather than reverse them.
 
-**The canonical fold.** One function that maps any of the above, Armenian
+**The canonical fold.** One function that maps any of the above, script
 or Latin, onto a single index form, so that index-time and query-time
 normalisation agree. This is what a Solr or Elasticsearch analysis chain
-calls. It generalises the script fold in Tetrak's Armenian recogniser and
-takes the orthography findings of Tetrak brief 014 as its first test cases.
+calls. Each script owns its rules, because what should be merged differs
+(Armenian folds *b* with *p*, Georgian must not), so Latin input names
+the script it is to be folded for. The Armenian fold generalises the
+script fold in Tetrak's Armenian recogniser and takes the orthography
+findings of Tetrak brief 014 as its first test cases.
 
 The schemes are for **display**; the fold is for **finding**. A fold key is
 a deliberately coarse ASCII skeleton (`poghosian`, `kevork`, `haiastan`)
@@ -78,13 +93,17 @@ package does not pretend there is one.
 ## What it does not do
 
 - **Translate.** Transliteration is the same words in different letters.
-- **Guess at lossy reversals.** `transliterate(..., to="armenian")` works for
-  ISO 9985 and Hübschmann-Meillet and raises for the rest.
+- **Guess at lossy reversals.** `transliterate(..., to="script")` works for
+  ISO 9985, Hübschmann-Meillet and ISO 9984 and raises for the rest.
 - **Fold every popular spelling.** Spellings that insert an unwritten
-  schwa (*Megerdich* for `Մկրտիչ`) or come through Russian (*Khachaturian*
-  for `Խաչատրյան`) do not fold to the Armenian, and a classical `աւ` that
-  reformed spelling turned into `օ` does not either. The test set is the
-  claim.
+  schwa (*Megerdich* for `Մկրտիչ`), come through Russian (*Khachaturian*
+  for `Խաչատրյան`, *Tiflis* for `თბილისი`) or are translations (*George*
+  for `გიორგი`) do not fold to the script, and a classical Armenian `աւ`
+  that reformed spelling turned into `օ` does not either. The test sets
+  are the claim.
+- **Handle every script.** Armenian and Georgian so far. The engine is
+  script-agnostic and a new script is a package of tables; see
+  [adding a script](https://scattercode.github.io/tetrak-translit/adding-a-script.html).
 
 ## Documentation
 
@@ -97,9 +116,10 @@ built from the released code at each release.
 Built as part of [Tetrak](https://tetrak.dev/), a local-first OCR pipeline
 for archival material, for two users at once: an Armenian cultural heritage
 aggregator that has to match catalogue records across scripts, and Tetrak's
-own Armenian transcripts, where an ALA-LC rendering beside the OCR output
-is both a catalogue-ready field and an accessibility one (a screen reader
-with no Armenian voice can at least read the romanisation).
+own transcripts, where an ALA-LC rendering beside the OCR output is both a
+catalogue-ready field and an accessibility one (a screen reader with no
+Armenian voice can at least read the romanisation). Georgian came next
+because Tetrak's recognisers are heading there; Syriac is planned.
 
 ## Contributing and licence
 

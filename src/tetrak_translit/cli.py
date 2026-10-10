@@ -2,10 +2,10 @@
 
 Four subcommands, mirroring the four public functions::
 
-    tetrak-translit detect "Երեւան"
+    tetrak-translit detect "Երեւան" "თბილისი"
     tetrak-translit transliterate --scheme ala_lc "Երևան"
-    tetrak-translit transliterate --scheme iso_9985 --to armenian "Erewan"
-    tetrak-translit fold "Boghossian" "Պօղոսեան"
+    tetrak-translit transliterate --scheme iso_9984 --to script "T'bilisi"
+    tetrak-translit fold --script hy "Boghossian" "Պօղոսեան"
     tetrak-translit schemes
 
 Each takes its text as arguments or, when none are given, one string per
@@ -23,9 +23,12 @@ from collections.abc import Iterable, Iterator
 
 from . import __version__
 from .detect import detect
-from .fold import fold
-from .schemes import SCHEMES
-from .transliterate import NotReversibleError, UnknownSchemeError, transliterate
+from .engine import NotReversibleError
+from .fold import ScriptRequiredError, fold
+from .registry import PACKAGES, UnknownSchemeError, UnknownScriptError
+from .transliterate import transliterate
+
+_USER_ERRORS = (UnknownSchemeError, UnknownScriptError, NotReversibleError, ScriptRequiredError)
 
 
 def _inputs(texts: list[str]) -> Iterator[str]:
@@ -38,8 +41,13 @@ def _inputs(texts: list[str]) -> Iterator[str]:
 
 
 def _emit(lines: Iterable[str]) -> int:
-    for line in lines:
-        print(line)
+    try:
+        for line in lines:
+            print(line)
+    except _USER_ERRORS as error:
+        message = error.args[0] if error.args else str(error)
+        print(f"tetrak-translit: {message}", file=sys.stderr)
+        return 2
     return 0
 
 
@@ -57,25 +65,22 @@ def _cmd_detect(args: argparse.Namespace) -> int:
 
 
 def _cmd_transliterate(args: argparse.Namespace) -> int:
-    try:
-        return _emit(transliterate(text, args.scheme, to=args.to) for text in _inputs(args.text))
-    except (UnknownSchemeError, NotReversibleError) as error:
-        print(f"tetrak-translit: {error}", file=sys.stderr)
-        return 2
+    return _emit(
+        transliterate(text, args.scheme, script=args.script, to=args.to)
+        for text in _inputs(args.text)
+    )
 
 
 def _cmd_fold(args: argparse.Namespace) -> int:
-    try:
-        return _emit(fold(text, args.scheme) for text in _inputs(args.text))
-    except UnknownSchemeError as error:
-        print(f"tetrak-translit: {error}", file=sys.stderr)
-        return 2
+    return _emit(fold(text, script=args.script, scheme=args.scheme) for text in _inputs(args.text))
 
 
 def _cmd_schemes(args: argparse.Namespace) -> int:
     if args.json:
         rows = [
             {
+                "id": scheme.id,
+                "script": scheme.script.key,
                 "key": scheme.key,
                 "name": scheme.name,
                 "version": scheme.version,
@@ -83,23 +88,30 @@ def _cmd_schemes(args: argparse.Namespace) -> int:
                 "reversible": scheme.reversible,
                 "notes": scheme.notes,
             }
-            for scheme in SCHEMES.values()
+            for package in PACKAGES.values()
+            for scheme in package.schemes.values()
         ]
         print(json.dumps(rows, ensure_ascii=False, indent=2))
         return 0
-    width = max(len(key) for key in SCHEMES)
-    for scheme in SCHEMES.values():
-        reversible = "reversible" if scheme.reversible else "lossy"
-        print(f"{scheme.key:<{width}}  {scheme.name} v{scheme.version}, {reversible}")
-        print(f"{'':<{width}}  {scheme.standard}")
+    for package in PACKAGES.values():
+        print(f"{package.script.name} ({package.script.key})")
+        width = max(len(scheme.id) for scheme in package.schemes.values())
+        for scheme in package.schemes.values():
+            reversible = "reversible" if scheme.reversible else "lossy"
+            print(f"  {scheme.id:<{width}}  {scheme.name} v{scheme.version}, {reversible}")
+            print(f"  {'':<{width}}  {scheme.standard}")
     return 0
+
+
+def _add_script_flag(parser: argparse.ArgumentParser, help_text: str) -> None:
+    parser.add_argument("-S", "--script", default=None, help=help_text)
 
 
 def build_parser() -> argparse.ArgumentParser:
     """The ``tetrak-translit`` argument parser."""
     parser = argparse.ArgumentParser(
         prog="tetrak-translit",
-        description="Detect, transliterate and fold Armenian text.",
+        description="Detect, transliterate and fold Armenian and Georgian text.",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -112,7 +124,7 @@ def build_parser() -> argparse.ArgumentParser:
     detect_parser.set_defaults(func=_cmd_detect)
 
     transliterate_parser = commands.add_parser(
-        "transliterate", help="render Armenian in a romanisation scheme, or read one back"
+        "transliterate", help="render a script in a romanisation scheme, or read one back"
     )
     transliterate_parser.add_argument(
         "text", nargs="*", help="text to transliterate; stdin lines if omitted"
@@ -121,13 +133,18 @@ def build_parser() -> argparse.ArgumentParser:
         "-s",
         "--scheme",
         default="ala_lc",
-        help="romanisation scheme (default: ala_lc; see `tetrak-translit schemes`)",
+        help="romanisation scheme, optionally qualified: ala_lc, ka/iso_9984 "
+        "(default: ala_lc; see `tetrak-translit schemes`)",
+    )
+    _add_script_flag(
+        transliterate_parser,
+        "the script (hy, ka) when the text and the scheme key do not settle it",
     )
     transliterate_parser.add_argument(
         "--to",
-        choices=("latin", "armenian"),
         default="latin",
-        help="direction (default: latin; armenian only for reversible schemes)",
+        help="direction: latin (default), script, or a script key such as hy or ka "
+        "(reading back works for reversible schemes only)",
     )
     transliterate_parser.set_defaults(func=_cmd_transliterate)
 
@@ -135,6 +152,7 @@ def build_parser() -> argparse.ArgumentParser:
         "fold", help="map any spelling onto the canonical index form, for matching"
     )
     fold_parser.add_argument("text", nargs="*", help="text to fold; stdin lines if omitted")
+    _add_script_flag(fold_parser, "the script whose rules Latin text gets (hy, ka)")
     fold_parser.add_argument(
         "-s",
         "--scheme",

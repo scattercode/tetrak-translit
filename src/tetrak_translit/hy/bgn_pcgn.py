@@ -12,11 +12,13 @@ and ``յ``, and the digraphs are as ambiguous as ALA-LC's.
 
 from __future__ import annotations
 
-from . import Scheme
+from ..script import Scheme
+from .descriptor import SCRIPT
 
 ASPIRATION = "'"
 
 BGN_PCGN = Scheme(
+    script=SCRIPT,
     key="bgn_pcgn",
     name="BGN/PCGN",
     version="1.0",

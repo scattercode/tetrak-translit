@@ -1,26 +1,31 @@
-"""Script and orthography detection."""
+"""Script and variant detection."""
 
 from __future__ import annotations
 
 import pytest
 
 from tetrak_translit import detect, orthography
+from tetrak_translit.hy.orthography import markers
 
 
 class TestScript:
     @pytest.mark.parametrize(
-        ("text", "script"),
+        ("text", "script", "key"),
         [
-            ("Երևան", "armenian"),
-            ("Yerevan", "latin"),
-            ("Ереван", "cyrillic"),
-            ("Erevan (Երևան)", "mixed"),
-            ("1922 — ...", "none"),
-            ("", "none"),
+            ("Երևան", "armenian", "hy"),
+            ("თბილისი", "georgian", "ka"),
+            ("ᲗᲑᲘᲚᲘᲡᲘ", "georgian", "ka"),
+            ("Yerevan", "latin", None),
+            ("Ереван", "cyrillic", None),
+            ("Erevan (Երևան)", "mixed", "hy"),
+            ("Երևան და თბილისი", "mixed", None),
+            ("1922 — ...", "none", None),
+            ("", "none", None),
         ],
     )
-    def test_script(self, text: str, script: str) -> None:
-        assert detect(text).script == script
+    def test_script_and_key(self, text: str, script: str, key: str | None) -> None:
+        found = detect(text)
+        assert (found.script, found.key) == (script, key)
 
     def test_mixed_reports_the_dominant_script(self) -> None:
         found = detect("Հայաստանի Հանրապետություն, Republic of Armenia")
@@ -28,22 +33,25 @@ class TestScript:
         assert found.dominant == "armenian"
         assert found.letters["armenian"] > found.letters["latin"]
 
-    def test_non_armenian_has_no_orthography(self) -> None:
+    def test_non_registered_scripts_have_no_orthography(self) -> None:
         assert detect("Yerevan").orthography is None
         assert detect("").orthography is None
         assert orthography("Yerevan") is None
 
+    def test_georgian_has_no_orthography(self) -> None:
+        assert detect("თბილისი").orthography is None
+
     def test_diacritics_do_not_change_the_script(self) -> None:
-        assert detect("Chʻarentsʻ Ēǰmiacin").script == "latin"
+        assert detect("Chʻarentsʻ Ēǰmiacin Tʻbilisi").script == "latin"
 
     def test_as_dict_is_json_shaped(self) -> None:
         view = detect("Երեւան").as_dict()
         assert view["script"] == "armenian"
+        assert view["key"] == "hy"
         assert view["orthography"] == "classical"
-        assert view["markers"]["free_yiwn"] == 1
 
 
-class TestOrthography:
+class TestArmenianOrthography:
     @pytest.mark.parametrize(
         "text",
         [
@@ -82,10 +90,9 @@ class TestOrthography:
         assert detect("տպագրութիւն և").orthography == "classical"
 
     def test_ou_is_not_a_free_yiwn(self) -> None:
-        assert detect("Սուրբ").markers.free_yiwn == 0
-        assert detect("Ուրարտու").markers.free_yiwn == 0
+        assert markers("Սուրբ").free_yiwn == 0
+        assert markers("Ուրարտու").free_yiwn == 0
 
     def test_final_y_is_reported_but_does_not_decide(self) -> None:
-        found = detect("ծառայ")
-        assert found.markers.final_y == 1
-        assert found.orthography == "indeterminate"
+        assert markers("ծառայ").final_y == 1
+        assert detect("ծառայ").orthography == "indeterminate"

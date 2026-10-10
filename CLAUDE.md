@@ -5,9 +5,10 @@ Guidance for Claude Code when working in this repository.
 ## What this repository is
 
 **tetrak-translit** is a dependency-free Python library and CLI that
-detects the script and orthography of a string, transliterates Armenian to
-and from five named Latin schemes, and folds any spelling onto one
-canonical index form for cross-script search. It was specified in Tetrak's
+detects the script and orthography of a string, transliterates a script to
+and from its named Latin schemes, and folds any spelling onto one
+canonical index form for cross-script search. Armenian (five schemes) and
+Georgian (three) are the scripts so far; Syriac is planned. It was specified in Tetrak's
 brief 015 (product zone, private) as part 3 of the Armenian heritage
 aggregator work, and is a separate repository rather than a fourth
 `tetrak` package because its audience — catalogue and search developers —
@@ -19,9 +20,18 @@ same as Tetrak itself.
 
 ## Hard rules
 
+### The engine is script-agnostic; a script is a package of data
+
+`engine.py` reads a `Scheme` and the `Script` it belongs to, and nothing
+else. A script lives in its own package (`hy/`, `ka/`) exporting `SCRIPT`,
+`SCHEMES`, `fold_token` and `variant`, and is listed in `registry.py`.
+Nothing above the registry names a script. Adding one is documented in
+`docs/adding-a-script.md`; if adding a script needs a change to the
+engine, the engine is wrong, not the script.
+
 ### Display and finding are different jobs
 
-The schemes in `src/tetrak_translit/schemes/` render Armenian for a
+The schemes in `src/tetrak_translit/<script>/` render a script for a
 reader. `fold()` produces a key for matching. Never make a scheme "more
 matchable" (merging `եւ` and `և` at display time, say) and never make the
 fold "more readable". ALA-LC writes *Erevan* for `Երևան` and *Erewan* for
@@ -34,9 +44,11 @@ from another implementation, whatever its licence; do not take anything
 from a non-commercially-licensed source. A change to a mapping cites the
 standard and bumps that scheme's `version`.
 
-### The fold test set is the published claim
+### The fold test sets are the published claim
 
-`tests/data/fold_cases.tsv` is what we say folds together. Every case must
+`tests/data/<script>_fold_cases.tsv` is what we say folds together, per
+script. Latin input to `fold()` must name its script, because the rules
+differ (Armenian merges b/p, Georgian must not); never add a default. Every case must
 keep passing; a new fold rule arrives with its cases; a gap that cannot be
 closed without breaking a case is written up in `docs/fold.md` under known
 gaps, not forced. A change to what the fold returns for an existing case
@@ -51,12 +63,17 @@ only.
 
 | Path | What |
 |---|---|
-| `src/tetrak_translit/detect.py` | Script and orthography detection |
-| `src/tetrak_translit/schemes/` | One module per romanisation table, plus the `Scheme` dataclass |
-| `src/tetrak_translit/transliterate.py` | The engine over the tables, both directions |
-| `src/tetrak_translit/fold.py` | The canonical fold |
+| `src/tetrak_translit/script.py` | The `Script` and `Scheme` dataclasses: the data everything runs over |
+| `src/tetrak_translit/engine.py` | Script to Latin and back, over any `Scheme` |
+| `src/tetrak_translit/latin.py` | The cleaning and finishing every fold shares |
+| `src/tetrak_translit/registry.py` | The registered script packages; scheme resolution |
+| `src/tetrak_translit/detect.py` | Generic script detection; asks the script package for its variant |
+| `src/tetrak_translit/transliterate.py` | Public transliteration API over the registry and engine |
+| `src/tetrak_translit/fold.py` | Dispatches each token to its script's fold |
+| `src/tetrak_translit/hy/` | Armenian: descriptor, five tables, orthography detector, fold |
+| `src/tetrak_translit/ka/` | Georgian: descriptor, three tables, fold |
 | `src/tetrak_translit/cli.py` | `tetrak-translit`, argparse |
-| `tests/` | pytest; `tests/data/fold_cases.tsv` is the fold test set |
+| `tests/` | pytest; `tests/data/<script>_fold_cases.tsv` are the fold test sets |
 | `docs/` | Sphinx (furo, MyST), published to GitHub Pages at each release |
 
 ## Checks

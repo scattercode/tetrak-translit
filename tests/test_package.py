@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import re
 from pathlib import Path
 
@@ -27,7 +28,7 @@ def test_typed() -> None:
 
 
 def test_public_api_is_exported() -> None:
-    for name in ("detect", "transliterate", "fold", "schemes", "__version__"):
+    for name in ("detect", "transliterate", "fold", "schemes", "scripts", "__version__"):
         assert name in tetrak_translit.__all__
         assert hasattr(tetrak_translit, name)
 
@@ -38,10 +39,16 @@ def test_only_the_standard_library_is_imported() -> None:
     package = ROOT / "src" / "tetrak_translit"
     allowed = {"argparse", "collections", "dataclasses", "json", "re", "sys", "unicodedata"}
     for module in package.rglob("*.py"):
-        for match in re.finditer(
-            r"^(?:from|import) ([A-Za-z_][\w.]*)", module.read_text(encoding="utf-8"), re.M
-        ):
-            top = match.group(1).split(".")[0]
-            assert top in allowed or top in {"tetrak_translit", "__future__"} or top == "", (
-                f"{module.name} imports {top}"
-            )
+        tree = ast.parse(module.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                names = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.level == 0:
+                names = [node.module or ""]
+            else:
+                continue
+            for name in names:
+                top = name.split(".")[0]
+                assert top in allowed or top in {"tetrak_translit", "__future__"}, (
+                    f"{module.name} imports {top}"
+                )
