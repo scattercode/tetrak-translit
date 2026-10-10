@@ -24,6 +24,12 @@ Two constraints shape what we can accept:
   `docs/adding-a-script.md`. If the engine has to change to admit a
   script, raise that as its own pull request first.
 
+If you work with a coding agent — Claude Code, Codex, Cursor, Gemini CLI or
+another — point it at `AGENTS.md`, which carries the repository's rules in
+the form such tools read, and at the guides under `.claude/skills/`, which
+are plain Markdown any tool or person can open. The rules there are the
+same as here, stated for an agent.
+
 ## Getting set up
 
 ```bash
