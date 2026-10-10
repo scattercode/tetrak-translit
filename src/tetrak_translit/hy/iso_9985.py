@@ -11,11 +11,13 @@ mapping one-to-one. Aspiration is a plain apostrophe.
 
 from __future__ import annotations
 
-from . import Scheme
+from ..script import Scheme
+from .descriptor import SCRIPT
 
 ASPIRATION = "'"
 
 ISO_9985 = Scheme(
+    script=SCRIPT,
     key="iso_9985",
     name="ISO 9985",
     version="1.0",

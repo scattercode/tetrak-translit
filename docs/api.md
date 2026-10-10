@@ -12,6 +12,11 @@ For how the pieces fit together, see [usage](usage.md).
    tetrak_translit.detect
    tetrak_translit.transliterate
    tetrak_translit.fold
-   tetrak_translit.schemes
+   tetrak_translit.script
+   tetrak_translit.engine
+   tetrak_translit.latin
+   tetrak_translit.registry
+   tetrak_translit.hy
+   tetrak_translit.ka
    tetrak_translit.cli
 ```

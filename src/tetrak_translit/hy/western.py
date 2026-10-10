@@ -24,9 +24,11 @@ what makes the two traditions' spellings match.
 
 from __future__ import annotations
 
-from . import Scheme
+from ..script import Scheme
+from .descriptor import SCRIPT
 
 WESTERN = Scheme(
+    script=SCRIPT,
     key="western",
     name="Western Armenian pronunciation",
     version="1.0",

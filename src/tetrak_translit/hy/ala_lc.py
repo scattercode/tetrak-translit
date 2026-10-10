@@ -20,11 +20,13 @@ cannot be reversed with certainty.
 
 from __future__ import annotations
 
-from . import Scheme
+from ..script import Scheme
+from .descriptor import SCRIPT
 
 ASPIRATION = "ʻ"  # ʻ
 
 ALA_LC = Scheme(
+    script=SCRIPT,
     key="ala_lc",
     name="ALA-LC",
     version="1.0",

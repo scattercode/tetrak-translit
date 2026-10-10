@@ -14,11 +14,13 @@ classical digraph is the same two letters, so the table reverses exactly.
 
 from __future__ import annotations
 
-from . import Scheme
+from ..script import Scheme
+from .descriptor import SCRIPT
 
 ASPIRATION = "ʿ"  # ʿ
 
 HUBSCHMANN_MEILLET = Scheme(
+    script=SCRIPT,
     key="hubschmann_meillet",
     name="Hübschmann-Meillet",
     version="1.0",

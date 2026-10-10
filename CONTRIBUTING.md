@@ -10,15 +10,19 @@ Two constraints shape what we can accept:
 
 - **Tables are written from the standards, never copied.** Romanisation
   tables are facts, but a copied file is still a copied file. Every table
-  in `src/tetrak_translit/schemes/` names the published standard it was
+  in `src/tetrak_translit/<script>/` names the published standard it was
   written from, and a change to one must cite the standard too. Nothing
   from a non-commercially-licensed transliteration source can be accepted,
   whatever its licence says about tables.
-- **The fold is a published claim.** `tests/data/fold_cases.tsv` is the set
-  of spellings we say fold together. A change to the fold rules must keep
-  every existing case passing, and a new capability must arrive with its
-  cases. A gap that cannot be closed is documented in `docs/fold.md`, not
-  papered over with a rule that breaks something else.
+- **The folds are published claims.** `tests/data/<script>_fold_cases.tsv`
+  is the set of spellings we say fold together for each script. A change
+  to a fold's rules must keep every existing case passing, and a new
+  capability must arrive with its cases. A gap that cannot be closed is
+  documented in `docs/fold.md`, not papered over with a rule that breaks
+  something else.
+- **A new script is a package, not an engine change.** See
+  `docs/adding-a-script.md`. If the engine has to change to admit a
+  script, raise that as its own pull request first.
 
 ## Getting set up
 

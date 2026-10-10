@@ -1,22 +1,24 @@
-"""Transliteration in both directions."""
+"""Transliteration in both directions, for both scripts."""
 
 from __future__ import annotations
 
 import pytest
 
 from tetrak_translit import (
+    SCHEMES,
     NotReversibleError,
     UnknownSchemeError,
-    get_scheme,
-    schemes,
+    UnknownScriptError,
+    hy,
+    ka,
     to_armenian,
     to_latin,
+    to_script,
     transliterate,
 )
-from tetrak_translit.schemes import ARMENIAN_LOWERCASE, SCHEMES
 
 
-class TestToLatin:
+class TestArmenianToLatin:
     @pytest.mark.parametrize(
         ("text", "scheme", "expected"),
         [
@@ -47,39 +49,39 @@ class TestToLatin:
     def test_known_forms(self, text: str, scheme: str, expected: str) -> None:
         assert transliterate(text, scheme) == expected
 
-    def test_default_scheme_is_ala_lc(self) -> None:
+    def test_default_scheme_is_ala_lc_of_the_text_s_script(self) -> None:
         assert transliterate("Երևան") == "Erevan"
+        assert transliterate("თბილისი") == "tʻbilisi"
 
     def test_capitals_carry_across(self) -> None:
         assert transliterate("ԵՐԵՎԱՆ", "bgn_pcgn") == "YEREVAN"
         assert transliterate("Թ", "ala_lc") == "Tʻ"
         assert transliterate("ԹԹ", "ala_lc") == "TʻTʻ"
 
-    def test_non_armenian_passes_through(self) -> None:
+    def test_other_scripts_pass_through(self) -> None:
         line = "Charents, Eghishe, 1897-1937. Երկեր / Yerevan, 1985."
         assert (
             transliterate(line, "ala_lc") == "Charents, Eghishe, 1897-1937. Erker / Yerevan, 1985."
         )
+        assert transliterate("Երևան და თბილისი", "hy/ala_lc") == "Erevan და თბილისი"
+        assert transliterate("Երևան და თბილისი", "ka/ala_lc") == "Երևան da tʻbilisi"
 
-    def test_punctuation_inside_armenian_is_kept(self) -> None:
+    def test_punctuation_inside_a_word_is_kept(self) -> None:
         assert transliterate("Սայաթ-Նովա", "ala_lc") == "Sayatʻ-Nova"
         assert transliterate("«Երկեր»", "ala_lc") == "«Erker»"
 
-    def test_scheme_keys_are_forgiving(self) -> None:
-        assert get_scheme("ALA-LC") is SCHEMES["ala_lc"]
-        assert get_scheme("iso 9985") is SCHEMES["iso_9985"]
-        assert get_scheme(SCHEMES["western"]) is SCHEMES["western"]
+    def test_scheme_objects_and_forgiving_keys(self) -> None:
+        assert transliterate("Երևան", hy.ALA_LC) == "Erevan"
+        assert transliterate("Երևան", "ISO 9985") == "Erewan"
+        assert transliterate("Երևան", "hy/ala-lc") == "Erevan"
 
-    def test_unknown_scheme_names_the_known_ones(self) -> None:
-        with pytest.raises(UnknownSchemeError, match="ala_lc"):
+    def test_errors(self) -> None:
+        with pytest.raises(UnknownSchemeError, match="known schemes"):
             transliterate("Երևան", "wade-giles")
-
-    def test_schemes_lists_them_in_order(self) -> None:
-        assert [scheme.key for scheme in schemes()] == list(SCHEMES)
-
-    def test_bad_direction(self) -> None:
-        with pytest.raises(ValueError, match="to must be"):
-            transliterate("Երևան", "ala_lc", to="greek")
+        with pytest.raises(UnknownScriptError):
+            transliterate("Երևան", "ala_lc", script="syr")
+        with pytest.raises(UnknownScriptError):
+            transliterate("Erewan", "iso_9985", to="greek")
 
 
 class TestWesternPositionalRules:
@@ -95,18 +97,71 @@ class TestWesternPositionalRules:
         assert transliterate("Վարդանեան", "western") == "Vartanian"
 
 
-class TestToArmenian:
-    @pytest.mark.parametrize("key", [key for key, s in SCHEMES.items() if s.reversible])
-    def test_round_trips_every_letter(self, key: str) -> None:
-        alphabet = ARMENIAN_LOWERCASE + "ու" + "և"
-        assert to_armenian(to_latin(alphabet, key), key) == alphabet
-
-    @pytest.mark.parametrize("key", [key for key, s in SCHEMES.items() if s.reversible])
+class TestGeorgianToLatin:
     @pytest.mark.parametrize(
-        "text", ["Երևան", "Չարենց", "Խաչատրյան", "Մեսրոպ Մաշտոց", "Սուրբ Էջմիածին", "ՉԱՐԵՆՑ"]
+        ("text", "scheme", "expected"),
+        [
+            ("თბილისი", "ala_lc", "tʻbilisi"),
+            ("თბილისი", "iso_9984", "t'bilisi"),
+            ("თბილისი", "national", "tbilisi"),
+            ("ქუთაისი", "ala_lc", "kʻutʻaisi"),
+            ("ქუთაისი", "national", "kutaisi"),
+            ("ჭავჭავაძე", "ala_lc", "chavchavadze"),
+            ("ჭავჭავაძე", "iso_9984", "čavčavaje"),
+            ("ჭავჭავაძე", "national", "ch'avch'avadze"),
+            ("წერეთელი", "ala_lc", "tseretʻeli"),
+            ("წერეთელი", "iso_9984", "ceret'eli"),
+            ("წერეთელი", "national", "ts'ereteli"),
+            ("მცხეთა", "ala_lc", "mtsʻkhetʻa"),
+            ("მცხეთა", "iso_9984", "mc'xet'a"),
+            ("მცხეთა", "national", "mtskheta"),
+            ("ჯავახიშვილი", "iso_9984", "ǰavaxišvili"),
+            ("ღვინო", "iso_9984", "ḡvino"),
+            ("ყაზბეგი", "national", "q'azbegi"),
+            ("ჴელი", "ala_lc", "ẖeli"),  # archaic
+            ("ჴელი", "iso_9984", "ẖeli"),
+        ],
     )
-    def test_round_trips_words(self, key: str, text: str) -> None:
-        assert to_armenian(to_latin(text, key), key) == text
+    def test_known_forms(self, text: str, scheme: str, expected: str) -> None:
+        assert transliterate(text, scheme) == expected
+
+    def test_mkhedruli_is_caseless_so_nothing_is_capitalised(self) -> None:
+        assert transliterate("თბილისი", "national") == "tbilisi"
+
+    def test_mtavruli_renders_as_capitals(self) -> None:
+        assert transliterate("ᲗᲑᲘᲚᲘᲡᲘ", "national") == "TBILISI"
+        assert transliterate("Თბილისი", "national") == "Tbilisi"
+
+    def test_a_letter_the_scheme_does_not_define_passes_through(self) -> None:
+        """The national system defines no archaic letters; ჴ is left as it is."""
+        assert transliterate("ჴელი", "national") == "ჴeli"
+
+
+class TestToScript:
+    @pytest.mark.parametrize(
+        "scheme", [s for s in SCHEMES.values() if s.reversible], ids=lambda s: s.id
+    )
+    def test_round_trips_every_letter(self, scheme) -> None:  # type: ignore[no-untyped-def]
+        alphabet = scheme.script.letters + "".join(scheme.script.digraphs)
+        assert to_script(to_latin(alphabet, scheme), scheme) == alphabet
+
+    @pytest.mark.parametrize(
+        ("scheme", "text"),
+        [
+            ("hy/iso_9985", "Երևան"),
+            ("hy/iso_9985", "Չարենց"),
+            ("hy/iso_9985", "Սուրբ Էջմիածին"),
+            ("hy/iso_9985", "ՉԱՐԵՆՑ"),
+            ("hy/hubschmann_meillet", "Խաչատրյան"),
+            ("hy/hubschmann_meillet", "Մեսրոպ Մաշտոց"),
+            ("ka/iso_9984", "თბილისი"),
+            ("ka/iso_9984", "ჭავჭავაძე"),
+            ("ka/iso_9984", "მცხეთა"),
+            ("ka/iso_9984", "ჴელი"),
+        ],
+    )
+    def test_round_trips_words(self, scheme: str, text: str) -> None:
+        assert to_script(to_latin(text, scheme), scheme) == text
 
     def test_the_two_letter_ew_comes_back_as_the_ligature(self) -> None:
         """Same letters, one typographic form; documented, not a bug."""
@@ -115,11 +170,26 @@ class TestToArmenian:
     def test_any_apostrophe_marks_aspiration(self) -> None:
         for mark in ("'", "’", "ʻ", "ʿ"):
             assert to_armenian(f"Čarenc{mark}", "iso_9985") == "Չարենց"
+            assert to_script(f"T{mark}bilisi", "iso_9984") == "თბილისი"
+
+    def test_latin_capitals_are_dropped_for_a_caseless_script(self) -> None:
+        assert to_script("T'bilisi", "ka/iso_9984") == "თბილისი"
+        assert to_script("T'BILISI", ka.ISO_9984) == "თბილისი"
 
     def test_non_scheme_characters_pass_through(self) -> None:
         assert to_armenian("Erewan, 1985.", "iso_9985") == "Երևան, 1985."
 
+    def test_the_to_argument_names_the_script(self) -> None:
+        assert transliterate("Erewan", "iso_9985", to="armenian") == "Երևան"
+        assert transliterate("Erewan", "iso_9985", to="hy") == "Երևան"
+        assert transliterate("T'bilisi", "iso_9984", to="script") == "თბილისი"
+        assert transliterate("T'bilisi", "iso_9984", to="Georgian") == "თბილისი"
+
     def test_lossy_schemes_refuse(self) -> None:
-        for key in ("ala_lc", "bgn_pcgn", "western"):
+        for key in ("hy/ala_lc", "bgn_pcgn", "western", "ka/ala_lc", "national"):
             with pytest.raises(NotReversibleError, match="not reversible"):
-                transliterate("Erevan", key, to="armenian")
+                transliterate("Erevan", key, to="script")
+
+    def test_reading_back_needs_the_script_settled(self) -> None:
+        with pytest.raises(UnknownSchemeError, match="say which"):
+            transliterate("Tbilisi", "ala_lc", to="script")
