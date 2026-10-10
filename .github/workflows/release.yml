@@ -141,9 +141,16 @@ jobs:
   # Build the sdist and wheel from the exact tag. A fresh checkout at the
   # tag is what makes hatch-vcs produce a clean X.Y.Z; a build from an
   # untagged commit yields X.Y.Z+gabcdef, which PyPI rejects.
+  # `!cancelled()` on this and the next two gates, not a bare output check:
+  # a job whose `if` names no status function gets an implicit success(),
+  # and success() is false when any job earlier in the needs chain was
+  # skipped -- which the release job is on every dispatch. Without it the
+  # first dispatch for 0.2.0 ran the tag job, set released=true, and then
+  # skipped everything downstream. Each gate also checks the result of
+  # the job it actually depends on, so a failure still stops the chain.
   build:
     needs: tag
-    if: needs.tag.outputs.released == 'true'
+    if: ${{ !cancelled() && needs.tag.outputs.released == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -195,7 +202,7 @@ jobs:
   # are generated and uploaded by the action automatically.
   publish:
     needs: [tag, build]
-    if: needs.tag.outputs.released == 'true'
+    if: ${{ !cancelled() && needs.tag.outputs.released == 'true' && needs.build.result == 'success' }}
     runs-on: ubuntu-latest
     environment: pypi          # must match the name registered on PyPI
     permissions:
@@ -214,7 +221,7 @@ jobs:
   # the github-pages environment admits -- while building from the tag.
   docs:
     needs: [tag, publish]
-    if: needs.tag.outputs.released == 'true'
+    if: ${{ !cancelled() && needs.tag.outputs.released == 'true' && needs.publish.result == 'success' }}
     uses: ./.github/workflows/sphinx-docs.yml
     with:
       tag: ${{ needs.tag.outputs.version }}
