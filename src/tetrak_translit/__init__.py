@@ -32,10 +32,10 @@ national system).
     >>> tt.fold("Chavchavadze", script="ka") == tt.fold("ჭავჭავაძე")
     True
 
-No runtime dependencies. Built for the Armenian heritage aggregator
-described in Tetrak's brief 015 and for `Tetrak <https://tetrak.dev/>`_'s
-own OCR output, where a romanisation beside a transcript is both a
-catalogue-ready field and an accessibility one.
+No runtime dependencies. Built for a catalogue search and for
+`Tetrak <https://tetrak.dev/>`_'s own OCR output, where a
+romanisation beside a transcript is both a catalogue-ready field and
+an accessibility one.
 """
 
 from __future__ import annotations

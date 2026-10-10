@@ -114,8 +114,7 @@ built from the released code at each release.
 ## Where it comes from
 
 Built as part of [Tetrak](https://tetrak.dev/), a local-first OCR pipeline
-for archival material, for two users at once: an Armenian cultural heritage
-aggregator that has to match catalogue records across scripts, and Tetrak's
+for archival material, to support two use cases at once: a catalogue search that has to match records across scripts, and Tetrak's
 own transcripts, where an ALA-LC rendering beside the OCR output is both a
 catalogue-ready field and an accessibility one (a screen reader with no
 Armenian voice can at least read the romanisation). Georgian came next

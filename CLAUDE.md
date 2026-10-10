@@ -9,8 +9,7 @@ detects the script and orthography of a string, transliterates a script to
 and from its named Latin schemes, and folds any spelling onto one
 canonical index form for cross-script search. Armenian (five schemes) and
 Georgian (three) are the scripts so far; Syriac is planned. It was specified in Tetrak's
-brief 015 (product zone, private) as part 3 of the Armenian heritage
-aggregator work, and is a separate repository rather than a fourth
+brief 015 (product zone, private), and is a separate repository rather than a fourth
 `tetrak` package because its audience — catalogue and search developers —
 will never install an OCR tool.
 

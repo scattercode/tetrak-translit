@@ -3,9 +3,7 @@
 `fold()` maps any spelling of a word — its own script, Latin in any
 romanisation — onto one canonical index form, so that a search typed one
 way finds a record written another. It is the function a Solr or
-Elasticsearch analysis chain calls, at index time and at query time, and
-it is what the Armenian heritage aggregator in Tetrak brief 015 actually
-depends on.
+Elasticsearch analysis chain calls, at index time and at query time.
 
 ```python
 >>> import tetrak_translit as tt
