@@ -11,11 +11,27 @@
 # The release commit is pushed with GITHUB_TOKEN, which by design does not
 # retrigger workflows — so this never loops. If there are no releasable
 # commits since the last tag, the job is a no-op.
+#
+# A re-run by hand, for a tag whose build, publish or docs job failed after
+# the tag and GitHub Release already existed (0.2.0 was tagged and then its
+# wheel smoke test failed, leaving the version on GitHub but not on PyPI):
+#
+#   gh workflow run release.yml --ref main -f tag=0.2.0
+#
+# The release job is skipped and the rest runs for that tag. Re-running the
+# failed run itself would not help: a run uses the workflow file from the
+# commit that triggered it, so a fix to the workflow never reaches it.
 name: Release
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: An existing release tag to build, publish and document (for example 0.2.0)
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -26,8 +42,9 @@ concurrency:
 
 jobs:
   release:
-    # Belt and braces: never react to our own release commit.
-    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
+    # Belt and braces: never react to our own release commit. A dispatch
+    # names a tag that already exists, so there is nothing to compute.
+    if: ${{ github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'chore(release):') }}
     runs-on: ubuntu-latest
     outputs:
       released: ${{ steps.version.outputs.release }}
@@ -94,19 +111,50 @@ jobs:
 
           gh release create "$VERSION" --title "$VERSION" --notes-file RELEASE_NOTES.md
 
-  # Build the sdist and wheel from the exact tag the release job just
-  # pushed. A fresh checkout at the tag is what makes hatch-vcs produce a
-  # clean X.Y.Z; a build from an untagged commit yields X.Y.Z+gabcdef,
-  # which PyPI rejects.
-  build:
+  # One place that says which tag, if any, the rest of the workflow ships:
+  # the tag the release job just pushed, or the one a dispatch named. Runs
+  # whether or not the release job did, which is why it has `always()`;
+  # a skipped release job has empty outputs and a push with nothing to
+  # release ends here.
+  tag:
     needs: release
-    if: needs.release.outputs.released == 'true'
+    if: ${{ always() && !cancelled() }}
+    runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.pick.outputs.released }}
+      version: ${{ steps.pick.outputs.version }}
+    steps:
+      - id: pick
+        env:
+          DISPATCHED_TAG: ${{ inputs.tag }}
+          RELEASED: ${{ needs.release.outputs.released }}
+          VERSION: ${{ needs.release.outputs.version }}
+        run: |
+          if [ -n "$DISPATCHED_TAG" ]; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+            echo "version=$DISPATCHED_TAG" >> "$GITHUB_OUTPUT"
+          else
+            echo "released=${RELEASED:-false}" >> "$GITHUB_OUTPUT"
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          fi
+
+  # Build the sdist and wheel from the exact tag. A fresh checkout at the
+  # tag is what makes hatch-vcs produce a clean X.Y.Z; a build from an
+  # untagged commit yields X.Y.Z+gabcdef, which PyPI rejects.
+  build:
+    needs: tag
+    if: needs.tag.outputs.released == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ needs.release.outputs.version }}
+          ref: ${{ needs.tag.outputs.version }}
           fetch-depth: 0
+
+      # A dispatched tag could be a branch name or a typo, and
+      # actions/checkout would check either out without complaint.
+      - name: Check the ref is a tag
+        run: git describe --exact-match --tags HEAD
 
       - uses: actions/setup-python@v7
         with:
@@ -125,12 +173,16 @@ jobs:
       # files that work from `pip install -e .` but were left out of the wheel.
       - name: Smoke-test the wheel
         env:
-          VERSION: ${{ needs.release.outputs.version }}
+          VERSION: ${{ needs.tag.outputs.version }}
         run: |
           python -m venv /tmp/smoke
           /tmp/smoke/bin/pip install --quiet dist/*.whl
           /tmp/smoke/bin/python -c "import os, tetrak_translit as t; v = os.environ['VERSION'].removeprefix('v'); assert t.__version__ == v, (t.__version__, v); print(t.__version__)"
-          /tmp/smoke/bin/tetrak-translit fold "Պօղոսեան" "Boghossian"
+          # One call per script, each exercising the installed CLI end to end.
+          # Latin input names its script: 0.2.0's smoke test did not, and the
+          # exit status 2 that fold() rightly returns failed the release.
+          /tmp/smoke/bin/tetrak-translit fold --script hy "Պօղոսեան" "Boghossian"
+          /tmp/smoke/bin/tetrak-translit fold --script ka "ჭავჭავაძე" "Chavchavadze"
 
       - uses: actions/upload-artifact@v7
         with:
@@ -142,8 +194,8 @@ jobs:
   # id-token: write is the only permission it needs. Attestations (PEP 740)
   # are generated and uploaded by the action automatically.
   publish:
-    needs: [release, build]
-    if: needs.release.outputs.released == 'true'
+    needs: [tag, build]
+    if: needs.tag.outputs.released == 'true'
     runs-on: ubuntu-latest
     environment: pypi          # must match the name registered on PyPI
     permissions:
@@ -161,11 +213,11 @@ jobs:
   # version. The called workflow runs under refs/heads/main -- the only ref
   # the github-pages environment admits -- while building from the tag.
   docs:
-    needs: [release, publish]
-    if: needs.release.outputs.released == 'true'
+    needs: [tag, publish]
+    if: needs.tag.outputs.released == 'true'
     uses: ./.github/workflows/sphinx-docs.yml
     with:
-      tag: ${{ needs.release.outputs.version }}
+      tag: ${{ needs.tag.outputs.version }}
     permissions:
       contents: read
       pages: write
