@@ -1,0 +1,120 @@
+[build-system]
+requires = ["hatchling>=1.27", "hatch-vcs"]   # 1.27+ understands PEP 639
+build-backend = "hatchling.build"
+
+[project]
+name = "tetrak-translit"
+# Derived from the git tag via hatch-vcs, the workspace pattern (see
+# Tetrak): release.yml computes each version from the commit history and
+# tags it, so a literal here would be a second source of truth that nothing
+# updates.
+dynamic = ["version"]
+description = "Detect, transliterate and fold Armenian text — ALA-LC, ISO 9985, BGN/PCGN, Hübschmann-Meillet and Western pronunciation, plus one canonical index form for cross-script search"
+readme = "README.md"
+# A dependency-free library that runs inside other people's search stacks
+# and catalogue tooling: meet the supported Pythons where they are, as
+# tetrak-easyocr-armenian does, rather than Tetrak's own 3.11 floor.
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Stephen Masters" },
+    { name = "Yvette Mankerian" },
+]
+keywords = [
+    "armenian",
+    "transliteration",
+    "romanization",
+    "romanisation",
+    "ala-lc",
+    "iso-9985",
+    "bgn-pcgn",
+    "script-detection",
+    "search",
+    "archives",
+    "libraries",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Information Technology",
+    "Natural Language :: Armenian",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Text Processing :: Indexing",
+    "Typing :: Typed",
+]
+# None, and that is a feature: the package goes into Solr sidecars, catalogue
+# scripts and OCR pipelines alike, and must never drag anything in with it.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.5", "mypy>=1.10"]
+# Builds the Sphinx reference published to GitHub Pages.
+apidocs = ["sphinx>=8.0", "sphinx-argparse>=0.6.1", "furo>=2024.8", "myst-parser>=4.0"]
+
+[project.scripts]
+tetrak-translit = "tetrak_translit.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/scattercode/tetrak-translit"
+Documentation = "https://scattercode.github.io/tetrak-translit/"
+Tetrak = "https://tetrak.dev/"
+Source = "https://github.com/scattercode/tetrak-translit"
+Changelog = "https://github.com/scattercode/tetrak-translit/blob/main/CHANGELOG.md"
+Issues = "https://github.com/scattercode/tetrak-translit/issues"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+# Writes the resolved version into the package at build time, so an installed
+# copy can report it without git present. Generated, therefore gitignored.
+version-file = "src/tetrak_translit/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tetrak_translit"]
+
+[tool.ruff]
+line-length = 100
+
+# Declared explicitly rather than left to ruff's defaults, which differ
+# between ruff versions. Same arrangement as the sibling repos.
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # import sorting
+    "UP",  # pyupgrade
+    "B",   # bugbear
+]
+ignore = [
+    # Line length is enforced by `ruff format`.
+    "E501",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["tetrak_translit"]
+
+[tool.mypy]
+strict = true
+packages = ["tetrak_translit"]
+mypy_path = "src"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["tetrak_translit"]
+branch = true
+
+[tool.coverage.report]
+# A scheme table is data; what matters is that the engine over it is covered.
+fail_under = 90
+show_missing = true
