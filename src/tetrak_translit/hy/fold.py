@@ -11,13 +11,16 @@ the Armenian rules. In order:
    Then it is rendered through ALA-LC, so that Armenian and ALA-LC Latin
    reach the next step by the same road.
 2. **Latin** is lowercased and stripped of every diacritic and
-   aspiration mark, then its digraphs are collapsed onto one spelling
-   each (``ž``/``zh``, ``x``/``kh``, ``ł``/``gh``, ``ow``/``ou``/``oo``/``u``,
-   ``w``/``v``), the voiced and voiceless pairs are merged (``b``/``p``,
+   aspiration mark, an aspirate written with *h* loses it (``th``/``t``,
+   ``ph``/``p``: *Thoumanian*), an *h* after *v* is dropped
+   (``vh``/``v``: *Hovannes*), then its digraphs are collapsed onto one
+   spelling each (``ž``/``zh``, ``x``/``kh``, ``ł``/``gh``,
+   ``ow``/``ou``/``oo``/``u``, ``w``/``v``), the voiced and voiceless pairs are merged (``b``/``p``,
    ``d``/``t``, ``g``/``k``, ``dz``/``ts``/``c``, ``j``/``ch``) because
    Eastern and Western pronunciation spellings disagree on exactly those,
    the glides are regularised (initial ``ye``/``e``, initial ``vo``/``o``,
-   initial ``y``/``h``, ``ya``/``ea``/``ia``), a final ``y`` after a vowel
+   initial ``y``/``h``, initial ``ho``/``o`` for the Russian-mediated
+   *Ovanes* and *Ovsep*, ``ya``/``ea``/``ia``), a final ``y`` after a vowel
    is dropped, doubled letters are collapsed and anything that is not a
    letter or digit is removed.
 
@@ -68,6 +71,12 @@ _LETTERS = {
 
 # The Latin skeleton rules, applied in this order to one lowercase token.
 _LATIN: Rules = (
+    # Older English and French spellings mark an aspirate with h (Thoumanian,
+    # Thoros, Pharantsem), where the schemes use an apostrophe or nothing.
+    (re.compile(r"th"), "t"),
+    (re.compile(r"ph"), "p"),
+    # An h after v is dropped by popular spellings (Hovannes for Hovhannes).
+    (re.compile(r"vh"), "v"),
     (re.compile(r"ow|ou|oo"), "u"),
     (re.compile(r"ew"), "ev"),
     (re.compile(r"w"), "v"),
@@ -75,6 +84,9 @@ _LATIN: Rules = (
     (re.compile(r"^ye"), "e"),
     (re.compile(r"^vo"), "o"),
     (re.compile(r"^y(?=[aeiou])"), "h"),
+    # Russian has no h, so Russian-mediated forms drop it: Ovanes, Ovsep.
+    # Only before o; a general drop would merge իւր (his) with ուր (where).
+    (re.compile(r"^ho"), "o"),
     (re.compile(r"dz"), "ts"),
     (re.compile(r"ts|tz"), "c"),
     (re.compile(r"j"), "ch"),

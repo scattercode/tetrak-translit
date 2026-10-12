@@ -163,5 +163,7 @@ class TestKey:
         into the test set and out of the gaps."""
         assert fold("Megerdich", script="hy") != fold("Մկրտիչ")
         assert fold("Khachaturian", script="hy") != fold("Խաչատրյան")
+        assert fold("Akop", script="hy") != fold("Հակոբ")
+        assert fold("Arutyunyan", script="hy") != fold("Հարությունյան")
         assert fold("Tiflis", script="ka") != fold("თბილისი")
         assert fold("George", script="ka") != fold("გიორგი")
