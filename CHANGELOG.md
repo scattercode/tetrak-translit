@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-10-12
+
+### Changed
+
+- Push the release commit as the scattercode-release App
+- Follow ISO 9985:2026 and keep the 1996 table as iso_9985_1996
+- Say that ISO 9984 has a second edition we have not checked
+- Follow ISO 9984:2026 and keep the 1996 table as iso_9984_1996
+
+### Fixed
+
+- Read back capitals that have no precomposed form
+
 ## [1.0.0] - 2026-10-12
 
 ### Added
