@@ -14,6 +14,9 @@ SCRIPT = Script(
     letters="աբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ",
     digraphs=("ու", "և"),
     vowels=frozenset("աեէըիոօ"),
+    # Set inside a word: the apostrophe ՚, the stress marks ՛ ՜ ՞ (over
+    # the stressed vowel) and the abbreviation mark ՟.
+    marks="՚՛՜՞՟",
     ranges=((0x0531, 0x0556), (0x0560, 0x0588)),
     cased=True,
 )

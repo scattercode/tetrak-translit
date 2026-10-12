@@ -52,6 +52,11 @@ class Script:
         cased: Whether the script has upper and lower case. Determines
             whether a capital in Latin input becomes a capital when read
             back; a caseless script is always written in its one form.
+        marks: Characters that are not letters but are written inside a
+            word, so a word does not end at them: Armenian's stress marks
+            ``՛ ՜ ՞``, set over the stressed vowel, and its apostrophe and
+            abbreviation mark. A scheme may render them through its
+            ``punctuation``; otherwise they pass through where they stand.
     """
 
     key: str
@@ -63,6 +68,7 @@ class Script:
     vowels: frozenset[str] = frozenset()
     ranges: tuple[tuple[int, int], ...] = ()
     cased: bool = True
+    marks: str = ""
 
     def is_letter(self, character: str) -> bool:
         """Whether *character* is one of this script's letters."""
@@ -71,6 +77,45 @@ class Script:
 
     def has_letters(self, text: str) -> bool:
         return any(self.is_letter(character) for character in text)
+
+
+@dataclass(frozen=True)
+class Rule:
+    """A rendering that replaces a unit's usual one when its conditions hold.
+
+    Every condition given must hold; the first rule that matches wins.
+
+    Attributes:
+        unit: The lowercase letter or digraph the rule renders.
+        latin: Its rendering when the rule applies.
+        initial: Only at the start of a word.
+        before: Only when the next letter in the word starts with one of
+            these characters (``""`` for any, including none).
+        capital: ``True`` only when the unit is a capital, ``False`` only
+            when it is lowercase, ``None`` for either.
+        variant: Only in text of this variant of the script (Armenian's
+            ``"classical"`` orthography), as the caller states it or the
+            script's detector finds it.
+    """
+
+    unit: str
+    latin: str
+    initial: bool = False
+    before: str = ""
+    capital: bool | None = None
+    variant: str | None = None
+
+    def applies(
+        self, *, initial: bool, following: str | None, capital: bool, variant: str | None
+    ) -> bool:
+        """Whether the rule holds for a unit in this position."""
+        if self.initial and not initial:
+            return False
+        if self.before and not (following and following[0] in self.before):
+            return False
+        if self.capital is not None and self.capital != capital:
+            return False
+        return self.variant is None or self.variant == variant
 
 
 @dataclass(frozen=True)
@@ -101,6 +146,17 @@ class Scheme:
             ``z·h`` for ``ზ`` and ``ჰ`` so that it is not ``zh``, ``ჟ``.
             Skipped when reading back.
         separate: The pairs of units, in order, that take the separator.
+        rules: Conditional renderings, tried before the table (see
+            :class:`Rule`).
+        punctuation: Marks the standard renders where they stand, to their
+            Latin form; ``""`` drops a mark. A mark not listed passes
+            through unchanged.
+        sentence_final: Marks the standard moves to the end of the
+            sentence, to their Latin form (ALA-LC writes ``՞`` as a
+            question mark there, not over the vowel that carries it).
+        sentence_end: Characters that end a sentence. A moved mark is
+            written in place of the first one after it, or at the end of
+            the line.
         notes: What a user should know before choosing this scheme.
     """
 
@@ -116,6 +172,10 @@ class Scheme:
     after_vowel: Mapping[str, str] = field(default_factory=dict)
     separator: str = ""
     separate: frozenset[tuple[str, str]] = frozenset()
+    rules: tuple[Rule, ...] = ()
+    punctuation: Mapping[str, str] = field(default_factory=dict)
+    sentence_final: Mapping[str, str] = field(default_factory=dict)
+    sentence_end: str = ""
     notes: str = ""
 
     def __post_init__(self) -> None:
@@ -148,18 +208,42 @@ class Scheme:
         )
         if stray:
             raise ValueError(f"{self.id} separate names unknown units {stray!r}")
+        stray = sorted({rule.unit for rule in self.rules} - set(self.letters) - set(self.digraphs))
+        if stray:
+            raise ValueError(f"{self.id} rules name unknown units {stray!r}")
+        marks = set(self.punctuation) | set(self.sentence_final) | set(self.sentence_end)
+        letters = [mark for mark in marks if self.script.is_letter(mark)]
+        if letters:
+            raise ValueError(f"{self.id} treats letters as punctuation {letters!r}")
 
     @property
     def id(self) -> str:
         """The fully qualified id, ``"<script>/<key>"``."""
         return f"{self.script.key}/{self.key}"
 
-    def render(self, unit: str, *, initial: bool = False, after_vowel: bool = False) -> str:
-        """The Latin rendering of one lowercase letter or digraph.
+    def render(
+        self,
+        unit: str,
+        *,
+        initial: bool = False,
+        after_vowel: bool = False,
+        following: str | None = None,
+        capital: bool = False,
+        variant: str | None = None,
+    ) -> str:
+        """The Latin rendering of one lowercase letter, digraph or mark.
 
         A unit the table does not define -- an archaic letter under a
-        scheme that has no rendering for it -- is returned as it is.
+        scheme that has no rendering for it, or a mark it has no
+        punctuation for -- is returned as it is.
         """
+        for rule in self.rules:
+            if rule.unit == unit and rule.applies(
+                initial=initial, following=following, capital=capital, variant=variant
+            ):
+                return rule.latin
+        if unit in self.punctuation:
+            return self.punctuation[unit]
         if initial and unit in self.initial:
             return self.initial[unit]
         if after_vowel and unit in self.after_vowel:
@@ -169,4 +253,4 @@ class Scheme:
         return self.letters.get(unit, unit)
 
 
-__all__ = ["Scheme", "Script"]
+__all__ = ["Rule", "Scheme", "Script"]

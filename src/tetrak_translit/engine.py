@@ -3,7 +3,9 @@
 Script to Latin walks each word letter by letter, longest unit first (so
 a digraph is taken whole), rendering each through the scheme's table and
 carrying the source's case across: a capital letter capitalises its
-rendering, a word in capitals renders in capitals. Text outside the
+rendering, a word in capitals renders in capitals. Punctuation is the scheme's to
+say: marks its standard maps are rendered where they stand or moved to
+the end of the sentence, and the rest are left alone. Text outside the
 scheme's script passes through untouched, so a mixed-script line -- an
 Armenian title with a Latin author -- comes out with only the Armenian
 changed.
@@ -53,45 +55,101 @@ def _units(word: str, scheme: Scheme) -> list[tuple[str, bool]]:
     return units
 
 
-def _render_word(word: str, scheme: Scheme) -> str:
+def _render_word(word: str, scheme: Scheme, variant: str | None) -> str:
+    """Render one word: the script's letters, and any marks set inside it.
+
+    Marks are rendered through the scheme's punctuation where they stand
+    and are invisible to everything positional: the letter after ``՞`` is
+    not word-initial, and a word in capitals is still in capitals.
+    """
     units = _units(word, scheme)
-    all_capitals = len(units) > 1 and all(capital for _, capital in units)
+    marks = scheme.script.marks
+    letters = [index for index, (unit, _) in enumerate(units) if unit not in marks]
+    all_capitals = len(letters) > 1 and all(units[index][1] for index in letters)
+    following = {here: units[there][0] for here, there in zip(letters, letters[1:], strict=False)}
     vowels = scheme.script.vowels
     rendered: list[str] = []
     previous: str | None = None
-    for position, (unit, capital) in enumerate(units):
+    adjoining: str | None = None
+    for index, (unit, capital) in enumerate(units):
+        if unit in marks:
+            latin = scheme.punctuation.get(unit, unit)
+            rendered.append(latin)
+            if latin:
+                adjoining = None
+            continue
         latin = scheme.render(
             unit,
-            initial=position == 0,
+            initial=previous is None,
             after_vowel=previous is not None and previous[-1] in vowels,
+            following=following.get(index),
+            capital=capital,
+            variant=variant,
         )
         if all_capitals:
             latin = latin.upper()
         elif capital:
             latin = latin[:1].upper() + latin[1:]
-        if previous is not None and (previous, unit) in scheme.separate:
+        if adjoining is not None and (adjoining, unit) in scheme.separate:
             rendered.append(scheme.separator)
         rendered.append(latin)
-        previous = unit
+        previous = adjoining = unit
     return "".join(rendered)
 
 
-def render(text: str, scheme: Scheme) -> str:
-    """Render the scheme's script in *text* to Latin, leaving the rest alone."""
+def _before_trailing_space(out: list[str], marks: list[str]) -> list[str]:
+    """Insert *marks* before any spaces or tabs at the end of *out*."""
+    text = "".join(out)
+    body = text.rstrip(" \t")
+    return [body, "".join(marks), text[len(body) :]]
+
+
+def render(text: str, scheme: Scheme, variant: str | None = None) -> str:
+    """Render the scheme's script in *text* to Latin, leaving the rest alone.
+
+    Args:
+        text: Any string.
+        scheme: The table to render through.
+        variant: The variant of the script the text is in (Armenian's
+            ``"classical"`` or ``"reformed"`` orthography), for a scheme
+            with rules that depend on it; ``None`` applies none of them.
+    """
     script = scheme.script
     text = unicodedata.normalize("NFC", text)
     out: list[str] = []
     word: list[str] = []
+    pending: list[str] = []
+
+    def hold(mark: str) -> None:
+        latin = scheme.sentence_final[mark]
+        if latin not in pending:
+            pending.append(latin)
+
     for character in text:
-        if script.is_letter(character):
-            word.append(character)
+        if script.is_letter(character) or (word and character in script.marks):
+            if character in scheme.sentence_final:
+                hold(character)
+            else:
+                word.append(character)
             continue
         if word:
-            out.append(_render_word("".join(word), scheme))
+            out.append(_render_word("".join(word), scheme, variant))
             word = []
-        out.append(character)
+        if character in scheme.sentence_final:
+            hold(character)
+        elif character in scheme.sentence_end and pending:
+            out.extend(pending)
+            pending.clear()
+        elif character in "\r\n" and pending:
+            out = _before_trailing_space(out, pending)
+            pending.clear()
+            out.append(character)
+        else:
+            out.append(scheme.punctuation.get(character, character))
     if word:
-        out.append(_render_word("".join(word), scheme))
+        out.append(_render_word("".join(word), scheme, variant))
+    if pending:
+        out = _before_trailing_space(out, pending)
     return "".join(out)
 
 
@@ -109,6 +167,9 @@ def _inverse(scheme: Scheme) -> list[tuple[str, str]]:
     }
     for unit, latin in scheme.digraphs.items():
         pairs.setdefault(unicodedata.normalize("NFD", latin.lower()), unit)
+    for mark, latin in scheme.punctuation.items():
+        if latin:
+            pairs.setdefault(unicodedata.normalize("NFD", latin.lower()), mark)
     return sorted(pairs.items(), key=lambda item: -len(item[0]))
 
 

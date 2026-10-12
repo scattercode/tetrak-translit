@@ -181,6 +181,21 @@ class TestIso9984Edition2026:
         assert to_script("tsh", "ka/iso_9984") == "ცჰ"
 
 
+class TestMarksInsideAWord:
+    """Armenian's stress marks sit over a vowel, inside the word."""
+
+    def test_a_word_in_capitals_stays_in_capitals(self) -> None:
+        assert transliterate("Ո՞Վ", "bgn_pcgn") == "VO՞V"
+
+    def test_the_letter_after_a_mark_is_not_word_initial(self) -> None:
+        # BGN/PCGN writes initial ե as ye; inside a word it is e.
+        assert transliterate("կարդացե՞լ", "bgn_pcgn") == "kardats'e՞l"
+        assert transliterate("Երե՞ւան", "bgn_pcgn").startswith("Yere")
+
+    def test_a_scheme_without_punctuation_leaves_marks_where_they_stand(self) -> None:
+        assert transliterate("ու՜մ", "hubschmann_meillet") == "u՜m"
+
+
 class TestGeorgianToLatin:
     @pytest.mark.parametrize(
         ("text", "scheme", "expected"),
