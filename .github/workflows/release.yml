@@ -8,9 +8,11 @@
 # Publisher, and the documentation for that tag is deployed last -- so the
 # published reference can never run ahead of what is on PyPI.
 #
-# The release commit is pushed with GITHUB_TOKEN, which by design does not
-# retrigger workflows — so this never loops. If there are no releasable
-# commits since the last tag, the job is a no-op.
+# The release commit is pushed by the `scattercode-release` App, the only
+# actor the main ruleset lets bypass it. That token is a real identity, so
+# unlike GITHUB_TOKEN its pushes *do* trigger workflows -- the `chore(release):`
+# guard on the job below is what stops this looping, not the token. If there
+# are no releasable commits since the last tag, the job is a no-op.
 #
 # A re-run by hand, for a tag whose build, publish or docs job failed after
 # the tag and GitHub Release already existed (0.2.0 was tagged and then its
@@ -50,10 +52,37 @@ jobs:
       released: ${{ steps.version.outputs.release }}
       version: ${{ steps.version.outputs.next }}
     steps:
+      # A token for the `scattercode-release` GitHub App, which is the only
+      # actor allowed to bypass main's ruleset. GITHUB_TOKEN cannot be given
+      # that permission -- GitHub Actions is not an installable app, so it has
+      # no identity a ruleset can name. The App holds Contents: write and
+      # nothing else, so the worst it can do is commit and tag.
+      - name: Mint a release token
+        id: app_token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.RELEASE_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
+      # The committer line needs the App's bot *user* id, which is not any of
+      # the ids the token action returns -- `installation-id` is a different
+      # number, and a commit carrying it is attributed to nobody.
+      - name: Identify the App's bot user
+        id: bot
+        env:
+          GH_TOKEN: ${{ steps.app_token.outputs.token }}
+          SLUG: ${{ steps.app_token.outputs.app-slug }}
+        run: |
+          set -euo pipefail
+          echo "id=$(gh api "/users/${SLUG}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+
       - name: Check out full history
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          # Persisted so the push below goes out as the App rather than as
+          # GITHUB_TOKEN, which the ruleset would refuse.
+          token: ${{ steps.app_token.outputs.token }}
 
       - name: Install git-cliff
         uses: taiki-e/install-action@v2
@@ -100,14 +129,24 @@ jobs:
           git cliff --tag "$VERSION" --unreleased --prepend CHANGELOG.md
           git cliff --tag "$VERSION" --unreleased --strip all --output RELEASE_NOTES.md
 
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name  "${{ steps.app_token.outputs.app-slug }}[bot]"
+          git config user.email "${{ steps.bot.outputs.id }}+${{ steps.app_token.outputs.app-slug }}[bot]@users.noreply.github.com"
 
           git add CHANGELOG.md
           git commit -m "chore(release): ${VERSION#v}"
           git tag -a "$VERSION" -m "$VERSION"
-          git push origin HEAD:main
-          git push origin "$VERSION"
+
+          # One atomic push, so the branch and the tag land together. Two
+          # pushes leave a window where main carries the commit and the tag
+          # does not exist yet, and anything triggered in that window sees an
+          # untagged main and builds a dev version.
+          #
+          # A pull request merged into main while this job is running makes
+          # this push non-fast-forward and the job fails here. Because the
+          # push is atomic and nothing after it has run, a lost race leaves no
+          # tag, no release and no changelog commit, so re-running the job is
+          # a clean redo.
+          git push --atomic origin "HEAD:${{ github.ref_name }}" "$VERSION"
 
           gh release create "$VERSION" --title "$VERSION" --notes-file RELEASE_NOTES.md
 
