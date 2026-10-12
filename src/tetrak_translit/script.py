@@ -96,6 +96,11 @@ class Scheme:
             renders whole, to their renderings.
         initial: Renderings that apply only at the start of a word.
         after_vowel: Renderings that apply only directly after a vowel.
+        separator: Written between two units whose renderings would
+            otherwise read as a different unit, as ISO 9984:2026 writes
+            ``z·h`` for ``ზ`` and ``ჰ`` so that it is not ``zh``, ``ჟ``.
+            Skipped when reading back.
+        separate: The pairs of units, in order, that take the separator.
         notes: What a user should know before choosing this scheme.
     """
 
@@ -109,6 +114,8 @@ class Scheme:
     digraphs: Mapping[str, str] = field(default_factory=dict)
     initial: Mapping[str, str] = field(default_factory=dict)
     after_vowel: Mapping[str, str] = field(default_factory=dict)
+    separator: str = ""
+    separate: frozenset[tuple[str, str]] = frozenset()
     notes: str = ""
 
     def __post_init__(self) -> None:
@@ -129,6 +136,18 @@ class Scheme:
             ]
             if stray:
                 raise ValueError(f"{self.id} {name} rule names unknown units {stray!r}")
+        if self.separate and not self.separator:
+            raise ValueError(f"{self.id} names pairs to separate but no separator")
+        stray = sorted(
+            {
+                unit
+                for pair in self.separate
+                for unit in pair
+                if unit not in self.letters and unit not in self.digraphs
+            }
+        )
+        if stray:
+            raise ValueError(f"{self.id} separate names unknown units {stray!r}")
 
     @property
     def id(self) -> str:

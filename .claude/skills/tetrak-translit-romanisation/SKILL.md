@@ -16,7 +16,10 @@ workflows for changing anything are in `tetrak-translit-extending`.
 
 - **Transliteration** maps letters to letters. The same word, a different
   alphabet. Done strictly it is reversible: ISO 9985 and ISO 9984 are built so
-  that every Latin rendering goes back to exactly one letter.
+  that every Latin rendering goes back to exactly one letter. ISO 9984:2026
+  gets there differently from its first edition: it keeps the national
+  system's digraphs and writes a middle dot (`z·h`) between two letters that
+  would otherwise read as one (`Scheme.separator`, `Scheme.separate`).
 - **Transcription** maps sounds to letters. BGN/PCGN, the Georgian national
   system and the Western Armenian pronunciation spelling lean this way: *Yerevan*
   with its initial *ye* is how the word sounds, not a letter-for-letter
@@ -34,7 +37,7 @@ general act and *scheme* for one table. Keep to that.
 | Family | Here | Designed for | Marks | Reversible |
 |---|---|---|---|---|
 | Library | `hy/ala_lc`, `ka/ala_lc` | Catalogue records, authority headings, WorldCat | `ʻ` U+02BB, a few macrons and dots | no |
-| International | `hy/iso_9985` (and `hy/iso_9985_1996`), `ka/iso_9984` | Data exchange: one letter per letter | Diacritics, plain apostrophe | yes |
+| International | `hy/iso_9985`, `ka/iso_9984` (and the `_1996` first editions) | Data exchange: reversible | Diacritics or separated digraphs, plain apostrophe | yes |
 | Geographic | `hy/bgn_pcgn`, `ka/national` | Maps, signs, passports, English readers | Apostrophe, no diacritics | no |
 | Scholarly | `hy/hubschmann_meillet` | Linguistics, critical editions, the *Revue des Études Arméniennes* | Háčeks, `ʿ` U+02BF | yes |
 | Practice | `hy/western` | How diaspora names were actually spelled | None | no |
@@ -140,7 +143,7 @@ script and searches for either key.
 
 | Character | Code point | Category | Used for |
 |---|---|---|---|
-| `'` | U+0027 | Po | ISO 9985, ISO 9984, BGN/PCGN aspiration; the national system's ejective; what users type |
+| `'` | U+0027 | Po | ISO 9985, ISO 9984:1996, BGN/PCGN aspiration; the ejective in the national system and ISO 9984:2026; what users type |
 | `’` | U+2019 | Pf | What word processors turn `'` into |
 | `ʻ` | U+02BB modifier letter turned comma | Lm | ALA-LC aspiration, Armenian and Georgian; the character catalogue records carry |
 | `ʿ` | U+02BF modifier letter left half ring | Lm | Hübschmann-Meillet aspiration |
@@ -234,10 +237,10 @@ Every table names the standard it was written from, and a change cites it:
 
 - **ALA-LC Romanization Tables** — Library of Congress, published free per
   language at loc.gov (Armenian and Georgian both approved 2011).
-- **ISO 9985:2026** (Armenian, second edition; replaced ISO 9985:1996, which
-  `hy/iso_9985_1996` keeps) and **ISO 9984:1996** (Georgian; replaced by
-  ISO 9984:2026, which the table has not yet been checked against) — ISO,
-  paid. ISO sells them directly for less than national bodies do.
+- **ISO 9985:2026** (Armenian) and **ISO 9984:2026** (Georgian), the second
+  editions, which replaced the 1996 editions that `hy/iso_9985_1996` and
+  `ka/iso_9984_1996` keep — ISO, paid. In the UK they are sold only through
+  BSI (as BS ISO).
 - **BGN/PCGN** — the US Board on Geographic Names and the UK Permanent
   Committee on Geographical Names publish the agreed systems free (Armenian
   1981; the Georgian national system of 2002 as adopted in 2009).

@@ -105,29 +105,106 @@ class TestWesternPositionalRules:
         assert transliterate("Վարդանեան", "western") == "Vartanian"
 
 
+# ISO 9984:2026 Table 4: each letter's example, as the standard prints it
+# (with the optional initial capital).
+ISO_9984_2026_EXAMPLES = [
+    ("ამბროლაური", "Ambrolauri"),
+    ("ბათუმი", "Batumi"),
+    ("გორი", "Gori"),
+    ("დუშეთი", "Dusheti"),
+    ("ერგე", "Erge"),
+    ("ვანი", "Vani"),
+    ("ზუგდიდი", "Zugdidi"),
+    ("თბილისი", "Tbilisi"),
+    ("ონი", "Oni"),
+    ("კასპი", "K'asp'i"),
+    ("ლაგოდეხი", "Lagodekhi"),
+    ("მარნეული", "Marneuli"),
+    ("ნინოწმინდა", "Ninots'minda"),
+    ("ოზურგეთი", "Ozurgeti"),
+    ("პანტნარი", "P'ant'nari"),
+    ("ჟანივრი", "Zhanivri"),
+    ("რუსთავი", "Rustavi"),
+    ("სენაკი", "Senak'i"),
+    ("სამტრედია", "Samt'redia"),
+    ("ქუთაისი", "Kutaisi"),
+    ("ფოთი", "Poti"),
+    ("ქობულეთი", "Kobuleti"),
+    ("ღრმაღელე", "Ghrmaghele"),
+    ("ყუმისთავი", "Q'umistavi"),
+    ("შხარა", "Shkhara"),
+    ("ჩუნეში", "Chuneshi"),
+    ("ცაგერი", "Tsageri"),
+    ("ძეძილეთი", "Dzedzileti"),
+    ("წალკა", "Ts'alk'a"),
+    ("აჭარა", "Ach'ara"),
+    ("ხაშური", "Khashuri"),
+    ("ჯვარი", "Jvari"),
+    ("ჰეღო", "Hegho"),
+]
+
+
+class TestIso9984Edition2026:
+    @pytest.mark.parametrize(("text", "expected"), ISO_9984_2026_EXAMPLES)
+    def test_the_standards_examples(self, text: str, expected: str) -> None:
+        rendered = transliterate(text, "ka/iso_9984")
+        assert rendered[:1].upper() + rendered[1:] == expected
+        assert to_script(expected, "ka/iso_9984") == text
+
+    @pytest.mark.parametrize(
+        ("text", "expected"),
+        [("ზჰ", "z·h"), ("გჰ", "g·h"), ("სჰ", "s·h"), ("ქჰ", "k·h"), ("თს", "t·s"), ("დზ", "d·z")],
+    )
+    def test_a_middle_dot_keeps_two_letters_from_reading_as_a_digraph(
+        self, text: str, expected: str
+    ) -> None:
+        assert transliterate(text, "ka/iso_9984") == expected
+        assert to_script(expected, "ka/iso_9984") == text
+        assert to_script(expected.replace("·", ""), "ka/iso_9984") != text
+
+    def test_the_separator_survives_capitals(self) -> None:
+        assert transliterate("ᲖᲰ", "ka/iso_9984") == "Z·H"
+
+    def test_the_apostrophe_marks_the_ejective(self) -> None:
+        assert transliterate("ტ", "ka/iso_9984") == "t'"
+        assert transliterate("თ", "ka/iso_9984") == "t"
+
+    def test_the_historical_letters_of_table_5(self) -> None:
+        assert transliterate("ჱჲჳჴჵჶჷჸჹჺჼჽჾჿ", "ka/iso_9984") == "ēywẖōfȳʔĝʕⁿæʸʷ"
+        assert to_script("ēywẖōfȳʔĝʕⁿæʸʷ", "ka/iso_9984") == "ჱჲჳჴჵჶჷჸჹჺჼჽჾჿ"
+
+    def test_sequences_the_standards_list_leaves_ambiguous(self) -> None:
+        """dzh and tsh read two ways; reading back takes the digraph first."""
+        assert transliterate("დჟ", "ka/iso_9984") == transliterate("ძჰ", "ka/iso_9984")
+        assert transliterate("თშ", "ka/iso_9984") == transliterate("ცჰ", "ka/iso_9984")
+        assert to_script("dzh", "ka/iso_9984") == "ძჰ"
+        assert to_script("tsh", "ka/iso_9984") == "ცჰ"
+
+
 class TestGeorgianToLatin:
     @pytest.mark.parametrize(
         ("text", "scheme", "expected"),
         [
             ("თბილისი", "ala_lc", "tʻbilisi"),
-            ("თბილისი", "iso_9984", "t'bilisi"),
+            ("თბილისი", "iso_9984_1996", "t'bilisi"),
             ("თბილისი", "national", "tbilisi"),
             ("ქუთაისი", "ala_lc", "kʻutʻaisi"),
             ("ქუთაისი", "national", "kutaisi"),
             ("ჭავჭავაძე", "ala_lc", "chavchavadze"),
-            ("ჭავჭავაძე", "iso_9984", "čavčavaje"),
+            ("ჭავჭავაძე", "iso_9984_1996", "čavčavaje"),
             ("ჭავჭავაძე", "national", "ch'avch'avadze"),
             ("წერეთელი", "ala_lc", "tseretʻeli"),
-            ("წერეთელი", "iso_9984", "ceret'eli"),
+            ("წერეთელი", "iso_9984_1996", "ceret'eli"),
             ("წერეთელი", "national", "ts'ereteli"),
             ("მცხეთა", "ala_lc", "mtsʻkhetʻa"),
-            ("მცხეთა", "iso_9984", "mc'xet'a"),
+            ("მცხეთა", "iso_9984_1996", "mc'xet'a"),
             ("მცხეთა", "national", "mtskheta"),
-            ("ჯავახიშვილი", "iso_9984", "ǰavaxišvili"),
-            ("ღვინო", "iso_9984", "ḡvino"),
+            ("ჯავახიშვილი", "iso_9984_1996", "ǰavaxišvili"),
+            ("ღვინო", "iso_9984_1996", "ḡvino"),
             ("ყაზბეგი", "national", "q'azbegi"),
             ("ჴელი", "ala_lc", "ẖeli"),  # archaic
-            ("ჴელი", "iso_9984", "ẖeli"),
+            ("ჴელი", "iso_9984_1996", "ẖeli"),
+            ("ჶ", "iso_9984_1996", "f"),
         ],
     )
     def test_known_forms(self, text: str, scheme: str, expected: str) -> None:
@@ -164,10 +241,10 @@ class TestToScript:
             ("hy/iso_9985_1996", "Ճաշ Չարենց Ծիծեռնակ Օհան Ջուր"),
             ("hy/hubschmann_meillet", "Խաչատրյան"),
             ("hy/hubschmann_meillet", "Մեսրոպ Մաշտոց"),
-            ("ka/iso_9984", "თბილისი"),
-            ("ka/iso_9984", "ჭავჭავაძე"),
-            ("ka/iso_9984", "მცხეთა"),
-            ("ka/iso_9984", "ჴელი"),
+            ("ka/iso_9984_1996", "თბილისი"),
+            ("ka/iso_9984_1996", "ჭავჭავაძე"),
+            ("ka/iso_9984_1996", "მცხეთა"),
+            ("ka/iso_9984_1996", "ჴელი"),
         ],
     )
     def test_round_trips_words(self, scheme: str, text: str) -> None:
@@ -181,19 +258,19 @@ class TestToScript:
         for mark in ("'", "’", "ʻ", "ʿ"):
             assert to_armenian(f"Č{mark}arenc{mark}", "iso_9985") == "Չարենց"
             assert to_armenian(f"Čarenc{mark}", "iso_9985_1996") == "Չարենց"
-            assert to_script(f"T{mark}bilisi", "iso_9984") == "თბილისი"
+            assert to_script(f"T{mark}bilisi", "iso_9984_1996") == "თბილისი"
 
     def test_capitals_with_no_precomposed_form_read_back(self) -> None:
         """Capital ǰ is J and a combining caron; Unicode has no single character."""
         assert to_armenian("J̌owr", "iso_9985") == "Ջուր"
-        assert to_script("J̌avaxišvili", "iso_9984") == "ჯავახიშვილი"
+        assert to_script("J̌avaxišvili", "iso_9984_1996") == "ჯავახიშვილი"
 
     def test_a_match_does_not_split_a_character(self) -> None:
         assert to_armenian("é", "iso_9985") == "é"
 
     def test_latin_capitals_are_dropped_for_a_caseless_script(self) -> None:
-        assert to_script("T'bilisi", "ka/iso_9984") == "თბილისი"
-        assert to_script("T'BILISI", ka.ISO_9984) == "თბილისი"
+        assert to_script("T'bilisi", "ka/iso_9984_1996") == "თბილისი"
+        assert to_script("T'BILISI", ka.ISO_9984_1996) == "თბილისი"
 
     def test_non_scheme_characters_pass_through(self) -> None:
         assert to_armenian("Erewan, 1985.", "iso_9985") == "Երևան, 1985."
@@ -201,8 +278,8 @@ class TestToScript:
     def test_the_to_argument_names_the_script(self) -> None:
         assert transliterate("Erewan", "iso_9985", to="armenian") == "Երևան"
         assert transliterate("Erewan", "iso_9985", to="hy") == "Երևան"
-        assert transliterate("T'bilisi", "iso_9984", to="script") == "თბილისი"
-        assert transliterate("T'bilisi", "iso_9984", to="Georgian") == "თბილისი"
+        assert transliterate("T'bilisi", "iso_9984_1996", to="script") == "თბილისი"
+        assert transliterate("T'bilisi", "iso_9984_1996", to="Georgian") == "თბილისი"
 
     def test_lossy_schemes_refuse(self) -> None:
         for key in ("hy/ala_lc", "bgn_pcgn", "western", "ka/ala_lc", "national"):

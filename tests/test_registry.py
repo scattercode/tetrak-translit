@@ -91,7 +91,7 @@ class TestGetScheme:
 
 def test_schemes_lists_all_or_one_script() -> None:
     assert [s.id for s in schemes()] == list(SCHEMES)
-    assert [s.key for s in schemes("ka")] == ["ala_lc", "iso_9984", "national"]
+    assert [s.key for s in schemes("ka")] == ["ala_lc", "iso_9984", "iso_9984_1996", "national"]
 
 
 def test_scripts_in() -> None:

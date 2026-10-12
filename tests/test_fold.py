@@ -127,7 +127,8 @@ class TestSchemeHint:
         assert fold("Jowkn", script="hy") != fold("Ձուկն")
 
     def test_a_reversible_scheme_hint_works_for_georgian(self) -> None:
-        assert fold("Mc'xet'a", scheme="ka/iso_9984") == fold("მცხეთა")
+        assert fold("Mc'xet'a", scheme="ka/iso_9984_1996") == fold("მცხეთა")
+        assert fold("Mtskheta", scheme="ka/iso_9984") == fold("მცხეთა")
 
     def test_a_lossy_scheme_hint_is_ignored(self) -> None:
         assert fold("Yerevan", scheme="bgn_pcgn") == fold("Yerevan", script="hy")

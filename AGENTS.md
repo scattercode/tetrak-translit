@@ -12,7 +12,7 @@ checks and the commit style at more length.
 detects the script and orthography of a string, transliterates a script to
 and from its named Latin schemes, and folds any spelling onto one
 canonical index form for cross-script search. Armenian (five schemes, ISO 9985 in two editions) and
-Georgian (three) are the scripts so far; Syriac is planned. It was specified in Tetrak's
+Georgian (three schemes, ISO 9984 in two editions) are the scripts so far; Syriac is planned. It was specified in Tetrak's
 brief 015 (product zone, private), and is a separate repository rather than a fourth
 `tetrak` package because its audience — catalogue and search developers —
 will never install an OCR tool.
@@ -81,8 +81,8 @@ the work rather than reconstructing it:
   schemes side by side, the fold's rules in order and its known gaps.
 - **`tetrak-translit-georgian`** — Mkhedruli and Mtavruli, the scripts the
   library does not handle, the aspirate/ejective pairs and the apostrophe that
-  runs the opposite way between ALA-LC and the national system, the three
-  schemes, the fold.
+  runs the opposite way between ALA-LC and the national system (which ISO
+  9984:2026 now follows), the schemes, the fold.
 - **`tetrak-translit-extending`** — the workflows: correct a table, add a
   scheme, add a script (with Syriac design notes in its `references/`),
   extend a fold with its cases first; the hardcoded tests that go stale, the

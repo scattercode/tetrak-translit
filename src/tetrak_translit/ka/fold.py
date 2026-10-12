@@ -6,7 +6,9 @@ tradition that swaps consonants. What varies between spellings is the
 marking of aspirate against ejective (``ʻ``, ``'`` or nothing, on
 opposite members of each pair depending on the system), the sibilants
 (``ž``/``zh``, ``š``/``sh``, ``č``/``ch``), ``x``/``kh``, ``ḡ``/``gh``,
-and ISO 9984's ``c``/``j`` for ALA-LC's ``ts``/``dz``.
+and ISO 9984:1996's ``c``/``j`` for ALA-LC's ``ts``/``dz``. ISO 9984:2026
+is the national system's spelling, with a middle dot that the fold
+removes with the other punctuation.
 
 So the rules are: Georgian is rendered through ALA-LC after the archaic
 letters are folded onto their modern values; Latin is lowercased and

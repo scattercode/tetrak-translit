@@ -101,19 +101,20 @@ can predict. Never meant to be reversed: it cannot say whether a *p* is
 | Id | Scheme | Standard | Where you meet it | Reversible |
 |---|---|---|---|---|
 | `ka/ala_lc` | ALA-LC | ALA-LC Romanization Tables, Georgian (2011) | Library catalogues | no |
-| `ka/iso_9984` | ISO 9984 | ISO 9984:1996 (superseded; see below) | Data exchange; one letter per letter | yes |
+| `ka/iso_9984` | ISO 9984 | ISO 9984:2026 | Data exchange; the national system made reversible | yes |
+| `ka/iso_9984_1996` | ISO 9984:1996 | ISO 9984:1996, superseded | Data romanised under the first edition | yes |
 | `ka/national` | Georgian national system | Adopted 2002; BGN/PCGN 2009 | Road signs, passports, maps: *Tbilisi*, *Kutaisi* | no |
 
-The same name three ways:
+The same name four ways:
 
-| Georgian | `ala_lc` | `iso_9984` | `national` |
-|---|---|---|---|
-| თბილისი | tʻbilisi | t'bilisi | tbilisi |
-| ქუთაისი | kʻutʻaisi | k'ut'aisi | kutaisi |
-| ჭავჭავაძე | chavchavadze | čavčavaje | ch'avch'avadze |
-| წერეთელი | tseretʻeli | ceret'eli | ts'ereteli |
-| მცხეთა | mtsʻkhetʻa | mc'xet'a | mtskheta |
-| ყაზბეგი | qazbegi | qazbegi | q'azbegi |
+| Georgian | `ala_lc` | `iso_9984` | `iso_9984_1996` | `national` |
+|---|---|---|---|---|
+| თბილისი | tʻbilisi | tbilisi | t'bilisi | tbilisi |
+| ქუთაისი | kʻutʻaisi | kutaisi | k'ut'aisi | kutaisi |
+| ჭავჭავაძე | chavchavadze | ch'avch'avadze | čavčavaje | ch'avch'avadze |
+| წერეთელი | tseretʻeli | ts'ereteli | ceret'eli | ts'ereteli |
+| მცხეთა | mtsʻkhetʻa | mtskheta | mc'xet'a | mtskheta |
+| ყაზბეგი | qazbegi | q'azbegi | qazbegi | q'azbegi |
 
 Mkhedruli has no capitals, so a Georgian rendering is lowercase; a
 catalogue capitalises proper names by its own convention. Mtavruli, the
@@ -122,10 +123,11 @@ capital forms Unicode added in 2018, renders as capitals.
 ### The apostrophe runs the opposite way
 
 Georgian has pairs of aspirated and ejective consonants (`თ`/`ტ`,
-`ფ`/`პ`, `ქ`/`კ`, `ჩ`/`ჭ`, `ც`/`წ`). ALA-LC and ISO 9984 mark the
+`ფ`/`პ`, `ქ`/`კ`, `ჩ`/`ჭ`, `ც`/`წ`). ALA-LC and ISO 9984:1996 mark the
 **aspirate** with the apostrophe (`tʻbilisi`, `kʻutʻaisi`) and leave the
-ejective plain. The national system marks the **ejective** (`ts'ereteli`,
-`ch'avch'avadze`) and leaves the aspirate plain. The same apostrophe on
+ejective plain. The national system, and ISO 9984:2026 after it, mark the
+**ejective** (`ts'ereteli`, `ch'avch'avadze`) and leave the aspirate
+plain. The same apostrophe on
 the same word therefore means opposite letters in the two systems, which
 is the commonest source of confusion between them, and the reason the
 fold strips the mark and merges each pair.
@@ -138,16 +140,30 @@ letters (`ჱ ē`, `ჲ y`, `ჳ w`, `ჴ ẖ`, `ჵ ō`). Lossy: `dz`, `zh`, `g
 
 ### ISO 9984
 
-One letter per letter, so it reverses: háčeks for the sibilants and
-affricates (`ž š č ǰ`), `x` for `ხ`, `ḡ` for `ღ`, `j` for `ძ`, `c` for
-`წ`, and a plain apostrophe on the aspirates. Defines the archaic letters
-as ALA-LC does.
+`ka/iso_9984` follows the second edition, ISO 9984:2026, which is a
+different system from the first. It is based on the national system:
+the same digraphs (`zh sh ch ts dz kh gh`) and the apostrophe on the
+ejective, so for most words it gives exactly the national spelling
+(*Tbilisi*, *Ts'ereteli*). What makes it reversible is a middle dot
+(U+00B7) between two letters that would otherwise read as a digraph:
+`z·h` is `ზ` and `ჰ`, not `ჟ`. The standard lists the pairs (`გ`, `ზ`,
+`ს` or `ქ` before `ჰ`; `თ` before `ს`; `დ` before `ზ`), and the dot is
+skipped when reading back. Two sequences the list does not cover still
+read two ways, `dzh` (`ძჰ` or `დჟ`) and `tsh` (`ცჰ` or `თშ`); reading
+back takes the first of each. It also defines fourteen letters that
+standard Georgian does not use, the five archaic letters as ALA-LC has
+them among them.
 
-Written from ISO 9984:1996. A second edition, ISO 9984:2026, has since
-replaced it, and the table has not yet been checked against it. The
-Armenian standard's second edition changed four letters; the Georgian
-table already marked every aspirate with an apostrophe, so the same
-change may not apply, but until the 2026 text is read that is a guess.
+### ISO 9984:1996
+
+The first edition, which the 2026 edition cancelled and replaced. It is
+kept as `ka/iso_9984_1996` because data romanised under it stays in
+catalogues and data sets, and only its own table reads that data back.
+One letter per letter: háčeks for the sibilants and affricates
+(`ž š č ǰ`), `x` for `ხ`, `ḡ` for `ღ`, `j` for `ძ`, `c` for `წ`, and a
+plain apostrophe on the **aspirates**, so its `t'` is `თ` where the
+second edition's is `ტ`. Defines the archaic letters as ALA-LC does, and
+`ჶ` as `f`. The fold equates both editions.
 
 ### The national system
 

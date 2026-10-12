@@ -69,6 +69,8 @@ def _render_word(word: str, scheme: Scheme) -> str:
             latin = latin.upper()
         elif capital:
             latin = latin[:1].upper() + latin[1:]
+        if previous is not None and (previous, unit) in scheme.separate:
+            rendered.append(scheme.separator)
         rendered.append(latin)
         previous = unit
     return "".join(rendered)
@@ -134,7 +136,11 @@ def read(text: str, scheme: Scheme) -> str:
     cased = scheme.script.cased
     out: list[str] = []
     index = 0
+    separator = scheme.separator
     while index < len(text):
+        if separator and text.startswith(separator, index):
+            index += len(separator)
+            continue
         for latin, unit in inverse:
             end = index + len(latin)
             candidate = text[index:end]

@@ -56,7 +56,7 @@ class TestTransliterate:
             == "Երևան\n"
         )
         assert (
-            run(capsys, "transliterate", "-s", "iso_9984", "--to", "script", "T'bilisi")[1]
+            run(capsys, "transliterate", "-s", "iso_9984_1996", "--to", "script", "T'bilisi")[1]
             == "თბილისი\n"
         )
 
@@ -114,6 +114,7 @@ class TestSchemes:
             "hy/western",
             "ka/ala_lc",
             "ka/iso_9984",
+            "ka/iso_9984_1996",
             "ka/national",
         ):
             assert scheme_id in out
