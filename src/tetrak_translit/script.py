@@ -57,6 +57,13 @@ class Script:
             ``՛ ՜ ՞``, set over the stressed vowel, and its apostrophe and
             abbreviation mark. A scheme may render them through its
             ``punctuation``; otherwise they pass through where they stand.
+        compatibility: Characters that stand for a sequence of the script's
+            letters and are written out as those letters before anything
+            else happens: Armenian's presentation ligatures (``ﬕ`` is
+            ``մի``). Unicode keeps them only for compatibility; they are
+            typesetting, not spelling, and no standard has a rendering for
+            them. Only these are expanded, not NFKC as a whole, which would
+            also rewrite Latin and the modifier letters some schemes output.
     """
 
     key: str
@@ -69,6 +76,13 @@ class Script:
     ranges: tuple[tuple[int, int], ...] = ()
     cased: bool = True
     marks: str = ""
+    compatibility: Mapping[str, str] = field(default_factory=dict)
+
+    def expand(self, text: str) -> str:
+        """*text* with each compatibility character written out as its letters."""
+        if not any(character in self.compatibility for character in text):
+            return text
+        return "".join(self.compatibility.get(character, character) for character in text)
 
     def is_letter(self, character: str) -> bool:
         """Whether *character* is one of this script's letters."""
@@ -76,7 +90,9 @@ class Script:
         return any(low <= code <= high for low, high in self.ranges)
 
     def has_letters(self, text: str) -> bool:
-        return any(self.is_letter(character) for character in text)
+        return any(
+            self.is_letter(character) or character in self.compatibility for character in text
+        )
 
 
 @dataclass(frozen=True)

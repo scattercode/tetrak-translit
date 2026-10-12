@@ -124,6 +124,13 @@ is written *e*; many real spellings omit it (*Mkrtich*), which no table
 can predict. Never meant to be reversed: it cannot say whether a *p* is
 `բ` or `փ`.
 
+### Ligatures
+
+The five presentation ligatures Unicode keeps for compatibility, `ﬓ ﬔ ﬕ
+ﬖ ﬗ` (`մն մե մի վն մխ`), are typesetting, not spelling, and no standard
+romanises them. Every scheme, and the fold, writes each out as its two
+letters first: `ﬕայն` is *miayn* and folds with `միայն`.
+
 ### Punctuation
 
 Each scheme does with Armenian punctuation what its standard says, and

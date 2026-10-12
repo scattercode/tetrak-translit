@@ -275,6 +275,33 @@ class TestIso9985Punctuation:
         assert transliterate("Ո՞վ է։", "iso_9985_1996") == "O՞v ē։"
 
 
+class TestPresentationLigatures:
+    """ﬓ ﬔ ﬕ ﬖ ﬗ are typesetting for two letters, and render as those letters."""
+
+    @pytest.mark.parametrize(
+        ("ligature", "letters"), [("ﬓ", "մն"), ("ﬔ", "մե"), ("ﬕ", "մի"), ("ﬖ", "վն"), ("ﬗ", "մխ")]
+    )
+    def test_every_scheme_renders_the_letters(self, ligature: str, letters: str) -> None:
+        for scheme in hy.SCHEMES:
+            assert transliterate(ligature, f"hy/{scheme}") == transliterate(letters, f"hy/{scheme}")
+
+    def test_the_library_of_congress_example_as_printed(self) -> None:
+        """ALA-LC 2022, punctuation rule 5, sets մի as the ligature ﬕ."""
+        assert (
+            transliterate("Բարձրանում է աշխարհ ﬕ անեզր, որ քոնն է անշուշտ և իմը։", "ala_lc")
+            == "Bardzranum ē ashkharh mi anezr, or kʻonn ē anshusht ev imě."
+        )
+
+    def test_reading_back_gives_the_letters(self) -> None:
+        assert to_armenian(transliterate("ﬕայն", "iso_9985"), "iso_9985") == "միայն"
+
+    def test_a_ligature_alone_settles_the_script(self) -> None:
+        assert transliterate("ﬕ", "ala_lc") == "mi"
+
+    def test_latin_compatibility_characters_are_left_alone(self) -> None:
+        assert transliterate("ﬁle ﬕայն", "hy/ala_lc") == "ﬁle miayn"
+
+
 class TestMarksInsideAWord:
     """Armenian's stress marks sit over a vowel, inside the word."""
 

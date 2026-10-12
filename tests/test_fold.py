@@ -136,6 +136,10 @@ class TestSchemeHint:
             assert fold(latin, script="ka") == fold(georgian)
         assert fold("krtʹser", script="hy") == fold("կրտսեր")
 
+    def test_a_presentation_ligature_is_not_dropped(self) -> None:
+        """ﬕայն (only) once folded to the key of այն (that)."""
+        assert fold("ﬕայն") == fold("միայն") != fold("այն")
+
     def test_a_lossy_scheme_hint_is_ignored(self) -> None:
         assert fold("Yerevan", scheme="bgn_pcgn") == fold("Yerevan", script="hy")
 
