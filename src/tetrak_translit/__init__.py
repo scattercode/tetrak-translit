@@ -13,8 +13,9 @@ Three functions, one each for the three jobs:
   output is a key, not a spelling.
 
 Two scripts so far, each a package of tables the engine runs over:
-**Armenian** (:mod:`tetrak_translit.hy`: ALA-LC, ISO 9985, BGN/PCGN,
-Hübschmann-Meillet and the Western pronunciation spelling) and
+**Armenian** (:mod:`tetrak_translit.hy`: ALA-LC, ISO 9985 in its 2026
+and 1996 editions, BGN/PCGN, Hübschmann-Meillet and the Western
+pronunciation spelling) and
 **Georgian** (:mod:`tetrak_translit.ka`: ALA-LC, ISO 9984 and the
 national system).
 

@@ -12,7 +12,8 @@ them, use [the fold](fold.md).
 | Id | Scheme | Standard | Where you meet it | Reversible |
 |---|---|---|---|---|
 | `hy/ala_lc` | ALA-LC | ALA-LC Romanization Tables, Armenian (2011) | Library catalogues: Koha, WorldCat, the Library of Congress | no |
-| `hy/iso_9985` | ISO 9985 | ISO 9985:1996 | Data exchange; one letter per letter | yes |
+| `hy/iso_9985` | ISO 9985 | ISO 9985:2026 | Data exchange; one letter per letter | yes |
+| `hy/iso_9985_1996` | ISO 9985:1996 | ISO 9985:1996, superseded | Data romanised under the first edition | yes |
 | `hy/bgn_pcgn` | BGN/PCGN | BGN/PCGN 1981 System | Maps and place names: *Yerevan*, *Gyumri* | no |
 | `hy/hubschmann_meillet` | Hübschmann-Meillet | Hübschmann (1897), Meillet (1913) | Linguistics and classical Armenian scholarship | yes |
 | `hy/western` | Western Armenian pronunciation | Common practice, not a standard | Diaspora names: *Hagop*, *Kevork*, *Boghosian* | no |
@@ -25,8 +26,8 @@ The same name five ways:
 | Երեւան (classical) | Erewan | Erewan | Yerevan | Erewan | Yerevan |
 | Յակոբ | Yakob | Yakob | Yakob | Yakob | Hagop |
 | Գէորգ (classical) | Gēorg | Gēorg | Georg | Gēorg | Kevork |
-| Պօղոսեան (classical) | Pōghosean | Pòġosean | Poghosean | Pōłosean | Boghosian |
-| Չարենց | Chʻarentsʻ | Čarenc' | Ch'arents' | Čʿarencʿ | Charents |
+| Պօղոսեան (classical) | Pōghosean | Pōġosean | Poghosean | Pōłosean | Boghosian |
+| Չարենց | Chʻarentsʻ | Č'arenc' | Ch'arents' | Čʿarencʿ | Charents |
 | Ոսկան | Oskan | Oskan | Voskan | Oskan | Vosgan |
 
 ### ALA-LC
@@ -44,10 +45,24 @@ records, not an error, and one the fold equates. Lossy: `ts` is `ծ` or
 ### ISO 9985
 
 The international standard, designed to reverse: every letter is
-distinct, by diacritic where the plain letters run out. Aspiration is a
-plain apostrophe; `ճ` is `č` with a dot below and `չ` is plain `č`; `ը`
-is `ë`, `օ` is `ò`, `ու` is `ow`. Any apostrophe-like character (`'`,
-`’`, `ʻ`, `ʿ`) is accepted on input when reversing.
+distinct, by diacritic where the plain letters run out. `hy/iso_9985`
+follows the second edition, ISO 9985:2026, which marks every aspirate the
+same way: the unaspirated letter is plain and its aspirated partner takes
+a plain apostrophe (U+0027), so `ծ`/`ց` are `c`/`c'` and `ճ`/`չ` are
+`č`/`č'`, as `տ`/`թ` are `t`/`t'`. `ը` is `ë`, `օ` is `ō`, `ու` is `ow`.
+Any apostrophe-like character (`'`, `’`, `ʻ`, `ʿ`) is accepted on input
+when reversing. The standard also has a table for Armenian punctuation,
+which this scheme does not yet apply; punctuation passes through
+unchanged, as in every other scheme.
+
+### ISO 9985:1996
+
+The first edition, which the 2026 edition cancelled and replaced. It is
+kept as `hy/iso_9985_1996` because data romanised under it stays in
+catalogues and data sets, and only its own table reads that data back
+into Armenian. It differs from the second edition in four letters: `ծ`
+is `ç`, `ճ` is `č̣` (`č` with a dot below), `չ` is plain `č` and `օ` is
+`ò`. The fold equates both editions, so either finds the other.
 
 ### BGN/PCGN
 

@@ -110,6 +110,7 @@ class TestSchemes:
         for scheme_id in (
             "hy/ala_lc",
             "hy/iso_9985",
+            "hy/iso_9985_1996",
             "hy/western",
             "ka/ala_lc",
             "ka/iso_9984",

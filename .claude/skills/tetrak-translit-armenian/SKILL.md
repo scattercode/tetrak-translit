@@ -1,6 +1,6 @@
 ---
 name: tetrak-translit-armenian
-description: Armenian as tetrak-translit handles it — the 38-letter alphabet and its Unicode ranges, the ու digraph and the և ligature, the classical (pre-1922, diaspora) and reformed (Soviet and post-Soviet) orthographies and the tells detect() uses to separate them, Eastern against Western pronunciation and the consonant swap that gives Hagop/Yakob and Boghosian/Poghosyan, the five schemes (ALA-LC, ISO 9985, BGN/PCGN, Hübschmann-Meillet, Western) letter by letter where they differ, the fold's rules in order and its known gaps, and the traps (ligatures, apostrophes, lookalikes). Load this whenever Armenian text, an Armenian name or place, an Armenian scheme key, the hy/ package, hy_fold_cases.tsv or the orthography detector comes up — including questions like "how is X romanised", "why does Y not fold with Z", "is this classical or reformed", or anything about -ian/-yan surnames.
+description: Armenian as tetrak-translit handles it — the 38-letter alphabet and its Unicode ranges, the ու digraph and the և ligature, the classical (pre-1922, diaspora) and reformed (Soviet and post-Soviet) orthographies and the tells detect() uses to separate them, Eastern against Western pronunciation and the consonant swap that gives Hagop/Yakob and Boghosian/Poghosyan, the five schemes (ALA-LC, ISO 9985 in its 2026 and 1996 editions, BGN/PCGN, Hübschmann-Meillet, Western) letter by letter where they differ, the fold's rules in order and its known gaps, and the traps (ligatures, apostrophes, lookalikes). Load this whenever Armenian text, an Armenian name or place, an Armenian scheme key, the hy/ package, hy_fold_cases.tsv or the orthography detector comes up — including questions like "how is X romanised", "why does Y not fold with Z", "is this classical or reformed", or anything about -ian/-yan surnames.
 ---
 
 # Armenian
@@ -114,7 +114,8 @@ an Eastern record.
 | Id | Standard | Met in | Aspiration mark | Reversible |
 |---|---|---|---|---|
 | `hy/ala_lc` | ALA-LC Romanization Tables, Armenian (2011) | Library catalogues; the default | `ʻ` U+02BB | no |
-| `hy/iso_9985` | ISO 9985:1996 | Data exchange | `'` | yes |
+| `hy/iso_9985` | ISO 9985:2026 | Data exchange | `'` | yes |
+| `hy/iso_9985_1996` | ISO 9985:1996, superseded | Data made under the first edition | `'` | yes |
 | `hy/bgn_pcgn` | BGN/PCGN 1981 | Maps and place names | `'` | no |
 | `hy/hubschmann_meillet` | Hübschmann 1897, Meillet 1913 | Linguistics, classical scholarship | `ʿ` U+02BF | yes |
 | `hy/western` | Common practice, not a standard | Diaspora names | none | no |
@@ -128,18 +129,18 @@ Where they differ (the letters not listed render the same everywhere):
 | `թ` | tʻ | t' | t' | tʿ | t |
 | `ժ` | zh | ž | zh | ž | zh |
 | `խ` | kh | x | kh | x | kh |
-| `ծ` | ts | ç | ts | c | dz |
+| `ծ` | ts | c | ts | c | dz |
 | `ձ` | dz | j | dz | j | ts |
 | `ղ` | gh | ġ | gh | ł | gh |
-| `ճ` | ch | č̣ | ch | č | j |
-| `չ` | chʻ | č | ch' | čʿ | ch |
+| `ճ` | ch | č | ch | č | j |
+| `չ` | chʻ | č' | ch' | čʿ | ch |
 | `ջ` | j | ǰ | j | ǰ | ch |
 | `ռ` | ṙ | ṙ | rr | ṙ | r |
 | `ց` | tsʻ | c' | ts' | cʿ | ts |
 | `ւ` | w | w | w | w | v |
 | `փ` | pʻ | p' | p' | pʿ | p |
 | `ք` | kʻ | k' | k' | kʿ | k |
-| `օ` | ō | ò | o | ō | o |
+| `օ` | ō | ō | o | ō | o |
 | `ու` | u | ow | u | u | u |
 | `և` | ev | ew | ev; *yev* initially | ew | ev; *yev* initially |
 | `բ գ դ` / `պ կ տ` | b g d / p k t | same | same | same | **p k t / b g d** |
@@ -155,8 +156,8 @@ The same name five ways, from `docs/schemes.md`:
 | Երեւան (classical) | Erewan | Erewan | Yerevan | Erewan | Yerevan |
 | Յակոբ | Yakob | Yakob | Yakob | Yakob | Hagop |
 | Գէորգ (classical) | Gēorg | Gēorg | Georg | Gēorg | Kevork |
-| Պօղոսեան (classical) | Pōghosean | Pòġosean | Poghosean | Pōłosean | Boghosian |
-| Չարենց | Chʻarentsʻ | Čarenc' | Ch'arents' | Čʿarencʿ | Charents |
+| Պօղոսեան (classical) | Pōghosean | Pōġosean | Poghosean | Pōłosean | Boghosian |
+| Չարենց | Chʻarentsʻ | Č'arenc' | Ch'arents' | Čʿarencʿ | Charents |
 | Ոսկան | Oskan | Oskan | Voskan | Oskan | Vosgan |
 
 Things worth knowing per scheme:
@@ -167,8 +168,12 @@ Things worth knowing per scheme:
   *Erewan* — a real distinction in catalogue records, not an error, and the
   fold is where the two become one. Never make the scheme "fix" it.
 - **ISO 9985** is the one to choose for round-tripping; its oddities (`ow`,
-  `x`, `j` for `ձ`, `ò`) exist to keep it one-to-one. `č̣` for `ճ` is two code
-  points (no precomposed form).
+  `x`, `j` for `ձ`, `ō`) exist to keep it one-to-one. `iso_9985` is the
+  second edition (2026), which writes every aspirated/unaspirated pair as
+  plain/apostrophe (`c`/`c'` for `ծ`/`ց`, `č`/`č'` for `ճ`/`չ`).
+  `iso_9985_1996` is the superseded first edition, kept for data made under
+  it: `ծ` `ç`, `ճ` `č̣` (two code points, no precomposed form), `չ` `č`, `օ`
+  `ò`. The ISO column above is the 2026 edition. Both fold to the same keys.
 - **BGN/PCGN** is the only standard here with positional rules and was written
   for reformed Eastern Armenian; a classical spelling goes through it letter by
   letter. `y` is both `ը` and `յ`, so it is lossy twice over.

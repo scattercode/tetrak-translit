@@ -36,7 +36,15 @@ class TestArmenianToLatin:
             ("Ոսկան", "ala_lc", "Oskan"),
             ("Ոսկան", "bgn_pcgn", "Voskan"),
             ("Չարենց", "ala_lc", "Chʻarentsʻ"),
-            ("Չարենց", "iso_9985", "Čarenc'"),
+            ("Չարենց", "iso_9985", "Č'arenc'"),
+            ("Չարենց", "iso_9985_1996", "Čarenc'"),
+            # The four letters the 2026 edition changed.
+            ("Ծիծեռնակ", "iso_9985", "Ciceṙnak"),
+            ("Ծիծեռնակ", "iso_9985_1996", "Çiçeṙnak"),
+            ("Ճաշ", "iso_9985", "Čaš"),
+            ("Ճաշ", "iso_9985_1996", "Č̣aš"),
+            ("Պօղոսեան", "iso_9985", "Pōġosean"),
+            ("Պօղոսեան", "iso_9985_1996", "Pòġosean"),
             ("Չարենց", "hubschmann_meillet", "Čʿarencʿ"),
             ("Չարենց", "bgn_pcgn", "Ch'arents'"),
             ("Սուրբ", "iso_9985", "Sowrb"),
@@ -152,6 +160,8 @@ class TestToScript:
             ("hy/iso_9985", "Չարենց"),
             ("hy/iso_9985", "Սուրբ Էջմիածին"),
             ("hy/iso_9985", "ՉԱՐԵՆՑ"),
+            ("hy/iso_9985", "Ճաշ Չարենց Ծիծեռնակ Օհան Ջուր"),
+            ("hy/iso_9985_1996", "Ճաշ Չարենց Ծիծեռնակ Օհան Ջուր"),
             ("hy/hubschmann_meillet", "Խաչատրյան"),
             ("hy/hubschmann_meillet", "Մեսրոպ Մաշտոց"),
             ("ka/iso_9984", "თბილისი"),
@@ -169,7 +179,8 @@ class TestToScript:
 
     def test_any_apostrophe_marks_aspiration(self) -> None:
         for mark in ("'", "’", "ʻ", "ʿ"):
-            assert to_armenian(f"Čarenc{mark}", "iso_9985") == "Չարենց"
+            assert to_armenian(f"Č{mark}arenc{mark}", "iso_9985") == "Չարենց"
+            assert to_armenian(f"Čarenc{mark}", "iso_9985_1996") == "Չարենց"
             assert to_script(f"T{mark}bilisi", "iso_9984") == "თბილისი"
 
     def test_capitals_with_no_precomposed_form_read_back(self) -> None:

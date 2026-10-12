@@ -15,7 +15,7 @@ key within the script and by a qualified id across scripts:
 
 | Script | Schemes |
 |---|---|
-| `hy` Armenian | `ala_lc`, `iso_9985`, `bgn_pcgn`, `hubschmann_meillet`, `western` |
+| `hy` Armenian | `ala_lc`, `iso_9985`, `iso_9985_1996`, `bgn_pcgn`, `hubschmann_meillet`, `western` |
 | `ka` Georgian | `ala_lc`, `iso_9984`, `national` |
 
 A scheme key alone is enough when the text settles which script is meant

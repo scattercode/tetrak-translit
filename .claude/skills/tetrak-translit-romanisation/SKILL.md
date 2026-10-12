@@ -34,7 +34,7 @@ general act and *scheme* for one table. Keep to that.
 | Family | Here | Designed for | Marks | Reversible |
 |---|---|---|---|---|
 | Library | `hy/ala_lc`, `ka/ala_lc` | Catalogue records, authority headings, WorldCat | `ʻ` U+02BB, a few macrons and dots | no |
-| International | `hy/iso_9985`, `ka/iso_9984` | Data exchange: one letter per letter | Diacritics, plain apostrophe | yes |
+| International | `hy/iso_9985` (and `hy/iso_9985_1996`), `ka/iso_9984` | Data exchange: one letter per letter | Diacritics, plain apostrophe | yes |
 | Geographic | `hy/bgn_pcgn`, `ka/national` | Maps, signs, passports, English readers | Apostrophe, no diacritics | no |
 | Scholarly | `hy/hubschmann_meillet` | Linguistics, critical editions, the *Revue des Études Arméniennes* | Háčeks, `ʿ` U+02BF | yes |
 | Practice | `hy/western` | How diaspora names were actually spelled | None | no |
@@ -155,11 +155,14 @@ regardless of which system put the mark where.
 
 ### Combining marks and normalisation
 
-- The engine normalises input to **NFC**. Some renderings have no precomposed
-  form: ISO 9985 writes `ճ` as `č̣`, which is `č` plus U+0323 combining dot
-  below, two code points even in NFC. Inversion matches strings longest-first
-  so this works, but when writing a table store the rendering exactly as NFC
-  gives it, or `read()` will never match it.
+- The engine normalises input to **NFC** for rendering. Some renderings have
+  no precomposed form: ISO 9985:1996 writes `ճ` as `č̣`, which is `č` plus
+  U+0323 combining dot below, two code points even in NFC; and the capital of
+  `ǰ` is `J̌`, J plus U+030C combining caron, because Unicode has no
+  precomposed capital. `read()` therefore works in **NFD**: it decomposes
+  both the table and the input, matches longest-first, refuses a match that
+  would end in the middle of a character (a following combining mark), and
+  returns NFC. Tables can be written in either form.
 - `latin.clean()` applies the script's `_LETTERS` map **before** NFKD
   decomposition strips the combining marks. The order matters: `ž` must
   become `zh` before the háček is removed, or it becomes `z`. Any new
@@ -231,7 +234,8 @@ Every table names the standard it was written from, and a change cites it:
 
 - **ALA-LC Romanization Tables** — Library of Congress, published free per
   language at loc.gov (Armenian and Georgian both approved 2011).
-- **ISO 9985:1996** (Armenian) and **ISO 9984:1996** (Georgian) — ISO, paid.
+- **ISO 9985:2026** (Armenian, second edition; replaced ISO 9985:1996, which
+  `hy/iso_9985_1996` keeps) and **ISO 9984:1996** (Georgian) — ISO, paid.
 - **BGN/PCGN** — the US Board on Geographic Names and the UK Permanent
   Committee on Geographical Names publish the agreed systems free (Armenian
   1981; the Georgian national system of 2002 as adopted in 2009).

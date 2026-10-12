@@ -11,7 +11,7 @@ checks and the commit style at more length.
 **tetrak-translit** is a dependency-free Python library and CLI that
 detects the script and orthography of a string, transliterates a script to
 and from its named Latin schemes, and folds any spelling onto one
-canonical index form for cross-script search. Armenian (five schemes) and
+canonical index form for cross-script search. Armenian (five schemes, ISO 9985 in two editions) and
 Georgian (three) are the scripts so far; Syriac is planned. It was specified in Tetrak's
 brief 015 (product zone, private), and is a separate repository rather than a fourth
 `tetrak` package because its audience — catalogue and search developers —
@@ -101,7 +101,7 @@ the work rather than reconstructing it:
 | `src/tetrak_translit/detect.py` | Generic script detection; asks the script package for its variant |
 | `src/tetrak_translit/transliterate.py` | Public transliteration API over the registry and engine |
 | `src/tetrak_translit/fold.py` | Dispatches each token to its script's fold |
-| `src/tetrak_translit/hy/` | Armenian: descriptor, five tables, orthography detector, fold |
+| `src/tetrak_translit/hy/` | Armenian: descriptor, six tables, orthography detector, fold |
 | `src/tetrak_translit/ka/` | Georgian: descriptor, three tables, fold |
 | `src/tetrak_translit/cli.py` | `tetrak-translit`, argparse |
 | `tests/` | pytest; `tests/data/<script>_fold_cases.tsv` are the fold test sets |
