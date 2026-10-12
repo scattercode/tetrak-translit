@@ -117,7 +117,7 @@ an Eastern record.
 
 | Id | Standard | Met in | Aspiration mark | Reversible |
 |---|---|---|---|---|
-| `hy/ala_lc` | ALA-LC Romanization Tables, Armenian (2011) | Library catalogues; the default | `ʻ` U+02BB | no |
+| `hy/ala_lc` | ALA-LC Romanization Tables, Armenian (2022 version) | Library catalogues; the default | `ʻ` U+02BB | no |
 | `hy/iso_9985` | ISO 9985:2026 | Data exchange | `'` | yes |
 | `hy/iso_9985_1996` | ISO 9985:1996, superseded | Data made under the first edition | `'` | yes |
 | `hy/bgn_pcgn` | BGN/PCGN 1981 | Maps and place names | `'` | no |
@@ -139,7 +139,7 @@ Where they differ (the letters not listed render the same everywhere):
 | `ճ` | ch | č | ch | č | j |
 | `չ` | chʻ | č' | ch' | čʿ | ch |
 | `ջ` | j | ǰ | j | ǰ | ch |
-| `ռ` | ṙ | ṙ | rr | ṙ | r |
+| `ռ` | ṛ | ṙ | rr | ṙ | r |
 | `ց` | tsʻ | c' | ts' | cʿ | ts |
 | `ւ` | w | w | w | w | v |
 | `փ` | pʻ | p' | p' | pʿ | p |
@@ -166,11 +166,19 @@ The same name five ways, from `docs/schemes.md`:
 
 Things worth knowing per scheme:
 
-- **ALA-LC has no positional rules**: `ե` is `e` and `ո` is `o` everywhere,
+- **ALA-LC** (the 2022 table) writes `ե` as `e` and `ո` as `o` everywhere,
   which is why the Library of Congress heading is *Erevan* and the atlas says
   *Yerevan*. `և` is `ev` but `ւ` is `w`, so a classical imprint's `Երեւան` is
   *Erewan* — a real distinction in catalogue records, not an error, and the
-  fold is where the two become one. Never make the scheme "fix" it.
+  fold is where the two become one. Never make the scheme "fix" it. Its notes
+  add a soft sign `ʹ` between `գհ դզ կհ սհ տս` (*patʹsparan*), `eʹv` for a
+  lowercase `եվ` (a compound: *oskeʹvaz*), and two rules for **classical**
+  text only: word-initial `յ` is `ḥ` (*Ḥakob*) and a capitalised word's
+  initial `ե` before a vowel is `y`. Those two are `Rule`s with
+  `variant="classical"`; the orthography comes from `orthography=` or the
+  detector, and a lone `Յակոբ` is indeterminate, so it stays *Yakob* unless
+  the caller says classical. The 2011 table had none of this, and `ռ` was
+  `ṙ`; catalogue records made before 2022 carry those forms.
 - **ISO 9985** is the one to choose for round-tripping; its oddities (`ow`,
   `x`, `j` for `ձ`, `ō`) exist to keep it one-to-one. `iso_9985` is the
   second edition (2026), which writes every aspirated/unaspirated pair as
@@ -188,6 +196,21 @@ Things worth knowing per scheme:
 - **Western** is a practice. It is the only scheme whose stop letters are
   swapped and the only one with an `after_vowel` rule. It can never be
   reversed because it cannot say whether a *p* is `բ` or `փ`.
+
+## Punctuation
+
+The stress marks `՞ ՜ ՛`, the apostrophe `՚` and the abbreviation mark `՟` are
+`SCRIPT.marks`: written inside a word, invisible to capitals and positional
+rules. Each scheme does what its standard says and nothing more:
+
+- **ISO 9985:2026** (Table 2), each mark where it stands and reversibly:
+  `։`→`.` `՝`→`:` `․`→`;` `֊`→`-` `՞`→`?` `՜`→`!` `՛`→`ˆ` (U+02C6).
+  Reading back turns a Latin full stop into `։`.
+- **ALA-LC 2022**: `« »`→`“ ”`, `։`→`.`, `՛` dropped, and `՞`/`՜` become
+  `?`/`!` **at the end of the sentence** (`sentence_final`), written in
+  place of the next `։` or at the end of the line.
+- **Everything else** (ISO 9985:1996, BGN/PCGN, Hübschmann-Meillet, Western):
+  no rule, so marks pass through where they stand.
 
 ## The fold (`hy/fold.py`)
 

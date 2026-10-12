@@ -130,6 +130,12 @@ class TestSchemeHint:
         assert fold("Mc'xet'a", scheme="ka/iso_9984_1996") == fold("მცხეთა")
         assert fold("Mtskheta", scheme="ka/iso_9984") == fold("მცხეთა")
 
+    def test_separators_are_gone_before_the_digraphs_are_merged(self) -> None:
+        """ISO 9984:2026's middle dot and ALA-LC 2022's soft sign."""
+        for latin, georgian in (("t·s", "თს"), ("d·z", "დზ"), ("z·h", "ზჰ")):
+            assert fold(latin, script="ka") == fold(georgian)
+        assert fold("krtʹser", script="hy") == fold("կրտսեր")
+
     def test_a_lossy_scheme_hint_is_ignored(self) -> None:
         assert fold("Yerevan", scheme="bgn_pcgn") == fold("Yerevan", script="hy")
 

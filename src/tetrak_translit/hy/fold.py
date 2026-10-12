@@ -115,6 +115,8 @@ _ORTHOGRAPHY: Rules = (
 # Letters outside ASCII that NFKD does not decompose, and the ISO 9985 and
 # Hübschmann-Meillet letters whose diacritic carries the whole distinction.
 _LETTERS = {
+    # ALA-LC 2022's soft sign (patʹsparan): gone before ts can be merged.
+    "ʹ": "",
     "ž": "zh",
     "š": "sh",
     "č": "ch",

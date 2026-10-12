@@ -65,7 +65,9 @@ A table reverses when every rendering is distinct and the inverse can be read
 off longest-match-first without ambiguity. Three things break that:
 
 - **Digraph collisions.** ALA-LC Armenian renders `ծ` as `ts`, but `տ`+`ս` is
-  also `ts`; `ձ` and `դ`+`զ` are both `dz`; `խ` and `կ`+`հ` are both `kh`.
+  also `ts`; `ձ` and `դ`+`զ` are both `dz`. The 2022 table writes a soft sign
+  between the pairs it lists (`tʹs`), which settles those but not every
+  sequence, so the table stays lossy.
   Georgian ALA-LC has the same problem with `dz`, `zh`, `gh`, `sh`, `kh`.
 - **Positional rules.** BGN/PCGN writes `ե` as `ye` at the start of a word and
   `e` elsewhere; reading `e` back cannot know which letter it was.
@@ -119,7 +121,9 @@ Design principles when writing or changing one:
   why each script owns its fold and why Latin input must name its script.
 - **The two sides meet at ALA-LC.** Script input is pre-normalised (Armenian
   across the 1922 reform, Georgian archaic letters onto modern ones) and then
-  rendered through ALA-LC, so that the script and its catalogue romanisation
+  rendered through ALA-LC -- for Armenian, a frozen copy of the 2011 table in
+  `hy/fold.py` (`_BASIS`), so that following a new edition of the display
+  table never moves a stored key -- so that the script and its catalogue romanisation
   reach the Latin rules by the same road and one rule set serves every
   scheme. `TestAllSchemesFoldToTheirScript` checks that every scheme's output
   folds like its source.
@@ -236,7 +240,9 @@ between them raises an error that names the choices rather than guessing.
 Every table names the standard it was written from, and a change cites it:
 
 - **ALA-LC Romanization Tables** — Library of Congress, published free per
-  language at loc.gov (Armenian and Georgian both approved 2011).
+  language at loc.gov. Armenian is the 2022 version (earlier 2011, 1997);
+  Georgian is still the 2011 version. Check the version line at the top of
+  the PDF before trusting a table: the Armenian one changed without notice.
 - **ISO 9985:2026** (Armenian) and **ISO 9984:2026** (Georgian), the second
   editions, which replaced the 1996 editions that `hy/iso_9985_1996` and
   `ka/iso_9984_1996` keep — ISO, paid. In the UK they are sold only through

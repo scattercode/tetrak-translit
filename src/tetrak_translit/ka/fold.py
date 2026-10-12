@@ -38,6 +38,8 @@ from .descriptor import SCRIPT
 _ARCHAIC = str.maketrans({"ჱ": "ე", "ჲ": "ი", "ჳ": "ვ", "ჴ": "ხ", "ჵ": "ო"})
 
 _LETTERS = {
+    # ISO 9984:2026's middle dot (t·s): gone before ts can be merged.
+    "·": "",
     "ž": "zh",
     "š": "sh",
     "č": "ch",

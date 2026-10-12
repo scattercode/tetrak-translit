@@ -66,7 +66,9 @@ def _cmd_detect(args: argparse.Namespace) -> int:
 
 def _cmd_transliterate(args: argparse.Namespace) -> int:
     return _emit(
-        transliterate(text, args.scheme, script=args.script, to=args.to)
+        transliterate(
+            text, args.scheme, script=args.script, to=args.to, orthography=args.orthography
+        )
         for text in _inputs(args.text)
     )
 
@@ -145,6 +147,13 @@ def build_parser() -> argparse.ArgumentParser:
         default="latin",
         help="direction: latin (default), script, or a script key such as hy or ka "
         "(reading back works for reversible schemes only)",
+    )
+    transliterate_parser.add_argument(
+        "--orthography",
+        choices=("classical", "reformed"),
+        default=None,
+        help="the Armenian orthography, for ALA-LC's classical-only rules "
+        "(default: detected from each line)",
     )
     transliterate_parser.set_defaults(func=_cmd_transliterate)
 

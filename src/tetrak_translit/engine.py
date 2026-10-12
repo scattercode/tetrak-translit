@@ -11,8 +11,8 @@ Armenian title with a Latin author -- comes out with only the Armenian
 changed.
 
 Latin to script is offered only for the schemes whose tables are
-one-to-one. The rest are lossy by construction -- ALA-LC's ``ts`` is
-``ծ`` or ``տ``+``ս`` -- and guessing would be worse than refusing. For
+one-to-one. The rest are lossy by construction -- ALA-LC's ``zh`` is
+``ժ`` or ``զ``+``հ`` -- and guessing would be worse than refusing. For
 *matching* across schemes, which needs no guessing, there is
 :func:`tetrak_translit.fold`.
 

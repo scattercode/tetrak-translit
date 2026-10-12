@@ -53,7 +53,7 @@ def test_reversible_schemes_are_one_to_one(scheme: Scheme) -> None:
 
 def test_lossy_schemes_are_declared_lossy() -> None:
     assert SCHEMES["hy/ala_lc"].reversible is False
-    assert SCHEMES["hy/ala_lc"].letters["ծ"] == "ts"  # also տ + ս
+    assert SCHEMES["hy/ala_lc"].letters["ժ"] == "zh"  # also զ + հ, which 2022 leaves unmarked
     assert SCHEMES["ka/ala_lc"].reversible is False
     assert SCHEMES["ka/ala_lc"].letters["ძ"] == "dz"  # also დ + ზ
     assert SCHEMES["ka/national"].reversible is False

@@ -61,7 +61,7 @@ versioned, tested table written from its published standard:
 
 | Id | Scheme | Where you meet it | Reversible |
 |---|---|---|---|
-| `hy/ala_lc` | ALA-LC Armenian (2011) | Library catalogues: Koha, WorldCat, the Library of Congress | no |
+| `hy/ala_lc` | ALA-LC Armenian (2022) | Library catalogues: Koha, WorldCat, the Library of Congress | no |
 | `hy/iso_9985` | ISO 9985:2026 | Data exchange; one letter per letter | **yes** |
 | `hy/iso_9985_1996` | ISO 9985:1996, superseded | Reading data romanised under the first edition | **yes** |
 | `hy/bgn_pcgn` | BGN/PCGN 1981 | Maps and place names: *Yerevan*, *Gyumri* | no |
