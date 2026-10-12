@@ -11,7 +11,7 @@ them, use [the fold](fold.md).
 
 | Id | Scheme | Standard | Where you meet it | Reversible |
 |---|---|---|---|---|
-| `hy/ala_lc` | ALA-LC | ALA-LC Romanization Tables, Armenian (2011) | Library catalogues: Koha, WorldCat, the Library of Congress | no |
+| `hy/ala_lc` | ALA-LC | ALA-LC Romanization Tables, Armenian (2022 version) | Library catalogues: Koha, WorldCat, the Library of Congress | no |
 | `hy/iso_9985` | ISO 9985 | ISO 9985:2026 | Data exchange; one letter per letter | yes |
 | `hy/iso_9985_1996` | ISO 9985:1996 | ISO 9985:1996, superseded | Data romanised under the first edition | yes |
 | `hy/bgn_pcgn` | BGN/PCGN | BGN/PCGN 1981 System | Maps and place names: *Yerevan*, *Gyumri* | no |
@@ -32,15 +32,35 @@ The same name five ways:
 
 ### ALA-LC
 
-The Library of Congress table has no positional rules: `ե` is `e` and
-`ո` is `o` in every position, which is why the Library of Congress writes
-*Erevan* and *Oskan* where BGN/PCGN writes *Yerevan* and *Voskan*.
+Written from the 2022 version of the Library of Congress table. `ե` is
+`e` and `ո` is `o` in every position, which is why the Library of
+Congress writes *Erevan* and *Oskan* where BGN/PCGN writes *Yerevan* and
+*Voskan*.
 Aspiration is marked with the modifier letter turned comma `ʻ` (U+02BB),
 the character catalogue records actually carry. The ligature `և` is `ev`
 but the letter `ւ` is `w`, so a classical-orthography imprint spelling
 the city `Երեւան` romanises as *Erewan*: a real distinction in catalogue
-records, not an error, and one the fold equates. Lossy: `ts` is `ծ` or
-`տ`+`ս`, `dz` is `ձ` or `դ`+`զ`, `kh` is `խ` or `կ`+`հ`, and so on.
+records, not an error, and one the fold equates. `ռ` is `ṛ`.
+
+The 2022 table adds rules in its notes:
+
+- **The soft sign** `ʹ` (U+02B9) goes between letters that would
+  otherwise read as a digraph: `գհ` `gʹh`, `դզ` `dʹz`, `կհ` `kʹh`, `սհ`
+  `sʹh`, `տս` `tʹs` (*patʹsparan*, *SSʹH*).
+- **A lowercase `եվ` is `eʹv`.** Reformed spelling writes *ev* as `և`,
+  so `ե` then `վ` is a compound (*oskeʹvaz*). The capitals `ԵՎ` and `Եվ`
+  belong to the ligature and stay *EV*, *Ev*.
+- **In classical orthography**, a word-initial `յ` is `ḥ` (*Ḥakob*), and
+  `ե` at the start of a name and before a vowel is `y`. A name is taken
+  to be a capitalised word; the start of a stem inside a compound is not
+  detected. These rules need the orthography: pass
+  `orthography="classical"` (or `--orthography classical`), or it is
+  detected from the text. A lone `Յակոբ` has no tell, so without it the
+  result is *Yakob*.
+
+Lossy: the soft sign separates only the pairs the table lists, so `zh`
+is still `ժ` or `զ`+`հ`, and an initial `y` may be `յ` or, in a
+classical name, `ե`.
 
 ### ISO 9985
 
@@ -51,9 +71,17 @@ same way: the unaspirated letter is plain and its aspirated partner takes
 a plain apostrophe (U+0027), so `ծ`/`ց` are `c`/`c'` and `ճ`/`չ` are
 `č`/`č'`, as `տ`/`թ` are `t`/`t'`. `ը` is `ë`, `օ` is `ō`, `ու` is `ow`.
 Any apostrophe-like character (`'`, `’`, `ʻ`, `ʿ`) is accepted on input
-when reversing. The standard also has a table for Armenian punctuation,
-which this scheme does not yet apply; punctuation passes through
-unchanged, as in every other scheme.
+when reversing.
+
+Punctuation follows the standard's Table 2, each mark where it stands:
+
+| Armenian | `։` | `՝` | `․` | `՞` | `՜` | `՛` | `֊` | `,` |
+|---|---|---|---|---|---|---|---|---|
+| ISO 9985 | `.` | `:` | `;` | `?` | `!` | `ˆ` | `-` | `,` |
+
+The stress marks stay over their vowel, so `կարդացե՞լ` is `kardac'e?l`,
+and reading back maps each Latin mark to its Armenian one: a full stop
+in the Latin becomes `։`.
 
 ### ISO 9985:1996
 
@@ -95,6 +123,30 @@ digraphs `եա` and `իւ` are *ia* and *iu* (*Vartanian*, *Harutiun*). `ը`
 is written *e*; many real spellings omit it (*Mkrtich*), which no table
 can predict. Never meant to be reversed: it cannot say whether a *p* is
 `բ` or `փ`.
+
+### Punctuation
+
+Each scheme does with Armenian punctuation what its standard says, and
+nothing where the standard is silent:
+
+| Mark | `ala_lc` | `iso_9985` | `iso_9985_1996`, `bgn_pcgn`, `hubschmann_meillet`, `western` |
+|---|---|---|---|
+| `։` full stop | `.` | `.` | unchanged |
+| `՝` comma | unchanged | `:` | unchanged |
+| `․` (U+2024) | unchanged | `;` | unchanged |
+| `֊` hyphen | unchanged | `-` | unchanged |
+| `« »` | `“ ”` | unchanged | unchanged |
+| `՞` question | `?` at the end of the sentence | `?` where it stands | unchanged |
+| `՜` exclamation | `!` at the end of the sentence | `!` where it stands | unchanged |
+| `՛` emphasis | dropped | `ˆ` (U+02C6) where it stands | unchanged |
+
+The stress marks `՞ ՜ ՛` are set over the stressed vowel, inside the
+word, and a word does not end at them, so capitals and word-initial rules
+see through them. ALA-LC writes a moved mark in place of the sentence's
+`։`, or at the end of the line: `Ո՞վ է։` is *Ov ē?*. BGN/PCGN's
+standard is for place names and says nothing about punctuation; we do
+not have the text of ISO 9985:1996; Hübschmann-Meillet and the Western
+spelling have no published rule.
 
 ## Georgian
 

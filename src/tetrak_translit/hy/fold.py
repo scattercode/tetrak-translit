@@ -8,8 +8,10 @@ the Armenian rules. In order:
    becomes ``յա`` and ``իւ`` becomes ``յու`` (the classical digraphs for
    *ya* and *yu*), ``եո`` becomes ``եվո`` (*Գէորգ* is *Gevorg*), and a
    word-final ``յ`` after a vowel is dropped (``ծառայ`` is ``ծառա``).
-   Then it is rendered through ALA-LC, so that Armenian and ALA-LC Latin
-   reach the next step by the same road.
+   Then it is rendered through ALA-LC -- the 2011 table, frozen in this
+   module so that a new edition of the display table never moves a key
+   -- so that Armenian and ALA-LC Latin reach the next step by the same
+   road.
 2. **Latin** is lowercased and stripped of every diacritic and
    aspiration mark, an aspirate written with *h* loses it (``th``/``t``,
    ``ph``/``p``: *Thoumanian*), an *h* after *v* is dropped
@@ -42,8 +44,63 @@ import re
 
 from ..engine import render
 from ..latin import FINISH, Rules, apply, clean
-from .ala_lc import ALA_LC
+from ..script import Scheme
 from .descriptor import SCRIPT
+
+# The road Armenian takes into Latin before the skeleton rules: the
+# ALA-LC table as it stood in 2011, frozen here. The fold's keys are data
+# other systems store, so they must not move when the display table
+# follows a new edition of its standard; :mod:`.ala_lc` is free to change
+# and this is not. It is never registered as a scheme.
+_BASIS = Scheme(
+    script=SCRIPT,
+    key="fold_basis",
+    name="Fold basis (ALA-LC 2011)",
+    version="1.0",
+    standard="ALA-LC Romanization Tables, Armenian (2011), frozen for the fold",
+    reversible=False,
+    letters={
+        "ա": "a",
+        "բ": "b",
+        "գ": "g",
+        "դ": "d",
+        "ե": "e",
+        "զ": "z",
+        "է": "ē",
+        "ը": "ě",
+        "թ": "tʻ",
+        "ժ": "zh",
+        "ի": "i",
+        "լ": "l",
+        "խ": "kh",
+        "ծ": "ts",
+        "կ": "k",
+        "հ": "h",
+        "ձ": "dz",
+        "ղ": "gh",
+        "ճ": "ch",
+        "մ": "m",
+        "յ": "y",
+        "ն": "n",
+        "շ": "sh",
+        "ո": "o",
+        "չ": "chʻ",
+        "պ": "p",
+        "ջ": "j",
+        "ռ": "ṙ",
+        "ս": "s",
+        "վ": "v",
+        "տ": "t",
+        "ր": "r",
+        "ց": "tsʻ",
+        "ւ": "w",
+        "փ": "pʻ",
+        "ք": "kʻ",
+        "օ": "ō",
+        "ֆ": "f",
+    },
+    digraphs={"ու": "u", "և": "ev"},
+)
 
 # Classical-orthography spellings, lowercase, towards their reformed forms.
 _ORTHOGRAPHY: Rules = (
@@ -58,6 +115,8 @@ _ORTHOGRAPHY: Rules = (
 # Letters outside ASCII that NFKD does not decompose, and the ISO 9985 and
 # Hübschmann-Meillet letters whose diacritic carries the whole distinction.
 _LETTERS = {
+    # ALA-LC 2022's soft sign (patʹsparan): gone before ts can be merged.
+    "ʹ": "",
     "ž": "zh",
     "š": "sh",
     "č": "ch",
@@ -107,7 +166,7 @@ _LATIN: Rules = (
 def fold_token(token: str) -> str:
     """Fold one whitespace-free token, Armenian or Latin, to its key."""
     if SCRIPT.has_letters(token):
-        token = render(apply(token.lower(), _ORTHOGRAPHY), ALA_LC)
+        token = render(apply(token.lower(), _ORTHOGRAPHY), _BASIS)
     return apply(clean(token, _LETTERS), _LATIN)
 
 

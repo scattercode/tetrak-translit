@@ -83,6 +83,29 @@ The default scheme is `ala_lc`, the one library catalogues hold, for
 whichever script the text is in. The schemes and what each is for are on
 [their own page](schemes.md).
 
+Punctuation follows each scheme's standard: ALA-LC moves Armenian's
+question and exclamation marks to the end of the sentence, ISO 9985
+converts every mark where it stands, and the schemes whose standards say
+nothing leave punctuation alone ([details](schemes.md#punctuation)).
+
+```python
+>>> tt.transliterate("Դու կարդացե՞լ ես այս գիրքը։", "ala_lc")
+'Du kardatsʻel es ays girkʻě?'
+>>> tt.transliterate("Դու կարդացե՞լ ես այս գիրքը։", "iso_9985")
+"Dow kardac'e?l es ays girk'ë."
+```
+
+Two ALA-LC rules hold only in classical orthography (a word-initial `յ`
+is `ḥ`). The orthography is detected from the text, but a single name
+often has nothing to tell by, so say it when you know it:
+
+```python
+>>> tt.transliterate("Յակոբ", "ala_lc")
+'Yakob'
+>>> tt.transliterate("Յակոբ", "ala_lc", orthography="classical")
+'Ḥakob'
+```
+
 Reading Latin back works for the schemes whose tables are one-to-one:
 
 ```python
@@ -97,7 +120,7 @@ tetrak_translit.engine.NotReversibleError: ALA-LC (hy/ala_lc) is not reversible:
 ```
 
 `to` is `"latin"` (the default), `"script"`, or a script key or name.
-The refusal is deliberate. ALA-LC `ts` is `ծ` and also `տ` + `ս`; a
+The refusal is deliberate. ALA-LC `zh` is `ժ` and also `զ` + `հ`; a
 library that guessed would be wrong often enough to be worse than one
 that says it cannot know. For matching names across schemes, which needs
 no guessing, use the fold.

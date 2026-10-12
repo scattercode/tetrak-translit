@@ -48,6 +48,10 @@ class TestTransliterate:
         assert run(capsys, "transliterate", "Երևան") == (0, "Erevan\n", "")
         assert run(capsys, "transliterate", "თბილისი") == (0, "tʻbilisi\n", "")
 
+    def test_orthography(self, capsys: pytest.CaptureFixture[str]) -> None:
+        assert run(capsys, "transliterate", "Յակոբ")[1] == "Yakob\n"
+        assert run(capsys, "transliterate", "--orthography", "classical", "Յակոբ")[1] == "Ḥakob\n"
+
     def test_named_scheme_and_direction(self, capsys: pytest.CaptureFixture[str]) -> None:
         assert run(capsys, "transliterate", "-s", "bgn_pcgn", "Երևան")[1] == "Yerevan\n"
         assert run(capsys, "transliterate", "-s", "national", "თბილისი")[1] == "tbilisi\n"

@@ -89,7 +89,9 @@ def _trace_token(token: str, package: ScriptPackage, module: ModuleType) -> str:
             if modern != work:
                 print(f"  archaic       {modern}")
             work = modern
-        work = engine.render(work, module.ALA_LC)
+        # A fold that freezes its own table (Armenian's _BASIS) renders
+        # through that; otherwise through the display ALA-LC table.
+        work = engine.render(work, getattr(module, "_BASIS", None) or module.ALA_LC)
         print(f"  ala_lc        {work}")
     cleaned = latin.clean(work, getattr(module, "_LETTERS", {}))
     print(f"  clean         {cleaned}")

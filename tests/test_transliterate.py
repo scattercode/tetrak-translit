@@ -76,7 +76,8 @@ class TestArmenianToLatin:
 
     def test_punctuation_inside_a_word_is_kept(self) -> None:
         assert transliterate("Սայաթ-Նովա", "ala_lc") == "Sayatʻ-Nova"
-        assert transliterate("«Երկեր»", "ala_lc") == "«Erker»"
+        assert transliterate("«Երկեր»", "hubschmann_meillet") == "«Erker»"
+        assert transliterate("«Երկեր»", "ala_lc") == "“Erker”"
 
     def test_scheme_objects_and_forgiving_keys(self) -> None:
         assert transliterate("Երևան", hy.ALA_LC) == "Erevan"
@@ -181,6 +182,114 @@ class TestIso9984Edition2026:
         assert to_script("tsh", "ka/iso_9984") == "ცჰ"
 
 
+# The ALA-LC 2022 Armenian table's own examples: its punctuation rules
+# (1-5) and its notes on the soft sign (3) and on եվ (6).
+ALA_LC_2022_EXAMPLES = [
+    ("«Սարդարապատի պատմաշինությունը» և այլ երկեր", "“Sardarapati patmashinutʻyuně” ev ayl erker"),
+    ("Դու կարդացե՞լ ես այս գիրքը", "Du kardatsʻel es ays girkʻě?"),
+    ("Այս ու՜մ եմ տեսնում", "Ays um em tesnum!"),
+    ("Կարդա՛, գրի՛ր տարին բոլոր", "Karda, grir tarin bolor"),
+    (
+        "Բարձրանում է աշխարհ մի անեզր, որ քոնն է անշուշտ և իմը։",
+        "Bardzranum ē ashkharh mi anezr, or kʻonn ē anshusht ev imě.",
+    ),
+    ("պատսպարան", "patʹsparan"),
+    ("կրտսեր", "krtʹser"),
+    ("Դզնունի", "Dʹznuni"),
+    ("մոտս", "motʹs"),
+    ("տստակ", "tʹstak"),
+    ("կհալ", "kʹhal"),
+    ("սիկհ", "sikʹh"),
+    ("Գհուկ", "Gʹhuk"),
+    ("ՍՍՀ", "SSʹH"),
+    ("սհաթ", "sʹhatʻ"),
+    ("դպրեվանք", "dpreʹvankʻ"),
+    ("ագեվազ", "ageʹvaz"),
+    ("Քարեվանք", "Kʻareʹvankʻ"),
+    ("հոգեվարք", "hogeʹvarkʻ"),
+    ("հոգեվիճակ", "hogeʹvichak"),
+    ("ոսկեվազ", "oskeʹvaz"),
+    ("ոսկեվարս", "oskeʹvars"),
+    ("ուղեվճար", "ugheʹvchar"),
+    ("գերեվարել", "gereʹvarel"),
+    ("գինեվաճառ", "gineʹvachaṛ"),
+    ("գինեվարպետ", "gineʹvarpet"),
+    ("դափնեվարդ", "dapʻneʹvard"),
+    ("կարեվեր", "kareʹver"),
+    ("Երևան", "Erevan"),
+    ("ևեթ", "evetʻ"),
+    ("ևս", "evs"),
+]
+
+
+class TestAlaLc2022:
+    @pytest.mark.parametrize(("text", "expected"), ALA_LC_2022_EXAMPLES)
+    def test_the_tables_examples(self, text: str, expected: str) -> None:
+        assert transliterate(text, "ala_lc") == expected
+
+    def test_the_capitals_of_the_ligature_take_no_prime(self) -> None:
+        assert transliterate("ԵՐԵՎԱՆ", "ala_lc") == "EREVAN"
+        assert transliterate("Եվրոպա", "ala_lc") == "Evropa"
+
+    def test_a_question_mark_replaces_the_full_stop(self) -> None:
+        assert transliterate("Ո՞վ է։ Ես եմ։", "ala_lc") == "Ov ē? Es em."
+
+    def test_a_moved_mark_ends_its_own_line(self) -> None:
+        assert transliterate("Ո՞վ է\nԵս եմ", "ala_lc") == "Ov ē?\nEs em"
+        assert transliterate("Ո՞վ է  ", "ala_lc") == "Ov ē?  "
+
+    def test_initial_y_is_h_in_classical_orthography(self) -> None:
+        """Note 4. Յովսէփ has an inner է, so it is detected as classical."""
+        assert transliterate("Յովսէփ", "ala_lc") == "Ḥovsēpʻ"
+        assert transliterate("Յակոբ Պօղոսեան", "ala_lc") == "Ḥakob Pōghosean"
+
+    def test_an_indeterminate_word_needs_the_orthography_said(self) -> None:
+        assert transliterate("Յակոբ", "ala_lc") == "Yakob"
+        assert transliterate("Յակոբ", "ala_lc", orthography="classical") == "Ḥakob"
+        assert transliterate("յոթ", "ala_lc", orthography="reformed") == "yotʻ"
+
+    def test_initial_e_before_a_vowel_is_y_in_a_classical_name(self) -> None:
+        """Note 2, with a capital standing for a name."""
+        assert transliterate("Եաղուբ", "ala_lc") == "Yaghub"
+        assert transliterate("եաղուբ", "ala_lc") == "eaghub"
+
+
+class TestIso9985Punctuation:
+    """ISO 9985:2026 Table 2: every mark where it stands."""
+
+    @pytest.mark.parametrize(
+        ("text", "expected"),
+        [
+            ("Դու կարդացե՞լ ես այս գիրքը։", "Dow kardac'e?l es ays girk'ë."),
+            ("Այս ու՜մ եմ տեսնում։", "Ays ow!m em tesnowm."),
+            ("Կարդա՛, գրի՛ր տարին բոլոր։", "Kardaˆ, griˆr tarin bolor."),
+            ("Ա․ Բ․ Սարգսյան՝ հայ֊անգլերեն", "A; B; Sargsyan: hay-angleren"),
+            ("ԿԱՐԴԱ՛", "KARDAˆ"),
+        ],
+    )
+    def test_table_2(self, text: str, expected: str) -> None:
+        assert transliterate(text, "iso_9985") == expected
+        assert to_armenian(expected, "iso_9985") == text
+
+    def test_the_first_edition_leaves_punctuation_alone(self) -> None:
+        assert transliterate("Ո՞վ է։", "iso_9985_1996") == "O՞v ē։"
+
+
+class TestMarksInsideAWord:
+    """Armenian's stress marks sit over a vowel, inside the word."""
+
+    def test_a_word_in_capitals_stays_in_capitals(self) -> None:
+        assert transliterate("Ո՞Վ", "bgn_pcgn") == "VO՞V"
+
+    def test_the_letter_after_a_mark_is_not_word_initial(self) -> None:
+        # BGN/PCGN writes initial ե as ye; inside a word it is e.
+        assert transliterate("կարդացե՞լ", "bgn_pcgn") == "kardats'e՞l"
+        assert transliterate("Երե՞ւան", "bgn_pcgn").startswith("Yere")
+
+    def test_a_scheme_without_punctuation_leaves_marks_where_they_stand(self) -> None:
+        assert transliterate("ու՜մ", "hubschmann_meillet") == "u՜m"
+
+
 class TestGeorgianToLatin:
     @pytest.mark.parametrize(
         ("text", "scheme", "expected"),
@@ -273,7 +382,11 @@ class TestToScript:
         assert to_script("T'BILISI", ka.ISO_9984_1996) == "თბილისი"
 
     def test_non_scheme_characters_pass_through(self) -> None:
-        assert to_armenian("Erewan, 1985.", "iso_9985") == "Երևան, 1985."
+        assert to_armenian("Erewan, 1985.", "hubschmann_meillet") == "Երևան, 1985."
+
+    def test_iso_9985_reads_its_punctuation_back(self) -> None:
+        """Table 2 maps the full stop both ways, so a Latin one becomes ։."""
+        assert to_armenian("Erewan, 1985.", "iso_9985") == "Երևան, 1985։"
 
     def test_the_to_argument_names_the_script(self) -> None:
         assert transliterate("Erewan", "iso_9985", to="armenian") == "Երևան"
