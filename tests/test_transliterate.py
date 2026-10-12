@@ -172,6 +172,14 @@ class TestToScript:
             assert to_armenian(f"Čarenc{mark}", "iso_9985") == "Չարենց"
             assert to_script(f"T{mark}bilisi", "iso_9984") == "თბილისი"
 
+    def test_capitals_with_no_precomposed_form_read_back(self) -> None:
+        """Capital ǰ is J and a combining caron; Unicode has no single character."""
+        assert to_armenian("J̌owr", "iso_9985") == "Ջուր"
+        assert to_script("J̌avaxišvili", "iso_9984") == "ჯავახიშვილი"
+
+    def test_a_match_does_not_split_a_character(self) -> None:
+        assert to_armenian("é", "iso_9985") == "é"
+
     def test_latin_capitals_are_dropped_for_a_caseless_script(self) -> None:
         assert to_script("T'bilisi", "ka/iso_9984") == "თბილისი"
         assert to_script("T'BILISI", ka.ISO_9984) == "თბილისი"
