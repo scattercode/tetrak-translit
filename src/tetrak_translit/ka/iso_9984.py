@@ -6,6 +6,12 @@ letter has a distinct rendering, so the table reverses exactly:
 háčeks for the sibilants and affricates (``ž š č ǰ``), ``x`` for ``ხ``,
 ``ḡ`` for ``ღ``, ``q`` for ``ყ``, and an apostrophe on the aspirates
 (``t' p' k' č' c'``), as in ALA-LC, against plain ejectives.
+
+ISO 9984:2026, a second edition, has since replaced the 1996 edition.
+This table has not yet been checked against it. The Armenian standard's
+second edition, published alongside it, changed four letters (see
+:mod:`tetrak_translit.hy.iso_9985`); whether the Georgian one changed
+any is not known here.
 """
 
 from __future__ import annotations

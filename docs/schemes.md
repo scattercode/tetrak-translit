@@ -101,7 +101,7 @@ can predict. Never meant to be reversed: it cannot say whether a *p* is
 | Id | Scheme | Standard | Where you meet it | Reversible |
 |---|---|---|---|---|
 | `ka/ala_lc` | ALA-LC | ALA-LC Romanization Tables, Georgian (2011) | Library catalogues | no |
-| `ka/iso_9984` | ISO 9984 | ISO 9984:1996 | Data exchange; one letter per letter | yes |
+| `ka/iso_9984` | ISO 9984 | ISO 9984:1996 (superseded; see below) | Data exchange; one letter per letter | yes |
 | `ka/national` | Georgian national system | Adopted 2002; BGN/PCGN 2009 | Road signs, passports, maps: *Tbilisi*, *Kutaisi* | no |
 
 The same name three ways:
@@ -142,6 +142,12 @@ One letter per letter, so it reverses: háčeks for the sibilants and
 affricates (`ž š č ǰ`), `x` for `ხ`, `ḡ` for `ღ`, `j` for `ძ`, `c` for
 `წ`, and a plain apostrophe on the aspirates. Defines the archaic letters
 as ALA-LC does.
+
+Written from ISO 9984:1996. A second edition, ISO 9984:2026, has since
+replaced it, and the table has not yet been checked against it. The
+Armenian standard's second edition changed four letters; the Georgian
+table already marked every aspirate with an apostrophe, so the same
+change may not apply, but until the 2026 text is read that is a guess.
 
 ### The national system
 

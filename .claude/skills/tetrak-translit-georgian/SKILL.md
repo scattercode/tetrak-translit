@@ -84,7 +84,7 @@ mark and merge each pair, so neither tradition has to be guessed.
 | Id | Standard | Met in | Apostrophe on | Reversible |
 |---|---|---|---|---|
 | `ka/ala_lc` | ALA-LC Romanization Tables, Georgian (2011) | Library catalogues; the default | aspirate, `ʻ` U+02BB | no |
-| `ka/iso_9984` | ISO 9984:1996 | Data exchange | aspirate, `'` | yes |
+| `ka/iso_9984` | ISO 9984:1996 (superseded by ISO 9984:2026, not yet checked) | Data exchange | aspirate, `'` | yes |
 | `ka/national` | Georgian national system (2002), adopted by BGN/PCGN 2009 | Road signs, passports, maps | ejective, `'` | no |
 
 Where they differ (letters not listed render the same everywhere):

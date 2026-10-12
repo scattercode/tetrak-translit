@@ -235,7 +235,9 @@ Every table names the standard it was written from, and a change cites it:
 - **ALA-LC Romanization Tables** — Library of Congress, published free per
   language at loc.gov (Armenian and Georgian both approved 2011).
 - **ISO 9985:2026** (Armenian, second edition; replaced ISO 9985:1996, which
-  `hy/iso_9985_1996` keeps) and **ISO 9984:1996** (Georgian) — ISO, paid.
+  `hy/iso_9985_1996` keeps) and **ISO 9984:1996** (Georgian; replaced by
+  ISO 9984:2026, which the table has not yet been checked against) — ISO,
+  paid. ISO sells them directly for less than national bodies do.
 - **BGN/PCGN** — the US Board on Geographic Names and the UK Permanent
   Committee on Geographical Names publish the agreed systems free (Armenian
   1981; the Georgian national system of 2002 as adopted in 2009).

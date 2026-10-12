@@ -68,7 +68,7 @@ versioned, tested table written from its published standard:
 | `hy/hubschmann_meillet` | Hübschmann-Meillet | Linguistics and classical scholarship | **yes** |
 | `hy/western` | Western Armenian pronunciation | Diaspora names: *Hagop*, *Kevork*, *Boghosian* | no |
 | `ka/ala_lc` | ALA-LC Georgian (2011) | Library catalogues | no |
-| `ka/iso_9984` | ISO 9984:1996 | Data exchange; one letter per letter | **yes** |
+| `ka/iso_9984` | ISO 9984:1996 (superseded by 2026; not yet checked) | Data exchange; one letter per letter | **yes** |
 | `ka/national` | Georgian national system (2002) | Road signs, passports, maps: *Tbilisi*, *Kutaisi* | no |
 
 A scheme key alone is enough when the text or the key settles the script;
