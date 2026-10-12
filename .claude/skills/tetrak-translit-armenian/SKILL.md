@@ -193,10 +193,13 @@ Order of operations for one token:
 
    | Rule | Why |
    |---|---|
+   | `th` → `t`; `ph` → `p` | Older English and French aspirates: *Thoumanian*, *Thoros* |
+   | `vh` → `v` | Popular *Hovannes* for *Hovhannes* |
    | `ow`, `ou`, `oo` → `u` | ISO `ow`, French-style *Sourp*, popular *Shooshi* |
    | `ew` → `ev`; `w` → `v` | ISO and Hübschmann-Meillet `և`, ALA-LC classical *Erewan*, ALA-LC `ւ` |
    | initial `yev` → `ev`, `ye` → `e`, `vo` → `o` | BGN/PCGN and Western glides |
    | initial `y` before a vowel → `h` | Western *Hagop* against *Yakob*; `Յովհաննէս` / `Հովհաննես` |
+   | initial `ho` → `o` | Russian-mediated *Ovanes*, *Ovsep* (Russian has no *h*). Only before `o`: a general initial-*h* drop would merge `իւր` (his) with `ուր` (where), and it would change the keys of every *h*- name |
    | `dz` → `ts`; `ts`, `tz` → `c` | `ծ ձ ց` become one |
    | `j` → `ch` | `ջ ճ չ` become one (and the ISO `j` gap below) |
    | `gh` protected as `\x01`; `b`→`p`, `d`→`t`, `g`→`k`; restored | The Eastern/Western swap, without turning `gh` into `kh` |
@@ -209,7 +212,9 @@ Order of operations for one token:
    part of a digraph an earlier rule needs kept.
 
 Sample keys: `Երևան`/*Yerevan*/*Erewan* → `erevan`; `Յակոբ`/*Hagop* →
-`hakop`; `Պօղոսեան`/*Boghossian*/*Poghosyan* → `poghosian`; `Գէորգ`/*Kevork*
+`hakop`; `Պօղոսեան`/*Boghossian*/*Poghosyan* → `poghosian`;
+`Հովհաննես`/*Hovannes*/*Ovanes* → `ovanes`; `Թումանյան`/*Thoumanian* →
+`tumanian`; `Գէորգ`/*Kevork*
 → `kevork`; `Սուրբ`/*Sourp* → `surp`.
 
 ### Known gaps (declared in `test_does_not_claim_the_known_gaps` and `docs/fold.md`)
@@ -217,7 +222,8 @@ Sample keys: `Երևան`/*Yerevan*/*Erewan* → `erevan`; `Յակոբ`/*Hagop* 
 - **Popular spellings that insert an unwritten schwa**: *Megerdich* for
   `Մկրտիչ` (*Mkrtich* in every scheme).
 - **Spellings that came through Russian**: *Khachaturian* has a *u* that
-  `Խաչատրյան` does not.
+  `Խաչատրյան` does not. Initial *h* is restored only before `o`, so *Akop*
+  and *Arutyunyan* still miss *Hakob* and *Harutyunyan*.
 - **Classical `աւ` that reformed writes `օ`**: `աւր` and `օր` stay apart.
 - **`j` with no scheme hint**: ALA-LC and BGN/PCGN `j` is `ջ`; ISO 9985 and
   Hübschmann-Meillet `j` is `ձ`. The heuristic reads it the library way.
@@ -232,7 +238,8 @@ pair is not in `tests/data/hy_fold_cases.tsv`, it is not claimed.
 `tests/data/hy_fold_cases.tsv` holds about thirty groups: the cities
 (Yerevan, Shushi), the saints and poets (Mesrop Mashtots, Charents, Sayat-Nova,
 Komitas, Eghishe), the surnames in both orthographies and both pronunciations
-(Poghosian, Vardanian, Avetikian, Khachatrian, Hovhannes), and the two
+(Poghosian, Vardanian, Avetikian, Khachatrian, Hovhannes, Hovsep, Tumanyan),
+and the two
 orthography pairs from Tetrak brief 014 (`Ազգ եւ հայրենիք` against `Ազգ և
 հայրենիք`, `Աւետիքեան` against `Ավետիքյան`). Every form carries a note saying
 which scheme or practice it is; keep that habit when adding.

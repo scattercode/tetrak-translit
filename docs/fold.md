@@ -47,12 +47,16 @@ rules would never find `ბათუმი`.
    (`ծառայ` is `ծառա`). It is then rendered through ALA-LC, so that
    Armenian and ALA-LC Latin reach the next step by the same road.
 2. **Latin** is lowercased and stripped of every diacritic and aspiration
-   mark. Then its digraphs are collapsed onto one spelling each (`ž` and
+   mark. An aspirate written with an *h* loses it (`th` and `t`, `ph`
+   and `p`, so *Thoumanian* finds `Թումանյան`), and an *h* after *v* is
+   dropped (`vh` and `v`, so *Hovannes* finds *Hovhannes*). Then its
+   digraphs are collapsed onto one spelling each (`ž` and
    `zh`; `x` and `kh`; `ł`, `ġ` and `gh`; `ow`, `ou`, `oo` and `u`; `w`
    and `v`); the voiced and voiceless pairs are merged (`b`/`p`, `d`/`t`,
    `g`/`k`, `dz`/`ts`/`c`, `j`/`ch`); the glides are regularised
-   (word-initial `ye` and `e`, `vo` and `o`, `y` and `h`; `ya`, `ea`
-   and `ia`); a final `y` after a vowel is dropped; doubled letters are
+   (word-initial `ye` and `e`, `vo` and `o`, `y` and `h`, and `ho` and
+   `o` for the Russian-mediated *Ovanes* and *Ovsep*; `ya`, `ea` and
+   `ia`); a final `y` after a vowel is dropped; doubled letters are
    collapsed; and anything that is not a letter or a digit is removed.
 
 ### Georgian
@@ -96,7 +100,10 @@ Armenian:
 - **Popular spellings that insert an unwritten schwa.** `Մկրտիչ` is
   *Mkrtich* in every scheme but *Megerdich* on many a gravestone.
 - **Spellings that came through Russian.** *Khachaturian* has a *u* that
-  `Խաչատրյան` does not.
+  `Խաչատրյան` does not. Russian has no *h*, and the fold restores it only
+  before *o* (*Ovanes*, *Ovsep*), so *Akop* and *Arutyunyan* still miss
+  *Hakob* and *Harutyunyan*. A general initial-*h* rule would also merge
+  `իւր` (his) with `ուր` (where).
 - **Classical `աւ` that reformed spelling turned into `օ`.** `աւր` and
   `օր` (day) do not fold together; the fold reads `ւ` as *v*.
 - **`j` without a scheme hint.** In ALA-LC and BGN/PCGN `j` is `ջ`; in
