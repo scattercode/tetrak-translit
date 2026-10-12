@@ -26,10 +26,14 @@ is the understanding behind them.
 - **`ւ`** (U+0582) is a letter in classical orthography (`նաւ`, `իւր`,
   `հաւատք`) and only ever the second half of `ու` in reformed. That is the
   single most useful fact in this skill.
-- **Punctuation is outside the ranges** and passes through: `՝ ՞ ՜ ՛ ՚`
-  (U+055A–U+055F), the full stop `։` (U+0589), the hyphen `֊` (U+058A). The
-  apostrophe `՚` is printed inside words in classical texts (`կ՚ուզէ`) and
-  comes through a rendering unchanged (`k՚uzē`).
+- **Punctuation is outside the ranges**: `՝ ՞ ՜ ՛ ՚` (U+055A–U+055F), the
+  full stop `։` (U+0589), the hyphen `֊` (U+058A). Five of them are written
+  *inside* a word and are the script's `marks`: the apostrophe `՚`
+  (`կ՚ուզէ`), the abbreviation mark `՟` and the stress marks `՛ ՜ ՞`, set over
+  the stressed vowel (`կարդացե՞լ`). A word does not end at a mark, so
+  capitals and word-initial rules see through it. What a mark becomes is
+  each scheme's `punctuation` (see "Punctuation" below); unmapped marks pass
+  through where they stand (`k՚uzē`).
 - **Presentation-form ligatures** `ﬓ ﬔ ﬕ ﬖ ﬗ` (U+FB13–U+FB17, for `մն մե մի
   վն մխ`) are detected as Armenian by name but are outside the ranges, so
   they are **not rendered**. NFKC would decompose them; the engine uses NFC.

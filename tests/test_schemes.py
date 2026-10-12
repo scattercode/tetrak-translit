@@ -43,9 +43,11 @@ class TestEveryScheme:
     "scheme", [s for s in SCHEMES.values() if s.reversible], ids=lambda s: s.id
 )
 def test_reversible_schemes_are_one_to_one(scheme: Scheme) -> None:
-    renderings = list(scheme.letters.values()) + [
-        scheme.digraphs[d] for d in scheme.script.digraphs
-    ]
+    renderings = (
+        list(scheme.letters.values())
+        + [scheme.digraphs[d] for d in scheme.script.digraphs]
+        + [latin for latin in scheme.punctuation.values() if latin]
+    )
     assert len(renderings) == len(set(renderings))
 
 

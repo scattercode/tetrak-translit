@@ -51,9 +51,17 @@ same way: the unaspirated letter is plain and its aspirated partner takes
 a plain apostrophe (U+0027), so `ծ`/`ց` are `c`/`c'` and `ճ`/`չ` are
 `č`/`č'`, as `տ`/`թ` are `t`/`t'`. `ը` is `ë`, `օ` is `ō`, `ու` is `ow`.
 Any apostrophe-like character (`'`, `’`, `ʻ`, `ʿ`) is accepted on input
-when reversing. The standard also has a table for Armenian punctuation,
-which this scheme does not yet apply; punctuation passes through
-unchanged, as in every other scheme.
+when reversing.
+
+Punctuation follows the standard's Table 2, each mark where it stands:
+
+| Armenian | `։` | `՝` | `․` | `՞` | `՜` | `՛` | `֊` | `,` |
+|---|---|---|---|---|---|---|---|---|
+| ISO 9985 | `.` | `:` | `;` | `?` | `!` | `ˆ` | `-` | `,` |
+
+The stress marks stay over their vowel, so `կարդացե՞լ` is `kardac'e?l`,
+and reading back maps each Latin mark to its Armenian one: a full stop
+in the Latin becomes `։`.
 
 ### ISO 9985:1996
 

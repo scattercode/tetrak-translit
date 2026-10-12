@@ -181,6 +181,27 @@ class TestIso9984Edition2026:
         assert to_script("tsh", "ka/iso_9984") == "ცჰ"
 
 
+class TestIso9985Punctuation:
+    """ISO 9985:2026 Table 2: every mark where it stands."""
+
+    @pytest.mark.parametrize(
+        ("text", "expected"),
+        [
+            ("Դու կարդացե՞լ ես այս գիրքը։", "Dow kardac'e?l es ays girk'ë."),
+            ("Այս ու՜մ եմ տեսնում։", "Ays ow!m em tesnowm."),
+            ("Կարդա՛, գրի՛ր տարին բոլոր։", "Kardaˆ, griˆr tarin bolor."),
+            ("Ա․ Բ․ Սարգսյան՝ հայ֊անգլերեն", "A; B; Sargsyan: hay-angleren"),
+            ("ԿԱՐԴԱ՛", "KARDAˆ"),
+        ],
+    )
+    def test_table_2(self, text: str, expected: str) -> None:
+        assert transliterate(text, "iso_9985") == expected
+        assert to_armenian(expected, "iso_9985") == text
+
+    def test_the_first_edition_leaves_punctuation_alone(self) -> None:
+        assert transliterate("Ո՞վ է։", "iso_9985_1996") == "O՞v ē։"
+
+
 class TestMarksInsideAWord:
     """Armenian's stress marks sit over a vowel, inside the word."""
 
@@ -288,7 +309,11 @@ class TestToScript:
         assert to_script("T'BILISI", ka.ISO_9984_1996) == "თბილისი"
 
     def test_non_scheme_characters_pass_through(self) -> None:
-        assert to_armenian("Erewan, 1985.", "iso_9985") == "Երևան, 1985."
+        assert to_armenian("Erewan, 1985.", "hubschmann_meillet") == "Երևան, 1985."
+
+    def test_iso_9985_reads_its_punctuation_back(self) -> None:
+        """Table 2 maps the full stop both ways, so a Latin one becomes ։."""
+        assert to_armenian("Erewan, 1985.", "iso_9985") == "Երևան, 1985։"
 
     def test_the_to_argument_names_the_script(self) -> None:
         assert transliterate("Erewan", "iso_9985", to="armenian") == "Երևան"
