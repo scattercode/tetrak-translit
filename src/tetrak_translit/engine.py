@@ -69,6 +69,8 @@ def _render_word(word: str, scheme: Scheme) -> str:
             latin = latin.upper()
         elif capital:
             latin = latin[:1].upper() + latin[1:]
+        if previous is not None and (previous, unit) in scheme.separate:
+            rendered.append(scheme.separator)
         rendered.append(latin)
         previous = unit
     return "".join(rendered)
@@ -94,10 +96,19 @@ def render(text: str, scheme: Scheme) -> str:
 
 
 def _inverse(scheme: Scheme) -> list[tuple[str, str]]:
-    """Latin unit to script unit, longest Latin first, for a reversible table."""
-    pairs = {latin.lower(): letter for letter, latin in scheme.letters.items()}
+    """Latin unit to script unit, longest Latin first, for a reversible table.
+
+    The Latin is decomposed (NFD), as :func:`read` decomposes its input, so
+    that a capital with no precomposed form -- ``J̌``, J and a combining
+    caron, the capital of ``ǰ`` -- lowercases to the same characters as
+    the table's letter.
+    """
+    pairs = {
+        unicodedata.normalize("NFD", latin.lower()): letter
+        for letter, latin in scheme.letters.items()
+    }
     for unit, latin in scheme.digraphs.items():
-        pairs.setdefault(latin.lower(), unit)
+        pairs.setdefault(unicodedata.normalize("NFD", latin.lower()), unit)
     return sorted(pairs.items(), key=lambda item: -len(item[0]))
 
 
@@ -116,7 +127,7 @@ def read(text: str, scheme: Scheme) -> str:
     aspiration = next(
         (latin[-1] for latin in scheme.letters.values() if latin[-1] in APOSTROPHES), None
     )
-    text = unicodedata.normalize("NFC", text)
+    text = unicodedata.normalize("NFD", text)
     if aspiration is not None:
         for mark in APOSTROPHES:
             text = text.replace(mark, aspiration)
@@ -125,19 +136,28 @@ def read(text: str, scheme: Scheme) -> str:
     cased = scheme.script.cased
     out: list[str] = []
     index = 0
+    separator = scheme.separator
     while index < len(text):
+        if separator and text.startswith(separator, index):
+            index += len(separator)
+            continue
         for latin, unit in inverse:
-            candidate = text[index : index + len(latin)]
-            if candidate.lower() == latin:
+            end = index + len(latin)
+            candidate = text[index:end]
+            # A match must end on a whole character: plain e is not the
+            # start of an ē that the table does not have.
+            if candidate.lower() == latin and not (
+                end < len(text) and unicodedata.combining(text[end])
+            ):
                 if cased and candidate[0].isupper():
                     unit = unit[0].upper() + unit[1:]
                 out.append(unit)
-                index += len(latin)
+                index = end
                 break
         else:
             out.append(text[index])
             index += 1
-    return "".join(out)
+    return unicodedata.normalize("NFC", "".join(out))
 
 
 __all__ = ["APOSTROPHES", "NotReversibleError", "read", "render"]

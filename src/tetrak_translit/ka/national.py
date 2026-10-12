@@ -5,7 +5,8 @@ Geodesy and Cartography and the Institute of Linguistics in 2002, and
 taken up by BGN/PCGN in 2009; the spelling on Georgian road signs,
 passports and maps. No diacritics, and the apostrophe marks the
 **ejective** (``k' p' t' q' ts' ch'``) with the aspirates plain -- the
-reverse of ALA-LC and ISO 9984. *Tbilisi*, *Kutaisi* and *Batumi* are
+reverse of ALA-LC and ISO 9984:1996. ISO 9984:2026 is built on this
+system and makes it reversible (see :mod:`.iso_9984`). *Tbilisi*, *Kutaisi* and *Batumi* are
 this system; so is *Ts'ereteli*. Lossy: the digraphs are as ambiguous as
 ALA-LC's, and the archaic letters are not defined.
 """
@@ -61,6 +62,6 @@ NATIONAL = Scheme(
     },
     notes=(
         "Road signs, passports and maps: Tbilisi, Kutaisi, Batumi. The apostrophe marks "
-        "the ejective, the opposite of ALA-LC and ISO 9984. Not reversible."
+        "the ejective, the opposite of ALA-LC. Not reversible; ISO 9984 is its reversible form."
     ),
 )

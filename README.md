@@ -41,8 +41,8 @@ $ tetrak-translit detect "Ազգ եւ հայրենիք" "თბილისი"
 armenian (classical)	Ազգ եւ հայրենիք
 georgian	თბილისი
 $ tetrak-translit transliterate --scheme iso_9985 "Չարենց"
-Čarenc'
-$ tetrak-translit transliterate --scheme iso_9984 --to script "T'bilisi"
+Č'arenc'
+$ tetrak-translit transliterate --scheme iso_9984 --to script "Tbilisi"
 თბილისი
 $ cut -f2 titles.tsv | tetrak-translit fold --script hy
 ```
@@ -62,12 +62,14 @@ versioned, tested table written from its published standard:
 | Id | Scheme | Where you meet it | Reversible |
 |---|---|---|---|
 | `hy/ala_lc` | ALA-LC Armenian (2011) | Library catalogues: Koha, WorldCat, the Library of Congress | no |
-| `hy/iso_9985` | ISO 9985:1996 | Data exchange; one letter per letter | **yes** |
+| `hy/iso_9985` | ISO 9985:2026 | Data exchange; one letter per letter | **yes** |
+| `hy/iso_9985_1996` | ISO 9985:1996, superseded | Reading data romanised under the first edition | **yes** |
 | `hy/bgn_pcgn` | BGN/PCGN 1981 | Maps and place names: *Yerevan*, *Gyumri* | no |
 | `hy/hubschmann_meillet` | Hübschmann-Meillet | Linguistics and classical scholarship | **yes** |
 | `hy/western` | Western Armenian pronunciation | Diaspora names: *Hagop*, *Kevork*, *Boghosian* | no |
 | `ka/ala_lc` | ALA-LC Georgian (2011) | Library catalogues | no |
-| `ka/iso_9984` | ISO 9984:1996 | Data exchange; one letter per letter | **yes** |
+| `ka/iso_9984` | ISO 9984:2026 | Data exchange; the national system made reversible | **yes** |
+| `ka/iso_9984_1996` | ISO 9984:1996, superseded | Reading data romanised under the first edition | **yes** |
 | `ka/national` | Georgian national system (2002) | Road signs, passports, maps: *Tbilisi*, *Kutaisi* | no |
 
 A scheme key alone is enough when the text or the key settles the script;

@@ -1,12 +1,20 @@
 """ISO 9985: the international standard, one Latin letter per Armenian one.
 
-Written from ISO 9985:1996, *Information and documentation -- Transliteration
-of Armenian characters into Latin characters*. Every Armenian letter has a
-distinct rendering, by diacritic where the plain letters run out, so the
-table reverses exactly; that is what the standard was designed for and the
-reason to choose it for round-tripping. ``ու`` is ``ow`` and ``օ`` is
-``ò``, which look odd to anyone used to the library form but keep the
-mapping one-to-one. Aspiration is a plain apostrophe.
+Written from ISO 9985:2026, *Information and documentation -- Transliteration
+of Armenian characters into Latin characters*, second edition, Table 1.
+Every Armenian letter has a distinct rendering, by diacritic where the
+plain letters run out, so the table reverses exactly; that is what the
+standard was designed for and the reason to choose it for round-tripping.
+``ու`` is ``ow`` and ``օ`` is ``ō``, which look odd to anyone used to the
+library form but keep the mapping one-to-one.
+
+The second edition marks every aspirate the same way: the unaspirated
+letter is plain and its aspirated partner takes a neutral apostrophe
+(U+0027). The first edition did that only for *p*, *t* and *k*; the
+2026 edition extends it to ``ծ``/``ց`` (``c``/``c'``) and ``ճ``/``չ``
+(``č``/``č'``), where 1996 wrote ``ç`` and ``č̣`` for the unaspirated
+letters. ``օ`` moved from ``ò`` to ``ō``. Data romanised under the first
+edition is read by :mod:`.iso_9985_1996`.
 """
 
 from __future__ import annotations
@@ -20,8 +28,8 @@ ISO_9985 = Scheme(
     script=SCRIPT,
     key="iso_9985",
     name="ISO 9985",
-    version="1.0",
-    standard="ISO 9985:1996",
+    version="2.0",
+    standard="ISO 9985:2026",
     reversible=True,
     letters={
         "ա": "a",
@@ -37,18 +45,18 @@ ISO_9985 = Scheme(
         "ի": "i",
         "լ": "l",
         "խ": "x",
-        "ծ": "ç",
+        "ծ": "c",
         "կ": "k",
         "հ": "h",
         "ձ": "j",
         "ղ": "ġ",
-        "ճ": "č̣",  # č with dot below
+        "ճ": "č",
         "մ": "m",
         "յ": "y",
         "ն": "n",
         "շ": "š",
         "ո": "o",
-        "չ": "č",
+        "չ": "č" + ASPIRATION,
         "պ": "p",
         "ջ": "ǰ",
         "ռ": "ṙ",
@@ -60,7 +68,7 @@ ISO_9985 = Scheme(
         "ւ": "w",
         "փ": "p" + ASPIRATION,
         "ք": "k" + ASPIRATION,
-        "օ": "ò",
+        "օ": "ō",
         "ֆ": "f",
     },
     digraphs={"ու": "ow", "և": "ew"},

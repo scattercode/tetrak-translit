@@ -15,8 +15,8 @@ key within the script and by a qualified id across scripts:
 
 | Script | Schemes |
 |---|---|
-| `hy` Armenian | `ala_lc`, `iso_9985`, `bgn_pcgn`, `hubschmann_meillet`, `western` |
-| `ka` Georgian | `ala_lc`, `iso_9984`, `national` |
+| `hy` Armenian | `ala_lc`, `iso_9985`, `iso_9985_1996`, `bgn_pcgn`, `hubschmann_meillet`, `western` |
+| `ka` Georgian | `ala_lc`, `iso_9984`, `iso_9984_1996`, `national` |
 
 A scheme key alone is enough when the text settles which script is meant
 (`transliterate("თბილისი", "ala_lc")`), or when only one script has a
@@ -88,7 +88,7 @@ Reading Latin back works for the schemes whose tables are one-to-one:
 ```python
 >>> tt.transliterate("Erewan", "iso_9985", to="armenian")
 'Երևան'
->>> tt.transliterate("T'bilisi", "iso_9984", to="script")
+>>> tt.transliterate("Tbilisi", "iso_9984", to="script")
 'თბილისი'
 >>> tt.transliterate("Erevan", "hy/ala_lc", to="script")
 Traceback (most recent call last):
@@ -159,7 +159,7 @@ tetrak-translit detect "Երեւան" "თბილისი"
 tetrak-translit detect --json < titles.txt
 tetrak-translit transliterate --scheme bgn_pcgn "Երևան"
 tetrak-translit transliterate --scheme national "თბილისი"
-tetrak-translit transliterate --scheme iso_9984 --to script "T'bilisi"
+tetrak-translit transliterate --scheme iso_9984 --to script "Tbilisi"
 cut -f2 records.tsv | tetrak-translit fold --script hy > keys.txt
 tetrak-translit schemes --json
 ```

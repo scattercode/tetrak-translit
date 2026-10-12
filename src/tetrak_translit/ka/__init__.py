@@ -1,4 +1,4 @@
-"""Georgian: the script, three romanisation schemes and the fold.
+"""Georgian: the script, its romanisation schemes and the fold.
 
 Modern Georgian is written in Mkhedruli, thirty-three letters with no
 case, so a transliteration carries no capitals unless the source was set
@@ -18,10 +18,11 @@ from .ala_lc import ALA_LC  # noqa: E402
 from .descriptor import SCRIPT
 from .fold import fold_token  # noqa: E402
 from .iso_9984 import ISO_9984  # noqa: E402
+from .iso_9984_1996 import ISO_9984_1996  # noqa: E402
 from .national import NATIONAL  # noqa: E402
 
 #: Every Georgian scheme, in the order the documentation lists them.
-SCHEMES = {scheme.key: scheme for scheme in (ALA_LC, ISO_9984, NATIONAL)}
+SCHEMES = {scheme.key: scheme for scheme in (ALA_LC, ISO_9984, ISO_9984_1996, NATIONAL)}
 
 
 def variant(text: str) -> None:
@@ -29,4 +30,13 @@ def variant(text: str) -> None:
     return None
 
 
-__all__ = ["ALA_LC", "ISO_9984", "NATIONAL", "SCHEMES", "SCRIPT", "fold_token", "variant"]
+__all__ = [
+    "ALA_LC",
+    "ISO_9984",
+    "ISO_9984_1996",
+    "NATIONAL",
+    "SCHEMES",
+    "SCRIPT",
+    "fold_token",
+    "variant",
+]

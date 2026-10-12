@@ -20,7 +20,8 @@ poghosian	Pōghosean	ALA-LC classical
 poghosian	Poghosyan	ALA-LC reformed
 poghosian	Boghossian	Western, doubled s
 poghosian	Boghosian	Western
-poghosian	Pòġosean	ISO 9985
+poghosian	Pōġosean	ISO 9985:2026
+poghosian	Pòġosean	ISO 9985:1996
 poghosian	Połosyan	Hübschmann-Meillet
 avetikian	Աւետիքեան	classical; brief 014
 avetikian	Ավետիքյան	reformed; brief 014
@@ -36,7 +37,8 @@ charents	Չարենց
 charents	Chʻarentsʻ	ALA-LC
 charents	Charents	popular
 charents	Čʿarencʿ	Hübschmann-Meillet
-charents	Čarenc'	ISO 9985
+charents	Č'arenc'	ISO 9985:2026
+charents	Čarenc'	ISO 9985:1996
 charents	Ch'arents'	BGN/PCGN
 sayat-nova	Սայաթ-Նովա	
 sayat-nova	Sayatʻ-Nova	ALA-LC
@@ -117,3 +119,14 @@ hovsep	Hovsepʻ	ALA-LC reformed
 hovsep	Yovsēpʻ	ALA-LC classical
 hovsep	Hovsep	Western, and BGN/PCGN with the aspiration mark dropped
 hovsep	Ovsep	Russian-mediated (Овсеп)
+echmiadzin	Էջմիածին	
+echmiadzin	Ējmiatsin	ALA-LC
+echmiadzin	Ēǰmiacin	ISO 9985:2026 and Hübschmann-Meillet
+echmiadzin	Ēǰmiaçin	ISO 9985:1996
+echmiadzin	Ejmiatsin	BGN/PCGN
+echmiadzin	Echmiadzin	Western
+chash	ճաշ	
+chash	chash	ALA-LC
+chash	čaš	ISO 9985:2026
+chash	č̣aš	ISO 9985:1996
+chash	jash	Western

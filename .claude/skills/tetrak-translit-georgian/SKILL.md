@@ -1,6 +1,6 @@
 ---
 name: tetrak-translit-georgian
-description: Georgian as tetrak-translit handles it — the 33-letter caseless Mkhedruli alphabet and its Unicode ranges, Mtavruli capitals, the five archaic letters, the Asomtavruli and Nuskhuri scripts the library deliberately does not handle, the aspirate/ejective consonant pairs and the apostrophe that ALA-LC and ISO 9984 put on the aspirate but the national system puts on the ejective, the three schemes letter by letter, the fold's rules and known gaps, and why Georgian must never merge b with p. Load this whenever Georgian text, a Georgian name or place, a Georgian scheme key (ala_lc for Georgian, iso_9984, national), the ka/ package or ka_fold_cases.tsv comes up — including "how is Tbilisi written in ALA-LC", "why does Kazbegi fold to ყაზბეგი", or any question about the apostrophe in a Georgian romanisation.
+description: Georgian as tetrak-translit handles it — the 33-letter caseless Mkhedruli alphabet and its Unicode ranges, Mtavruli capitals, the five archaic letters, the Asomtavruli and Nuskhuri scripts the library deliberately does not handle, the aspirate/ejective consonant pairs and the apostrophe that ALA-LC and ISO 9984:1996 put on the aspirate but the national system and ISO 9984:2026 put on the ejective, the schemes letter by letter (ISO 9984 in both editions, and the 2026 edition's middle dot), the fold's rules and known gaps, and why Georgian must never merge b with p. Load this whenever Georgian text, a Georgian name or place, a Georgian scheme key (ala_lc for Georgian, iso_9984, national), the ka/ package or ka_fold_cases.tsv comes up — including "how is Tbilisi written in ALA-LC", "why does Kazbegi fold to ყაზბეგი", or any question about the apostrophe in a Georgian romanisation.
 ---
 
 # Georgian
@@ -60,13 +60,16 @@ Georgian fold keeps `b`, `d`, `g` apart from `p`, `t`, `k` and why
 
 ### The apostrophe runs the opposite way
 
-**ALA-LC and ISO 9984 mark the aspirate** (`tʻbilisi`, `kʻutʻaisi`,
+**ALA-LC and ISO 9984:1996 mark the aspirate** (`tʻbilisi`, `kʻutʻaisi`,
 `t'bilisi`) and leave the ejective plain. **The national system marks the
 ejective** (`ts'ereteli`, `ch'avch'avadze`, `q'azbegi`) and leaves the
-aspirate plain (*Tbilisi*, *Kutaisi*). The same apostrophe on the same word
+aspirate plain (*Tbilisi*, *Kutaisi*). **ISO 9984:2026 changed sides**: it is
+built on the national system, so the plain key `iso_9984` now puts the
+apostrophe on the ejective, and `t'` means `თ` under `iso_9984_1996` but `ტ`
+under `iso_9984`. The same apostrophe on the same word
 therefore means opposite letters in the two traditions:
 
-| Georgian | ALA-LC | ISO 9984 | National |
+| Georgian | ALA-LC | ISO 9984:1996 | National and ISO 9984:2026 |
 |---|---|---|---|
 | თბილისი | tʻbilisi | t'bilisi | tbilisi |
 | წერეთელი | tseretʻeli | ceret'eli | ts'ereteli |
@@ -79,34 +82,39 @@ sound they do not have. When a user reports that "the apostrophe is on the
 wrong letter", it is almost always this. The fold's answer is to strip the
 mark and merge each pair, so neither tradition has to be guessed.
 
-## The three schemes
+## The schemes
 
 | Id | Standard | Met in | Apostrophe on | Reversible |
 |---|---|---|---|---|
 | `ka/ala_lc` | ALA-LC Romanization Tables, Georgian (2011) | Library catalogues; the default | aspirate, `ʻ` U+02BB | no |
-| `ka/iso_9984` | ISO 9984:1996 | Data exchange | aspirate, `'` | yes |
+| `ka/iso_9984` | ISO 9984:2026 | Data exchange | ejective, `'` | yes |
+| `ka/iso_9984_1996` | ISO 9984:1996, superseded | Data made under the first edition | aspirate, `'` | yes |
 | `ka/national` | Georgian national system (2002), adopted by BGN/PCGN 2009 | Road signs, passports, maps | ejective, `'` | no |
 
 Where they differ (letters not listed render the same everywhere):
 
-| | `ala_lc` | `iso_9984` | `national` |
-|---|---|---|---|
-| `თ` `ფ` `ქ` | tʻ pʻ kʻ | t' p' k' | t p k |
-| `ტ` `პ` `კ` | t p k | t p k | t' p' k' |
-| `ჩ` / `ჭ` | chʻ / ch | č' / č | ch / ch' |
-| `ც` / `წ` | tsʻ / ts | c' / c | ts / ts' |
-| `ყ` | q | q | q' |
-| `ჟ` | zh | ž | zh |
-| `შ` | sh | š | sh |
-| `ღ` | gh | ḡ | gh |
-| `ხ` | kh | x | kh |
-| `ძ` | dz | j | dz |
-| `ჯ` | j | ǰ | j |
-| `ჱ ჲ ჳ ჴ ჵ` | ē y w ẖ ō | ē y w ẖ ō | not defined; pass through |
+| | `ala_lc` | `iso_9984_1996` | `national` | `iso_9984` (2026) |
+|---|---|---|---|---|
+| `თ` `ფ` `ქ` | tʻ pʻ kʻ | t' p' k' | t p k | t p k |
+| `ტ` `პ` `კ` | t p k | t p k | t' p' k' | t' p' k' |
+| `ჩ` / `ჭ` | chʻ / ch | č' / č | ch / ch' | ch / ch' |
+| `ც` / `წ` | tsʻ / ts | c' / c | ts / ts' | ts / ts' |
+| `ყ` | q | q | q' | q' |
+| `ჟ` | zh | ž | zh | zh |
+| `შ` | sh | š | sh | sh |
+| `ღ` | gh | ḡ | gh | gh |
+| `ხ` | kh | x | kh | kh |
+| `ძ` | dz | j | dz | dz |
+| `ჯ` | j | ǰ | j | j |
+| `ჱ ჲ ჳ ჴ ჵ` | ē y w ẖ ō | ē y w ẖ ō | not defined; pass through | ē y w ẖ ō |
+| `ჶ` | — | f | — | f |
+| `ჷ ჸ ჹ ჺ ჼ ჽ ჾ ჿ` | — | — | — | ȳ ʔ ĝ ʕ ⁿ æ ʸ ʷ |
+| between `გზსქ` and `ჰ`, `თ` and `ს`, `დ` and `ზ` | nothing | nothing | nothing | `·` (U+00B7) |
 
-The same name three ways, from `docs/schemes.md`:
+The same name four ways (`iso_9984`, the 2026 edition, is the national
+spelling for all of these):
 
-| Georgian | `ala_lc` | `iso_9984` | `national` |
+| Georgian | `ala_lc` | `iso_9984_1996` | `national` and `iso_9984` |
 |---|---|---|---|
 | ქუთაისი | kʻutʻaisi | k'ut'aisi | kutaisi |
 | მცხეთა | mtsʻkhetʻa | mc'xet'a | mtskheta |
@@ -117,9 +125,16 @@ Per scheme:
 
 - **ALA-LC** is lossy because `dz`, `zh`, `gh`, `sh` and `kh` can each be one
   letter or two (`ძ` or `დ`+`ზ`, and so on).
-- **ISO 9984** is one letter per letter and reverses exactly. Its `j` is `ძ`
-  and `ǰ` is `ჯ`; its `c` is `წ` and `c'` is `ც`; `x` is `ხ`. Choose it for
-  round-tripping, not for readers.
+- **ISO 9984** (`iso_9984`, the 2026 edition) is the national system made
+  reversible: a middle dot separates the letter pairs the standard lists
+  (`z·h` is `ზჰ`, not `ჟ`), and `read()` skips it. The list misses two
+  sequences, `dzh` (`ძჰ` or `დჟ`) and `tsh` (`ცჰ` or `თშ`); reading back
+  takes the first, and a test pins that. Its Table 4 example for every
+  letter is a test in `tests/test_transliterate.py`. Choose it for
+  round-tripping.
+- **ISO 9984:1996** (`iso_9984_1996`) is one letter per letter with háčeks:
+  `j` is `ძ` and `ǰ` is `ჯ`; `c` is `წ` and `c'` is `ც`; `x` is `ხ`. Kept for
+  data made under it.
 - **The national system** is what Georgia itself uses: no diacritics,
   apostrophe on the ejective. It is the spelling on signs and in passports
   and the one English prose has settled on (*Tbilisi*, *Kutaisi*, *Batumi*).

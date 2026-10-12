@@ -12,7 +12,8 @@ them, use [the fold](fold.md).
 | Id | Scheme | Standard | Where you meet it | Reversible |
 |---|---|---|---|---|
 | `hy/ala_lc` | ALA-LC | ALA-LC Romanization Tables, Armenian (2011) | Library catalogues: Koha, WorldCat, the Library of Congress | no |
-| `hy/iso_9985` | ISO 9985 | ISO 9985:1996 | Data exchange; one letter per letter | yes |
+| `hy/iso_9985` | ISO 9985 | ISO 9985:2026 | Data exchange; one letter per letter | yes |
+| `hy/iso_9985_1996` | ISO 9985:1996 | ISO 9985:1996, superseded | Data romanised under the first edition | yes |
 | `hy/bgn_pcgn` | BGN/PCGN | BGN/PCGN 1981 System | Maps and place names: *Yerevan*, *Gyumri* | no |
 | `hy/hubschmann_meillet` | Hübschmann-Meillet | Hübschmann (1897), Meillet (1913) | Linguistics and classical Armenian scholarship | yes |
 | `hy/western` | Western Armenian pronunciation | Common practice, not a standard | Diaspora names: *Hagop*, *Kevork*, *Boghosian* | no |
@@ -25,8 +26,8 @@ The same name five ways:
 | Երեւան (classical) | Erewan | Erewan | Yerevan | Erewan | Yerevan |
 | Յակոբ | Yakob | Yakob | Yakob | Yakob | Hagop |
 | Գէորգ (classical) | Gēorg | Gēorg | Georg | Gēorg | Kevork |
-| Պօղոսեան (classical) | Pōghosean | Pòġosean | Poghosean | Pōłosean | Boghosian |
-| Չարենց | Chʻarentsʻ | Čarenc' | Ch'arents' | Čʿarencʿ | Charents |
+| Պօղոսեան (classical) | Pōghosean | Pōġosean | Poghosean | Pōłosean | Boghosian |
+| Չարենց | Chʻarentsʻ | Č'arenc' | Ch'arents' | Čʿarencʿ | Charents |
 | Ոսկան | Oskan | Oskan | Voskan | Oskan | Vosgan |
 
 ### ALA-LC
@@ -44,10 +45,24 @@ records, not an error, and one the fold equates. Lossy: `ts` is `ծ` or
 ### ISO 9985
 
 The international standard, designed to reverse: every letter is
-distinct, by diacritic where the plain letters run out. Aspiration is a
-plain apostrophe; `ճ` is `č` with a dot below and `չ` is plain `č`; `ը`
-is `ë`, `օ` is `ò`, `ու` is `ow`. Any apostrophe-like character (`'`,
-`’`, `ʻ`, `ʿ`) is accepted on input when reversing.
+distinct, by diacritic where the plain letters run out. `hy/iso_9985`
+follows the second edition, ISO 9985:2026, which marks every aspirate the
+same way: the unaspirated letter is plain and its aspirated partner takes
+a plain apostrophe (U+0027), so `ծ`/`ց` are `c`/`c'` and `ճ`/`չ` are
+`č`/`č'`, as `տ`/`թ` are `t`/`t'`. `ը` is `ë`, `օ` is `ō`, `ու` is `ow`.
+Any apostrophe-like character (`'`, `’`, `ʻ`, `ʿ`) is accepted on input
+when reversing. The standard also has a table for Armenian punctuation,
+which this scheme does not yet apply; punctuation passes through
+unchanged, as in every other scheme.
+
+### ISO 9985:1996
+
+The first edition, which the 2026 edition cancelled and replaced. It is
+kept as `hy/iso_9985_1996` because data romanised under it stays in
+catalogues and data sets, and only its own table reads that data back
+into Armenian. It differs from the second edition in four letters: `ծ`
+is `ç`, `ճ` is `č̣` (`č` with a dot below), `չ` is plain `č` and `օ` is
+`ò`. The fold equates both editions, so either finds the other.
 
 ### BGN/PCGN
 
@@ -86,19 +101,20 @@ can predict. Never meant to be reversed: it cannot say whether a *p* is
 | Id | Scheme | Standard | Where you meet it | Reversible |
 |---|---|---|---|---|
 | `ka/ala_lc` | ALA-LC | ALA-LC Romanization Tables, Georgian (2011) | Library catalogues | no |
-| `ka/iso_9984` | ISO 9984 | ISO 9984:1996 | Data exchange; one letter per letter | yes |
+| `ka/iso_9984` | ISO 9984 | ISO 9984:2026 | Data exchange; the national system made reversible | yes |
+| `ka/iso_9984_1996` | ISO 9984:1996 | ISO 9984:1996, superseded | Data romanised under the first edition | yes |
 | `ka/national` | Georgian national system | Adopted 2002; BGN/PCGN 2009 | Road signs, passports, maps: *Tbilisi*, *Kutaisi* | no |
 
-The same name three ways:
+The same name four ways:
 
-| Georgian | `ala_lc` | `iso_9984` | `national` |
-|---|---|---|---|
-| თბილისი | tʻbilisi | t'bilisi | tbilisi |
-| ქუთაისი | kʻutʻaisi | k'ut'aisi | kutaisi |
-| ჭავჭავაძე | chavchavadze | čavčavaje | ch'avch'avadze |
-| წერეთელი | tseretʻeli | ceret'eli | ts'ereteli |
-| მცხეთა | mtsʻkhetʻa | mc'xet'a | mtskheta |
-| ყაზბეგი | qazbegi | qazbegi | q'azbegi |
+| Georgian | `ala_lc` | `iso_9984` | `iso_9984_1996` | `national` |
+|---|---|---|---|---|
+| თბილისი | tʻbilisi | tbilisi | t'bilisi | tbilisi |
+| ქუთაისი | kʻutʻaisi | kutaisi | k'ut'aisi | kutaisi |
+| ჭავჭავაძე | chavchavadze | ch'avch'avadze | čavčavaje | ch'avch'avadze |
+| წერეთელი | tseretʻeli | ts'ereteli | ceret'eli | ts'ereteli |
+| მცხეთა | mtsʻkhetʻa | mtskheta | mc'xet'a | mtskheta |
+| ყაზბეგი | qazbegi | q'azbegi | qazbegi | q'azbegi |
 
 Mkhedruli has no capitals, so a Georgian rendering is lowercase; a
 catalogue capitalises proper names by its own convention. Mtavruli, the
@@ -107,10 +123,11 @@ capital forms Unicode added in 2018, renders as capitals.
 ### The apostrophe runs the opposite way
 
 Georgian has pairs of aspirated and ejective consonants (`თ`/`ტ`,
-`ფ`/`პ`, `ქ`/`კ`, `ჩ`/`ჭ`, `ც`/`წ`). ALA-LC and ISO 9984 mark the
+`ფ`/`პ`, `ქ`/`კ`, `ჩ`/`ჭ`, `ც`/`წ`). ALA-LC and ISO 9984:1996 mark the
 **aspirate** with the apostrophe (`tʻbilisi`, `kʻutʻaisi`) and leave the
-ejective plain. The national system marks the **ejective** (`ts'ereteli`,
-`ch'avch'avadze`) and leaves the aspirate plain. The same apostrophe on
+ejective plain. The national system, and ISO 9984:2026 after it, mark the
+**ejective** (`ts'ereteli`, `ch'avch'avadze`) and leave the aspirate
+plain. The same apostrophe on
 the same word therefore means opposite letters in the two systems, which
 is the commonest source of confusion between them, and the reason the
 fold strips the mark and merges each pair.
@@ -123,10 +140,30 @@ letters (`ჱ ē`, `ჲ y`, `ჳ w`, `ჴ ẖ`, `ჵ ō`). Lossy: `dz`, `zh`, `g
 
 ### ISO 9984
 
-One letter per letter, so it reverses: háčeks for the sibilants and
-affricates (`ž š č ǰ`), `x` for `ხ`, `ḡ` for `ღ`, `j` for `ძ`, `c` for
-`წ`, and a plain apostrophe on the aspirates. Defines the archaic letters
-as ALA-LC does.
+`ka/iso_9984` follows the second edition, ISO 9984:2026, which is a
+different system from the first. It is based on the national system:
+the same digraphs (`zh sh ch ts dz kh gh`) and the apostrophe on the
+ejective, so for most words it gives exactly the national spelling
+(*Tbilisi*, *Ts'ereteli*). What makes it reversible is a middle dot
+(U+00B7) between two letters that would otherwise read as a digraph:
+`z·h` is `ზ` and `ჰ`, not `ჟ`. The standard lists the pairs (`გ`, `ზ`,
+`ს` or `ქ` before `ჰ`; `თ` before `ს`; `დ` before `ზ`), and the dot is
+skipped when reading back. Two sequences the list does not cover still
+read two ways, `dzh` (`ძჰ` or `დჟ`) and `tsh` (`ცჰ` or `თშ`); reading
+back takes the first of each. It also defines fourteen letters that
+standard Georgian does not use, the five archaic letters as ALA-LC has
+them among them.
+
+### ISO 9984:1996
+
+The first edition, which the 2026 edition cancelled and replaced. It is
+kept as `ka/iso_9984_1996` because data romanised under it stays in
+catalogues and data sets, and only its own table reads that data back.
+One letter per letter: háčeks for the sibilants and affricates
+(`ž š č ǰ`), `x` for `ხ`, `ḡ` for `ღ`, `j` for `ძ`, `c` for `წ`, and a
+plain apostrophe on the **aspirates**, so its `t'` is `თ` where the
+second edition's is `ტ`. Defines the archaic letters as ALA-LC does, and
+`ჶ` as `f`. The fold equates both editions.
 
 ### The national system
 

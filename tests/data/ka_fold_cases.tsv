@@ -1,62 +1,62 @@
 group	form	note
 tbilisi	თბილისი	
 tbilisi	Tʻbilisi	ALA-LC
-tbilisi	T'bilisi	ISO 9984
-tbilisi	Tbilisi	national
+tbilisi	T'bilisi	ISO 9984:1996
+tbilisi	Tbilisi	national and ISO 9984:2026
 tbilisi	ᲗᲑᲘᲚᲘᲡᲘ	Mtavruli capitals
 tbilisi	TBILISI	
 kutaisi	ქუთაისი	
 kutaisi	Kʻutʻaisi	ALA-LC
-kutaisi	K'ut'aisi	ISO 9984
-kutaisi	Kutaisi	national
+kutaisi	K'ut'aisi	ISO 9984:1996
+kutaisi	Kutaisi	national and ISO 9984:2026
 batumi	ბათუმი	
 batumi	Batʻumi	ALA-LC
-batumi	Batumi	national
+batumi	Batumi	national and ISO 9984:2026
 mtskheta	მცხეთა	
 mtskheta	Mtsʻkhetʻa	ALA-LC
-mtskheta	Mc'xet'a	ISO 9984
-mtskheta	Mtskheta	national
+mtskheta	Mc'xet'a	ISO 9984:1996
+mtskheta	Mtskheta	national and ISO 9984:2026
 rustaveli	რუსთაველი	
 rustaveli	Rustʻaveli	ALA-LC
-rustaveli	Rust'aveli	ISO 9984
-rustaveli	Rustaveli	national
+rustaveli	Rust'aveli	ISO 9984:1996
+rustaveli	Rustaveli	national and ISO 9984:2026
 shota	შოთა	
 shota	Shotʻa	ALA-LC
-shota	Šot'a	ISO 9984
-shota	Shota	national
+shota	Šot'a	ISO 9984:1996
+shota	Shota	national and ISO 9984:2026
 chavchavadze	ჭავჭავაძე	
 chavchavadze	Chavchavadze	ALA-LC
-chavchavadze	Čavčavaje	ISO 9984
-chavchavadze	Ch'avch'avadze	national
+chavchavadze	Čavčavaje	ISO 9984:1996
+chavchavadze	Ch'avch'avadze	national and ISO 9984:2026
 tsereteli	წერეთელი	
 tsereteli	Tseretʻeli	ALA-LC
-tsereteli	Ceret'eli	ISO 9984
-tsereteli	Ts'ereteli	national
+tsereteli	Ceret'eli	ISO 9984:1996
+tsereteli	Ts'ereteli	national and ISO 9984:2026
 javakhishvili	ჯავახიშვილი	
-javakhishvili	Javakhishvili	ALA-LC and national
-javakhishvili	ǰavaxišvili	ISO 9984
+javakhishvili	Javakhishvili	ALA-LC, national and ISO 9984:2026
+javakhishvili	ǰavaxišvili	ISO 9984:1996
 zhordania	ჟორდანია	
-zhordania	Zhordania	ALA-LC and national
-zhordania	Žordania	ISO 9984
+zhordania	Zhordania	ALA-LC, national and ISO 9984:2026
+zhordania	Žordania	ISO 9984:1996
 qazbegi	ყაზბეგი	
-qazbegi	Qazbegi	ALA-LC and ISO 9984
-qazbegi	Q'azbegi	national
+qazbegi	Qazbegi	ALA-LC and ISO 9984:1996
+qazbegi	Q'azbegi	national and ISO 9984:2026
 qazbegi	Kazbegi	the common English form
 ghvino	ღვინო	
-ghvino	ghvino	ALA-LC and national
-ghvino	ḡvino	ISO 9984
+ghvino	ghvino	ALA-LC, national and ISO 9984:2026
+ghvino	ḡvino	ISO 9984:1996
 giorgi	გიორგი	
 giorgi	Giorgi	every scheme
 gamsakhurdia	გამსახურდია	
-gamsakhurdia	Gamsakhurdia	ALA-LC and national
-gamsakhurdia	Gamsaxurdia	ISO 9984
+gamsakhurdia	Gamsakhurdia	ALA-LC, national and ISO 9984:2026
+gamsakhurdia	Gamsaxurdia	ISO 9984:1996
 kartuli	ქართული	
 kartuli	Kʻartʻuli	ALA-LC
-kartuli	K'art'uli	ISO 9984
-kartuli	Kartuli	national
+kartuli	K'art'uli	ISO 9984:1996
+kartuli	Kartuli	national and ISO 9984:2026
 dzveli	ძველი	
-dzveli	dzveli	ALA-LC and national
-dzveli	jveli	ISO 9984
+dzveli	dzveli	ALA-LC, national and ISO 9984:2026
+dzveli	jveli	ISO 9984:1996
 archaic	ჴელი	archaic ჴ
 archaic	ხელი	modern
 archaic	kheli	

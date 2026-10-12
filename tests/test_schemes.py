@@ -12,10 +12,10 @@ def test_armenian_has_thirty_eight_letters() -> None:
     assert hy.SCRIPT.letters[0] == "ա" and hy.SCRIPT.letters[-1] == "ֆ"
 
 
-def test_georgian_has_thirty_three_letters_and_five_archaic() -> None:
+def test_georgian_has_thirty_three_letters_and_fourteen_others() -> None:
     assert len(ka.SCRIPT.letters) == 33
     assert ka.SCRIPT.letters[0] == "ა" and ka.SCRIPT.letters[-1] == "ჰ"
-    assert ka.SCRIPT.archaic == "ჱჲჳჴჵ"
+    assert ka.SCRIPT.archaic == "ჱჲჳჴჵჶჷჸჹჺჼჽჾჿ"
     assert not ka.SCRIPT.cased
 
 
