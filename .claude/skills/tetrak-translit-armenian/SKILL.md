@@ -35,9 +35,12 @@ is the understanding behind them.
   each scheme's `punctuation` (see "Punctuation" below); unmapped marks pass
   through where they stand (`k՚uzē`).
 - **Presentation-form ligatures** `ﬓ ﬔ ﬕ ﬖ ﬗ` (U+FB13–U+FB17, for `մն մե մի
-  վն մխ`) are detected as Armenian by name but are outside the ranges, so
-  they are **not rendered**. NFKC would decompose them; the engine uses NFC.
-  Known gap; see the romanisation skill.
+  վն մխ`) are outside the ranges. They are typesetting, not spelling, so
+  `SCRIPT.compatibility` writes each out as its two letters before rendering
+  and folding (`ﬕայն` → *miayn*, and it folds with `միայն`). Before 3.0.1
+  they passed through unrendered and the fold **dropped** them, so `ﬕայն`
+  (*only*) shared a key with `այն` (*that*). Reading back gives the letters,
+  never the ligature.
 
 ## Two orthographies
 

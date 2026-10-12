@@ -115,7 +115,7 @@ def render(text: str, scheme: Scheme, variant: str | None = None) -> str:
             with rules that depend on it; ``None`` applies none of them.
     """
     script = scheme.script
-    text = unicodedata.normalize("NFC", text)
+    text = script.expand(unicodedata.normalize("NFC", text))
     out: list[str] = []
     word: list[str] = []
     pending: list[str] = []

@@ -176,12 +176,14 @@ regardless of which system put the mark where.
   diacritic-bearing letter a scheme introduces needs a `_LETTERS` entry in
   that script's fold, or it folds to the bare letter and the scheme's output
   stops folding like its source.
-- NFKC is **not** applied, so compatibility characters survive. Armenian has
-  five presentation-form ligatures at U+FB13–U+FB17 (`ﬓ ﬔ ﬕ ﬖ ﬗ`, for `մն
-  մե մի վն մխ`): their Unicode names begin with "ARMENIAN", so `detect()`
-  reports Armenian, but they lie outside `Script.ranges` and pass through
-  `transliterate()` unrendered (`ﬔր` renders as `ﬔr`). Known gap, found
-  2026-10-10, not yet addressed; a fix would NFKC-normalise or add the range.
+- NFKC is **not** applied, deliberately: it would also rewrite Latin passing
+  through (`ﬁ`, superscripts) and the modifier letters some schemes output
+  (ISO 9984:2026's `ʸ ʷ ⁿ`). Instead a `Script` lists its own compatibility
+  characters in `compatibility`, and `Script.expand()` writes them out before
+  rendering and folding. Armenian's five presentation ligatures at
+  U+FB13–U+FB17 (`ﬓ ﬔ ﬕ ﬖ ﬗ`, for `մն մե մի վն մխ`) are the case: `ﬔր`
+  renders as *mer*. Fixed in 3.0.1; before that they passed through
+  unrendered and the fold dropped them.
 - **Case** is handled per character. A cased script capitalises a rendering
   when its source letter was a capital, and a whole word in capitals renders
   in capitals. A caseless script (Georgian Mkhedruli) ignores Latin capitals

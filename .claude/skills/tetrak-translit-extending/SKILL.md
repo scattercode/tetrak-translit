@@ -104,8 +104,10 @@ which it does not say:
   that is how `detect()` finds the script; and **`ranges` must contain every
   letter and no other registered script's letters**
   (`test_script_ranges_do_not_overlap`, `test_every_letter_is_in_the_ranges`).
-  A letter the ranges omit is detected and silently not rendered; the
-  Armenian presentation ligatures are the standing example.
+  A letter the ranges omit is detected and silently not rendered (and the
+  fold drops it). If the script has compatibility characters that stand for
+  letter sequences, list them in `compatibility` rather than widening the
+  ranges, as Armenian does for its presentation ligatures.
 - **`letters` are lowercase** and `test_every_letter_is_in_the_ranges` checks
   that. For a caseless script set `cased=False`, or Latin capitals on read-back
   will try to uppercase letters that have no uppercase.

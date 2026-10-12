@@ -17,6 +17,8 @@ SCRIPT = Script(
     # Set inside a word: the apostrophe ՚, the stress marks ՛ ՜ ՞ (over
     # the stressed vowel) and the abbreviation mark ՟.
     marks="՚՛՜՞՟",
+    # The presentation ligatures U+FB13-U+FB17, written out as their letters.
+    compatibility={"ﬓ": "մն", "ﬔ": "մե", "ﬕ": "մի", "ﬖ": "վն", "ﬗ": "մխ"},
     ranges=((0x0531, 0x0556), (0x0560, 0x0588)),
     cased=True,
 )

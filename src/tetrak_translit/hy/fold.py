@@ -165,6 +165,7 @@ _LATIN: Rules = (
 
 def fold_token(token: str) -> str:
     """Fold one whitespace-free token, Armenian or Latin, to its key."""
+    token = SCRIPT.expand(token)
     if SCRIPT.has_letters(token):
         token = render(apply(token.lower(), _ORTHOGRAPHY), _BASIS)
     return apply(clean(token, _LETTERS), _LATIN)
