@@ -30,7 +30,8 @@ class ScriptPackage:
 
     script: Script
     schemes: dict[str, Scheme]
-    fold_token: Callable[[str], str]
+    #: Folds a token; the second argument is the whole text it came from.
+    fold_token: Callable[..., str]
     variant: Callable[[str], str | None]
 
 

@@ -61,8 +61,12 @@ _LATIN: Rules = (
 )
 
 
-def fold_token(token: str) -> str:
-    """Fold one whitespace-free token, Georgian or Latin, to its key."""
+def fold_token(token: str, context: str | None = None) -> str:
+    """Fold one whitespace-free token, Georgian or Latin, to its key.
+
+    *context* is accepted for the registry's sake and unused: no Georgian
+    rule depends on the rest of the text.
+    """
     if SCRIPT.has_letters(token):
         token = render(token.lower().translate(_ARCHAIC), ALA_LC)
     return apply(clean(token, _LETTERS), _LATIN)

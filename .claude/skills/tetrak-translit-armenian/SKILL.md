@@ -221,6 +221,12 @@ Order of operations for one token:
 
 1. **Armenian input** is lowercased, normalised classical → reformed by the
    `_ORTHOGRAPHY` rules above, and rendered through **ALA-LC**.
+   **Latin input** whose whole text (`context`, which `fold()` passes; the
+   token alone otherwise) carries an ISO 9985 or Hübschmann-Meillet mark
+   (`_ISO_MARKS`: `č ǰ š ž ġ ł ə ë ç`, `ʿ`, `c` + apostrophe, `ow`) has
+   every bare `j` turned into `dz` first, because there `j` is `ձ` and `ǰ`
+   is `ջ`. Bare `c` and `ṙ` are deliberately not marks: popular spellings
+   use `c`, and the 2011 ALA-LC table used `ṙ`.
 2. **`clean()`**: the `_LETTERS` map runs first (`ž`→`zh`, `š`→`sh`, `č`→`ch`,
    `ǰ`→`j`, `ġ`/`ł`→`gh`, `ç`→`c`, `ə`→`e`, `x`→`kh`), then NFKD strips the
    remaining diacritics and every apostrophe-like mark goes.
@@ -260,9 +266,13 @@ Sample keys: `Երևան`/*Yerevan*/*Erewan* → `erevan`; `Յակոբ`/*Hagop* 
   `Խաչատրյան` does not. Initial *h* is restored only before `o`, so *Akop*
   and *Arutyunyan* still miss *Hakob* and *Harutyunyan*.
 - **Classical `աւ` that reformed writes `օ`**: `աւր` and `օր` stay apart.
-- **`j` with no scheme hint**: ALA-LC and BGN/PCGN `j` is `ջ`; ISO 9985 and
-  Hübschmann-Meillet `j` is `ձ`. The heuristic reads it the library way.
-  `fold("Jowkn", scheme="iso_9985")` reverses exactly first and gets it right.
+- **ISO or Hübschmann-Meillet `j` with no mark to show the scheme**: ALA-LC
+  and BGN/PCGN `j` is `ջ`; ISO 9985 and Hübschmann-Meillet `j` is `ձ`. With
+  a mark anywhere in the text the fold reads `ձ`; without one (a lone
+  *Jayn*) it reads the ALA-LC way. `fold("Jayn", scheme="iso_9985")`
+  reverses exactly first and gets it right. Measured on 507 catalogue
+  titles, the marks resolve all but 3–4 of the ISO and Hübschmann-Meillet
+  `j` misses.
 - **BGN/PCGN `y` for `ը`** folds as the glide, not the schwa.
 - **`իւր` (his) and `հուր` (fire) over-merge** to `hur`, with *iwr* and
   *Iur*: classical `իւ` → `յու`, then initial *y* → *h*. Accepted, because

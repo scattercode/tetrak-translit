@@ -71,7 +71,8 @@ def fold(
             in a reversible scheme (``"iso_9985"``, ``"hubschmann_meillet"``,
             ``"ka/iso_9984"``), name it and the text is read back into
             the script exactly before folding, which removes the
-            ambiguities the heuristic fold has (Armenian ``j``). For a
+            ambiguities the heuristic fold has (Armenian ``j``, when nothing
+            else in the text shows the scheme). For a
             lossy scheme the heuristic fold is used. Either way the
             scheme's script becomes the default for Latin tokens.
 
@@ -91,7 +92,7 @@ def fold(
             text = engine.read(text, table)
         default = get_script(table.script)
     keys = (
-        _package_for(match.group(), default).fold_token(match.group())
+        _package_for(match.group(), default).fold_token(match.group(), text)
         for match in _TOKEN.finditer(text)
     )
     return " ".join(key for key in keys if key)
