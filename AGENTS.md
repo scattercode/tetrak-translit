@@ -57,6 +57,25 @@ closed without breaking a case is written up in `docs/fold.md` under known
 gaps, not forced. A change to what the fold returns for an existing case
 is a breaking change (`!` in the commit type).
 
+### A change to a table or a fold rule is never a patch
+
+Downstream, renderings are stored in catalogues and fold keys are stored
+in search indexes, and both must be rebuilt when they change. Dependants
+take patch releases without looking (`>=3.0.1,<4` takes 3.0.2), so a patch
+must not change what any input renders or folds to. Any change to a
+mapping table or a fold rule changes the output for some input, even when
+no test case moves: 3.0.2 added `iw` → `iu`, moved no case, and still
+changed the key of every Latin value containing `iw`, which meant
+re-indexing downstream. So:
+
+- A table or fold-rule change is at least `feat` (minor), never `fix`.
+- It is `feat!` or `fix!` (major) when any existing case's key or
+  rendering moves, as above.
+- `fix` is for changes that leave every output as it was for any input
+  that already succeeded: a crash, an error message, performance, typing.
+- Say in the commit body what output changed and that dependants must
+  re-render or re-index.
+
 ### No runtime dependencies
 
 `dependencies = []` in `pyproject.toml` is a feature. Standard library

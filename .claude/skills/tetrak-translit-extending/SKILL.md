@@ -1,6 +1,6 @@
 ---
 name: tetrak-translit-extending
-description: The workflows for changing tetrak-translit — correct a romanisation table, add a scheme to an existing script, add a whole new script package (Syriac design notes included), and extend or fix a fold with its test cases first. Covers the sequence for each, the hardcoded tests and docs that silently go stale, the Scheme validator and the reversibility tests, the rule-ordering traps in a fold, which commit type cuts which version (a changed fold result is a breaking change), the checks to run and the probe script that renders a name through every scheme or traces a fold rule by rule. Load this whenever editing anything under src/tetrak_translit/hy/ or ka/, adding a scheme or a script, touching tests/data/*_fold_cases.tsv, debugging why two spellings do not fold together, planning Syriac, or preparing a commit or release in this repository.
+description: The workflows for changing tetrak-translit — correct a romanisation table, add a scheme to an existing script, add a whole new script package (Syriac design notes included), and extend or fix a fold with its test cases first. Covers the sequence for each, the hardcoded tests and docs that silently go stale, the Scheme validator and the reversibility tests, the rule-ordering traps in a fold, which commit type cuts which version (a table or fold-rule change is never a patch; a changed fold case is breaking), the checks to run and the probe script that renders a name through every scheme or traces a fold rule by rule. Load this whenever editing anything under src/tetrak_translit/hy/ or ka/, adding a scheme or a script, touching tests/data/*_fold_cases.tsv, debugging why two spellings do not fold together, planning Syriac, or preparing a commit or release in this repository.
 ---
 
 # Extending tetrak-translit
@@ -166,11 +166,15 @@ harder to notice, which is why the sequence starts with cases.
    inequality to `test_does_not_claim_the_known_gaps`, write it up under
    known gaps in `docs/fold.md` and in the per-script skill, and leave it.
 7. Update the rule table in `docs/fold.md` and in the per-script skill.
-8. **Commit type**: a rule that only adds merges (every existing key
-   unchanged) is `feat`; one that changes any existing case's key is a
-   breaking change, `feat!` or `fix!`, with the old and new keys in the body.
-   Run the whole case file through `fold()` before and after and diff the keys
-   if unsure.
+8. **Commit type**: never `fix`. A rule that moves no existing case is
+   `feat`, even when it reads as a bug fix: it still changes the key of some
+   real input (3.0.2's `iw` → `iu` moved no case and re-keyed every Latin
+   value containing `iw`), and dependants who take patches automatically
+   would find their index silently stale. One that changes any existing
+   case's key is a breaking change, `feat!` or `fix!`, with the old and new
+   keys in the body. Either way, say in the body which inputs now fold
+   differently and that indexes must be rebuilt. Run the whole case file
+   through `fold()` before and after and diff the keys if unsure.
 
 ## The checks, and what cuts a version
 
@@ -189,9 +193,13 @@ exist fails the build. Docstrings are Google style.
 
 | Change | Type | Release |
 |---|---|---|
-| Table correction, docstring fix that changes output | `fix` | patch |
-| New scheme, new script, new fold merge with no key changed | `feat` | minor |
-| Any existing fold case's key changes; a table change that moves one | `feat!` / `fix!` | **major**, even at 0.x |
+| A fix that changes no output for any input that already worked: a crash, an error message, performance, typing | `fix` | patch |
+| Table correction; new fold rule or merge with no existing case moved; new scheme; new script | `feat` | minor |
+| Any existing fold case's key or rendering changes | `feat!` / `fix!` | **major**, even at 0.x |
+
+A change to a mapping table or a fold rule is **never a patch**, however
+small: renderings are stored in catalogues and keys in search indexes, and
+dependants take patch releases without looking. See `AGENTS.md`.
 | Docs, tests, tooling, skills | `docs` / `test` / `chore` | none |
 
 Releases, tags, the changelog and PyPI publication are automated on push to
