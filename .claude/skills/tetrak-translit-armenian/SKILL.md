@@ -264,6 +264,10 @@ Sample keys: `Երևան`/*Yerevan*/*Erewan* → `erevan`; `Յակոբ`/*Hagop* 
   Hübschmann-Meillet `j` is `ձ`. The heuristic reads it the library way.
   `fold("Jowkn", scheme="iso_9985")` reverses exactly first and gets it right.
 - **BGN/PCGN `y` for `ը`** folds as the glide, not the schwa.
+- **`իւր` (his) and `հուր` (fire) over-merge** to `hur`, with *iwr* and
+  *Iur*: classical `իւ` → `յու`, then initial *y* → *h*. Accepted, because
+  undoing it costs the `Յ`/`Հ` merge (*Hakob*, *Hovhannes*). Declared in
+  `test_declares_the_known_over_merges`.
 
 Before promising a user that two spellings fold together, run them: if the
 pair is not in `tests/data/hy_fold_cases.tsv`, it is not claimed.

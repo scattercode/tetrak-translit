@@ -178,3 +178,11 @@ class TestKey:
         assert fold("Arutyunyan", script="hy") != fold("Հարությունյան")
         assert fold("Tiflis", script="ka") != fold("თბილისი")
         assert fold("George", script="ka") != fold("გიორგი")
+
+    def test_declares_the_known_over_merges(self) -> None:
+        """Different words that share a key, documented in docs/fold.md. If one
+        of these starts failing, move the pair into the different-names test
+        and out of the gaps."""
+        # իւր (his) and հուր (fire): initial y becomes h.
+        assert fold("իւր") == fold("հուր")
+        assert fold("iwr", script="hy") == fold("Hur", script="hy")
