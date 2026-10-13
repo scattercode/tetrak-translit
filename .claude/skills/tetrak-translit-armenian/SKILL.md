@@ -231,8 +231,8 @@ Order of operations for one token:
    | `th` → `t`; `ph` → `p` | Older English and French aspirates: *Thoumanian*, *Thoros* |
    | `vh` → `v` | Popular *Hovannes* for *Hovhannes* |
    | `ow`, `ou`, `oo` → `u` | ISO `ow`, French-style *Sourp*, popular *Shooshi* |
-   | `ew` → `ev`; `w` → `v` | ISO and Hübschmann-Meillet `և`, ALA-LC classical *Erewan*, ALA-LC `ւ` |
-   | initial `yev` → `ev`, `ye` → `e`, `vo` → `o` | BGN/PCGN and Western glides |
+   | `ew` → `ev`; `iw` → `iu`; `w` → `v` | ISO and Hübschmann-Meillet `և`, ALA-LC classical *Erewan*; classical `իւ` (*giwgh*, which the Armenian side has made `յու`); ALA-LC `ւ` |
+   | initial `yev` → `ev`, `ye` → `e`, `vo` → `o`, `iu` → `yu` | BGN/PCGN and Western glides; classical initial `իւ` (*iwr*, Western *Iur*) meets `յուր` |
    | initial `y` before a vowel → `h` | Western *Hagop* against *Yakob*; `Յովհաննէս` / `Հովհաննես` |
    | initial `ho` → `o` | Russian-mediated *Ovanes*, *Ovsep* (Russian has no *h*). Only before `o`: a general initial-*h* drop would merge `իւր` (his) with `ուր` (where), and it would change the keys of every *h*- name |
    | `dz` → `ts`; `ts`, `tz` → `c` | `ծ ձ ց` become one |
@@ -264,6 +264,10 @@ Sample keys: `Երևան`/*Yerevan*/*Erewan* → `erevan`; `Յակոբ`/*Hagop* 
   Hübschmann-Meillet `j` is `ձ`. The heuristic reads it the library way.
   `fold("Jowkn", scheme="iso_9985")` reverses exactly first and gets it right.
 - **BGN/PCGN `y` for `ը`** folds as the glide, not the schwa.
+- **`իւր` (his) and `հուր` (fire) over-merge** to `hur`, with *iwr* and
+  *Iur*: classical `իւ` → `յու`, then initial *y* → *h*. Accepted, because
+  undoing it costs the `Յ`/`Հ` merge (*Hakob*, *Hovhannes*). Declared in
+  `test_declares_the_known_over_merges`.
 
 Before promising a user that two spellings fold together, run them: if the
 pair is not in `tests/data/hy_fold_cases.tsv`, it is not claimed.
