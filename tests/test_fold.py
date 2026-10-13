@@ -122,9 +122,10 @@ class TestScriptArgument:
 
 class TestSchemeHint:
     def test_a_reversible_scheme_hint_resolves_armenian_j(self) -> None:
-        """ISO 9985 j is ձ; without the hint it would fold as ALA-LC's ջ."""
-        assert fold("Jowkn", scheme="iso_9985") == fold("Ձուկն")
-        assert fold("Jowkn", script="hy") != fold("Ձուկն")
+        """ISO 9985 j is ձ; with no hint and no ISO mark in the text it would
+        fold as ALA-LC's ջ."""
+        assert fold("Jayn", scheme="iso_9985") == fold("Ձայն")
+        assert fold("Jayn", script="hy") != fold("Ձայն")
 
     def test_a_reversible_scheme_hint_works_for_georgian(self) -> None:
         assert fold("Mc'xet'a", scheme="ka/iso_9984_1996") == fold("მცხეთა")

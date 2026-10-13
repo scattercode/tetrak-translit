@@ -151,11 +151,16 @@ raises rather than silently applying the wrong rules. The rules, and the
 gaps, are on [the fold page](fold.md).
 
 When the Latin input is known to be in a reversible scheme, say so and
-the fold reads it back exactly before folding, which removes the one
-ambiguity the Armenian heuristic has:
+the fold reads it back exactly before folding. That removes the one
+ambiguity the Armenian heuristic has, ISO 9985 and Hübschmann-Meillet `j`
+for `ձ`, in the case the heuristic cannot settle: a text with no other
+mark of the scheme. *Jowkn* needs no hint, because ISO's *ow* shows the
+scheme; a lone *Jayn* does:
 
 ```python
->>> tt.fold("Jowkn", scheme="iso_9985") == tt.fold("Ձուկն")
+>>> tt.fold("Jowkn", script="hy") == tt.fold("Ձուկն")
+True
+>>> tt.fold("Jayn", scheme="iso_9985") == tt.fold("Ձայն")
 True
 ```
 

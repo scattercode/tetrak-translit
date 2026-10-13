@@ -46,7 +46,15 @@ rules would never find `ბათუმი`.
    (*Գէորգ* is *Gevorg*); and a word-final `յ` after a vowel is dropped
    (`ծառայ` is `ծառա`). It is then rendered through ALA-LC, so that
    Armenian and ALA-LC Latin reach the next step by the same road.
-2. **Latin** is lowercased and stripped of every diacritic and aspiration
+2. **Latin `j` is read as `ձ` when the text shows ISO 9985 or
+   Hübschmann-Meillet.** Those two schemes write `ձ` as `j` and `ջ` as `ǰ`;
+   ALA-LC and BGN/PCGN write `ջ` as `j`. A mark only ISO 9985 or
+   Hübschmann-Meillet makes — `č ǰ š ž ġ ł ə ë ç`, the Hübschmann-Meillet
+   aspiration `ʿ`, `c` with an aspiration mark, or ISO `ow` — anywhere in
+   the text being folded, not only in the same word, turns every bare `j`
+   in it into `dz`: *Jayn hayreneacʿ* finds `Ձայն հայրենեաց`. A bare `c`
+   is not counted, because popular spellings use it.
+3. **Latin** is lowercased and stripped of every diacritic and aspiration
    mark. An aspirate written with an *h* loses it (`th` and `t`, `ph`
    and `p`, so *Thoumanian* finds `Թումանյան`), and an *h* after *v* is
    dropped (`vh` and `v`, so *Hovannes* finds *Hovhannes*). Then its
@@ -106,11 +114,14 @@ Armenian:
   `իւր` (his) with `ուր` (where).
 - **Classical `աւ` that reformed spelling turned into `օ`.** `աւր` and
   `օր` (day) do not fold together; the fold reads `ւ` as *v*.
-- **`j` without a scheme hint.** In ALA-LC and BGN/PCGN `j` is `ջ`; in
-  ISO 9985 and Hübschmann-Meillet it is `ձ`. The heuristic fold reads it
-  the library way. Pass `scheme="iso_9985"` or
-  `scheme="hubschmann_meillet"` when you know, and the input is reversed
-  exactly instead.
+- **ISO 9985 or Hübschmann-Meillet `j` with nothing to show the scheme.**
+  In ALA-LC and BGN/PCGN `j` is `ջ`; in ISO 9985 and Hübschmann-Meillet it
+  is `ձ`. When the text carries none of the marks in rule 2 (a lone
+  *Jayn*, or *arjak ew otanawor*), the fold reads `j` the ALA-LC way. Pass
+  `scheme="iso_9985"` or `scheme="hubschmann_meillet"` when you know, and
+  the input is reversed exactly instead. `fold_token()` sees one token, so
+  it looks for the marks in that token only; fold whole values with
+  `fold()`.
 - **BGN/PCGN `y` for `ը`.** It folds as the glide, not the schwa.
 - **`իւր` (his) and `հուր` (fire) share a key.** Classical `իւ` becomes
   `յու`, and an initial `y` becomes `h` so that *Hagop* finds *Yakob*;

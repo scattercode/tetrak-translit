@@ -12,7 +12,13 @@ the Armenian rules. In order:
    module so that a new edition of the display table never moves a key
    -- so that Armenian and ALA-LC Latin reach the next step by the same
    road.
-2. **Latin** is lowercased and stripped of every diacritic and
+2. **Latin written in ISO 9985 or Hübschmann-Meillet**, which spell ``ձ``
+   ``j`` where ALA-LC and BGN/PCGN spell ``ջ`` ``j``, is recognised by a
+   mark only those two schemes make (``č ǰ š ž ġ ł ə ë ç``, the
+   Hübschmann-Meillet aspiration ``ʿ``, ``c`` with an aspiration mark, or
+   ISO ``ow``) anywhere in the text being folded, not only in the token:
+   then its bare ``j`` is read as ``dz``.
+3. **Latin** is lowercased and stripped of every diacritic and
    aspiration mark, an aspirate written with *h* loses it (``th``/``t``,
    ``ph``/``p``: *Thoumanian*), an *h* after *v* is dropped
    (``vh``/``v``: *Hovannes*), then its digraphs are collapsed onto one
@@ -33,7 +39,8 @@ for ``Մկրտիչ``) or come through Russian (*Khachaturian* for
 ``Խաչատրյան``) do not fold to the Armenian; a classical ``աւ`` that
 reformed spelling turned into ``օ`` (``աւր``/``օր``) does not either;
 and ISO 9985 or Hübschmann-Meillet ``j`` (which is ``ձ``) folds as if it
-were ALA-LC ``j`` (which is ``ջ``) unless ``scheme=`` says otherwise. The
+were ALA-LC ``j`` (which is ``ջ``) when nothing else in the text shows the
+scheme (a lone *Jayn*) and ``scheme=`` does not say. The
 test set in ``tests/data/hy_fold_cases.tsv`` is the published claim; what
 is not in it is not claimed.
 """
@@ -41,6 +48,7 @@ is not in it is not claimed.
 from __future__ import annotations
 
 import re
+import unicodedata
 
 from ..engine import render
 from ..latin import FINISH, Rules, apply, clean
@@ -128,6 +136,25 @@ _LETTERS = {
     "x": "kh",
 }
 
+# Marks that only ISO 9985 and Hübschmann-Meillet make, so that in Latin
+# text carrying one, a bare j is their ձ and not ALA-LC's ջ. ǰ is matched
+# precomposed and as j with a combining caron (the capital has no
+# precomposed form). Bare c is left out: popular spellings use it.
+_ISO_MARKS = re.compile(r"[čǰšžġłəëçʿ]|j\u030c|c[ʻʼʿ'’]|ow")
+_BARE_J = re.compile(r"j(?!\u030c)")
+
+
+# fold() passes the same text for every token, so remember the last answer.
+_J_IS_DZ: dict[str, bool] = {}
+
+
+def _j_is_dz(context: str) -> bool:
+    if context not in _J_IS_DZ:
+        _J_IS_DZ.clear()
+        _J_IS_DZ[context] = bool(_ISO_MARKS.search(unicodedata.normalize("NFC", context).lower()))
+    return _J_IS_DZ[context]
+
+
 # The Latin skeleton rules, applied in this order to one lowercase token.
 _LATIN: Rules = (
     # Older English and French spellings mark an aspirate with h (Thoumanian,
@@ -167,11 +194,20 @@ _LATIN: Rules = (
 )
 
 
-def fold_token(token: str) -> str:
-    """Fold one whitespace-free token, Armenian or Latin, to its key."""
+def fold_token(token: str, context: str | None = None) -> str:
+    """Fold one whitespace-free token, Armenian or Latin, to its key.
+
+    Args:
+        token: The token.
+        context: The whole text the token came from, which is where the
+            marks that show a Latin ``j`` is ``ձ`` are looked for. The token
+            alone when omitted.
+    """
     token = SCRIPT.expand(token)
     if SCRIPT.has_letters(token):
         token = render(apply(token.lower(), _ORTHOGRAPHY), _BASIS)
+    elif _j_is_dz(token if context is None else context):
+        token = _BARE_J.sub("dz", unicodedata.normalize("NFC", token).lower())
     return apply(clean(token, _LETTERS), _LATIN)
 
 
