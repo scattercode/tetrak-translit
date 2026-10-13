@@ -231,8 +231,8 @@ Order of operations for one token:
    | `th` → `t`; `ph` → `p` | Older English and French aspirates: *Thoumanian*, *Thoros* |
    | `vh` → `v` | Popular *Hovannes* for *Hovhannes* |
    | `ow`, `ou`, `oo` → `u` | ISO `ow`, French-style *Sourp*, popular *Shooshi* |
-   | `ew` → `ev`; `w` → `v` | ISO and Hübschmann-Meillet `և`, ALA-LC classical *Erewan*, ALA-LC `ւ` |
-   | initial `yev` → `ev`, `ye` → `e`, `vo` → `o` | BGN/PCGN and Western glides |
+   | `ew` → `ev`; `iw` → `iu`; `w` → `v` | ISO and Hübschmann-Meillet `և`, ALA-LC classical *Erewan*; classical `իւ` (*giwgh*, which the Armenian side has made `յու`); ALA-LC `ւ` |
+   | initial `yev` → `ev`, `ye` → `e`, `vo` → `o`, `iu` → `yu` | BGN/PCGN and Western glides; classical initial `իւ` (*iwr*, Western *Iur*) meets `յուր` |
    | initial `y` before a vowel → `h` | Western *Hagop* against *Yakob*; `Յովհաննէս` / `Հովհաննես` |
    | initial `ho` → `o` | Russian-mediated *Ovanes*, *Ovsep* (Russian has no *h*). Only before `o`: a general initial-*h* drop would merge `իւր` (his) with `ուր` (where), and it would change the keys of every *h*- name |
    | `dz` → `ts`; `ts`, `tz` → `c` | `ծ ձ ց` become one |

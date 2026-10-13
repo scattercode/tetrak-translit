@@ -51,10 +51,10 @@ rules would never find `ბათუმი`.
    and `p`, so *Thoumanian* finds `Թումանյան`), and an *h* after *v* is
    dropped (`vh` and `v`, so *Hovannes* finds *Hovhannes*). Then its
    digraphs are collapsed onto one spelling each (`ž` and
-   `zh`; `x` and `kh`; `ł`, `ġ` and `gh`; `ow`, `ou`, `oo` and `u`; `w`
-   and `v`); the voiced and voiceless pairs are merged (`b`/`p`, `d`/`t`,
+   `zh`; `x` and `kh`; `ł`, `ġ` and `gh`; `ow`, `ou`, `oo` and `u`; `iw`
+   and `iu`, for the classical `իւ`; `w` and `v`); the voiced and voiceless pairs are merged (`b`/`p`, `d`/`t`,
    `g`/`k`, `dz`/`ts`/`c`, `j`/`ch`); the glides are regularised
-   (word-initial `ye` and `e`, `vo` and `o`, `y` and `h`, and `ho` and
+   (word-initial `ye` and `e`, `vo` and `o`, `iu`, `y` and `h`, and `ho` and
    `o` for the Russian-mediated *Ovanes* and *Ovsep*; `ya`, `ea` and
    `ia`); a final `y` after a vowel is dropped; doubled letters are
    collapsed; and anything that is not a letter or a digit is removed.

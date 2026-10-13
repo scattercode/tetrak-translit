@@ -17,11 +17,11 @@ the Armenian rules. In order:
    ``ph``/``p``: *Thoumanian*), an *h* after *v* is dropped
    (``vh``/``v``: *Hovannes*), then its digraphs are collapsed onto one
    spelling each (``ž``/``zh``, ``x``/``kh``, ``ł``/``gh``,
-   ``ow``/``ou``/``oo``/``u``, ``w``/``v``), the voiced and voiceless pairs are merged (``b``/``p``,
+   ``ow``/``ou``/``oo``/``u``, ``iw``/``iu``, ``w``/``v``), the voiced and voiceless pairs are merged (``b``/``p``,
    ``d``/``t``, ``g``/``k``, ``dz``/``ts``/``c``, ``j``/``ch``) because
    Eastern and Western pronunciation spellings disagree on exactly those,
    the glides are regularised (initial ``ye``/``e``, initial ``vo``/``o``,
-   initial ``y``/``h``, initial ``ho``/``o`` for the Russian-mediated
+   initial ``iu``/``yu``/``h``, initial ``ho``/``o`` for the Russian-mediated
    *Ovanes* and *Ovsep*, ``ya``/``ea``/``ia``), a final ``y`` after a vowel
    is dropped, doubled letters are collapsed and anything that is not a
    letter or digit is removed.
@@ -138,10 +138,14 @@ _LATIN: Rules = (
     (re.compile(r"vh"), "v"),
     (re.compile(r"ow|ou|oo"), "u"),
     (re.compile(r"ew"), "ev"),
+    # Classical իւ, which the Armenian side has already made յու: iw in the
+    # schemes that write ւ as w, iu in Western, both yu at the start of a word.
+    (re.compile(r"iw"), "iu"),
     (re.compile(r"w"), "v"),
     (re.compile(r"^yev"), "ev"),
     (re.compile(r"^ye"), "e"),
     (re.compile(r"^vo"), "o"),
+    (re.compile(r"^iu"), "yu"),
     (re.compile(r"^y(?=[aeiou])"), "h"),
     # Russian has no h, so Russian-mediated forms drop it: Ovanes, Ovsep.
     # Only before o; a general drop would merge իւր (his) with ուր (where).
