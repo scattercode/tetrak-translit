@@ -23,7 +23,10 @@ the Armenian rules. In order:
    ``ph``/``p``: *Thoumanian*), an *h* after *v* is dropped
    (``vh``/``v``: *Hovannes*), then its digraphs are collapsed onto one
    spelling each (``ž``/``zh``, ``x``/``kh``, ``ł``/``gh``,
-   ``ow``/``ou``/``oo``/``u``, ``iw``/``iu``, ``w``/``v``), the voiced and voiceless pairs are merged (``b``/``p``,
+   ``ow``/``ou``/``oo``/``u``, ``iw``/``iu``, ``w``/``v``), a ``y`` with a
+   consonant beside it and no vowel on either side is read as BGN/PCGN's
+   ``ը`` and becomes ``e`` (*zhanry*, *ynker*; a lone ``y``, the initial
+   ``Յ.``, is not), the voiced and voiceless pairs are merged (``b``/``p``,
    ``d``/``t``, ``g``/``k``, ``dz``/``ts``/``c``, ``j``/``ch``) because
    Eastern and Western pronunciation spellings disagree on exactly those,
    the glides are regularised (initial ``ye``/``e``, initial ``vo``/``o``,
@@ -169,6 +172,11 @@ _LATIN: Rules = (
     # schemes that write ւ as w, iu in Western, both yu at the start of a word.
     (re.compile(r"iw"), "iu"),
     (re.compile(r"w"), "v"),
+    # BGN/PCGN writes ը as y, which the other schemes give a vowel letter.
+    # A y with a consonant beside it and no vowel on either side cannot be
+    # the glide յ (zhanry, ynker, Hayy). Punctuation is still in the token
+    # here, so a lone y, the initial Յ., has neither and is left alone.
+    (re.compile(r"(?<=[b-df-hj-np-tv-z])y(?![aeiou])|(?<![a-z])y(?=[b-df-hj-np-tv-z])"), "e"),
     (re.compile(r"^yev"), "ev"),
     (re.compile(r"^ye"), "e"),
     (re.compile(r"^vo"), "o"),
