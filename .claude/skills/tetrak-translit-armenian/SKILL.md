@@ -238,6 +238,7 @@ Order of operations for one token:
    | `vh` → `v` | Popular *Hovannes* for *Hovhannes* |
    | `ow`, `ou`, `oo` → `u` | ISO `ow`, French-style *Sourp*, popular *Shooshi* |
    | `ew` → `ev`; `iw` → `iu`; `w` → `v` | ISO and Hübschmann-Meillet `և`, ALA-LC classical *Erewan*; classical `իւ` (*giwgh*, which the Armenian side has made `յու`); ALA-LC `ւ` |
+   | `y` with a consonant beside it and no vowel on either side → `e` | BGN/PCGN `y` for `ը` (*zhanry*, *ynker*, *Hayy*); the glide `յ` always has a vowel beside it. A lone `y` (the initial `Յ.`) is left, or it would merge with `Ե.`: punctuation is still in the token at this step, so "not a vowel" is not enough |
    | initial `yev` → `ev`, `ye` → `e`, `vo` → `o`, `iu` → `yu` | BGN/PCGN and Western glides; classical initial `իւ` (*iwr*, Western *Iur*) meets `յուր` |
    | initial `y` before a vowel → `h` | Western *Hagop* against *Yakob*; `Յովհաննէս` / `Հովհաննես` |
    | initial `ho` → `o` | Russian-mediated *Ovanes*, *Ovsep* (Russian has no *h*). Only before `o`: a general initial-*h* drop would merge `իւր` (his) with `ուր` (where), and it would change the keys of every *h*- name |
@@ -273,7 +274,6 @@ Sample keys: `Երևան`/*Yerevan*/*Erewan* → `erevan`; `Յակոբ`/*Hagop* 
   reverses exactly first and gets it right. Measured on 507 catalogue
   titles, the marks resolve all but 3–4 of the ISO and Hübschmann-Meillet
   `j` misses.
-- **BGN/PCGN `y` for `ը`** folds as the glide, not the schwa.
 - **`իւր` (his) and `հուր` (fire) over-merge** to `hur`, with *iwr* and
   *Iur*: classical `իւ` → `յու`, then initial *y* → *h*. Accepted, because
   undoing it costs the `Յ`/`Հ` merge (*Hakob*, *Hovhannes*). Declared in
