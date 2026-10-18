@@ -76,8 +76,9 @@ A mapping is wrong, or the standard says something the table does not.
    script (as `ala_lc` does), a bare key becomes ambiguous and users need
    `script=` or the qualified id; the error message handles that.
 5. **The fold must take its output back.** `TestAllSchemesFoldToTheirScript`
-   runs every scheme's rendering of a sample set through the fold and expects
-   the script's own key. A scheme that introduces a diacritic letter the fold
+   runs every scheme's rendering of every script form in the test set through
+   the fold and expects the script's own key; the renderings it is known not
+   to take back are listed in its `KNOWN`, each a declared gap. A scheme that introduces a diacritic letter the fold
    has not seen (`ġ`, `ł`, `ẖ`) needs a `_LETTERS` entry in that script's fold,
    before NFKD strips the mark. Use `probe.py trace` on the failing sample.
 6. Known forms in `tests/test_transliterate.py`; a round-trip test if
@@ -113,11 +114,11 @@ which it does not say:
   will try to uppercase letters that have no uppercase.
 - **`variant()` returns `None`** when the script has nothing to say; it is
   still required, because the registry calls it.
-- **Three hardcoded strings mention the scripts by name**: the `description` in
+- **Four places mention the scripts by name**: the `description` in
   `cli.py`'s `build_parser()` ("Armenian and Georgian text"), the project
   `description`, `keywords` and `Natural Language` classifiers in
-  `pyproject.toml` (which still say Armenian only), and the README's opening
-  sentence. Update all three.
+  `pyproject.toml`, the title and keywords in `CITATION.cff`, and the
+  README's opening sentence. Update all four.
 - **`docs/api.md`'s autosummary** lists each package; add the new one or the
   Sphinx build (`-W`) still passes but the reference is silently incomplete.
 - Registry order is documentation order and CLI order; append.

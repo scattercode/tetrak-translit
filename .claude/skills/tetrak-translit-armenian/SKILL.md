@@ -62,6 +62,7 @@ What the library normalises when it folds classical towards reformed
 | `եա` | `յա` | `Պօղոսեան` / `Պողոսյան`, the `-ean`/`-yan` of surnames |
 | `իւ` | `յու` | `իւր` / `յուր` |
 | `եո` | `եվո` | `Գէորգ` → *Gevorg* |
+| initial `յ` before a vowel | `հ` | `Յակոբ` / `Հակոբ`, `յետ` / `հետ`, as the reform wrote them |
 | final `յ` after a vowel | dropped | `ծառայ` / `ծառա` |
 
 A classical `աւ` that reformed spelling writes `օ` is **not** normalised;
@@ -246,9 +247,9 @@ Order of operations for one token:
    | initial `yev` → `ev`, `ye` → `e`, `vo` → `o`, where a hyphen or a bracket also starts a word; initial `iu` → `yu` | BGN/PCGN and Western glides, whose renderers count a hyphen or a bracket as a word boundary (*Ter-Yeghishe*, *hay[yeren]*, *ark'[yepiskopos]*); classical initial `իւ` (*iwr*, Western *Iur*) meets `յուր` |
    | `y` before a vowel at the start of a word or after a hyphen → `h`; a lone `y` → `h` | Western *Hagop* against *Yakob*; `Յովհաննէս` / `Հովհաննես`; `Տէր-Յակոբեան` / *Tēr-Ḥakobean*; the initial `Յ.`, which ALA-LC 2022 writes *Ḥ.* and a keyboard *H.*, and which then shares a key with `Հ.` (declared) |
    | initial `ho` → `o` | Russian-mediated *Ovanes*, *Ovsep* (Russian has no *h*). Only before `o`: a general initial-*h* drop would merge `իւր` (his) with `ուր` (where), and it would change the keys of every *h*- name |
-   | `dz` → `ts`; `ts`, `tz` → `c` | `ծ ձ ց` become one |
+   | `d` → `t`; `ts`, `tz` → `c` | `ծ ձ ց` become one; `d` first, so that Western's `ds` for `տս` (*badsbaran*) reaches `c` with ALA-LC's `ts` and `dz` goes the way of `tz` |
    | `j` → `ch` | `ջ ճ չ` become one (and the ISO `j` gap below) |
-   | `gh` protected as `\x01`; `b`→`p`, `d`→`t`, `g`→`k`; restored | The Eastern/Western swap, without turning `gh` into `kh` |
+   | `gh` protected as `\x01`; `b`→`p`, `g`→`k`; restored | The Eastern/Western swap, without turning `gh` into `kh` |
    | `eo` → `evo` | *Gēorg* → *kevork* |
    | `ya`, `ea` → `ia`; `yo` → `io`; `yu`, `eu` → `iu` | *-yan*, *-ean*, *-ian*; *Harutiun* |
    | `y` after `iu` at the end of a word → `e` | BGN/PCGN `y` for `ը` after the `ւ` of classical `իւ`, the one place it follows a vowel: *tʻiwy* for `թիւը`. Before the silent `յ` is dropped, or it would go with it |
@@ -271,6 +272,12 @@ Sample keys: `Երևան`/*Yerevan*/*Erewan* → `erevan`; `Յակոբ`/*Hagop* 
 - **Spellings that came through Russian**: *Khachaturian* has a *u* that
   `Խաչատրյան` does not. Initial *h* is restored only before `o`, so *Akop*
   and *Arutyunyan* still miss *Hakob* and *Harutyunyan*.
+- **A classical word beginning `յե`, romanised with a `y`**: the Armenian
+  side reads the initial `յ` as `հ` (`յետ` / `հետ`, `Յեսու` / `Հեսու`, *Hesu*,
+  *Ḥesu*), but BGN/PCGN, ISO 9985, Hübschmann-Meillet and ALA-LC with the
+  orthography not stated write *Yesu*, and a Latin `ye` reads as an initial
+  `ե`. `scheme=` settles it for the reversible two. Declared in `KNOWN` in
+  `TestAllSchemesFoldToTheirScript`.
 - **German spellings**: *Eriwan*, *Jerewan*, *Tscharenz*, *Chatschaturjan*.
   German *j* is `յ`, *z* is `ց`, *tsch* is `չ`; in every scheme *j* is `ջ`,
   *z* is `զ` and *tsch* is `տ` + `շ`, so a German rule set would cost

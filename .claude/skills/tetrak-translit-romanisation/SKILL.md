@@ -121,9 +121,9 @@ Design principles when writing or changing one:
   why each script owns its fold and why Latin input must name its script.
 - **The two sides meet at ALA-LC.** Script input is pre-normalised (Armenian
   across the 1922 reform, Georgian archaic letters onto modern ones) and then
-  rendered through ALA-LC -- for Armenian, a frozen copy of the 2011 table in
-  `hy/fold.py` (`_BASIS`), so that following a new edition of the display
-  table never moves a stored key -- so that the script and its catalogue romanisation
+  rendered through ALA-LC -- a frozen copy of the 2011 table in each fold
+  module (`_BASIS`), so that following a new edition of the display table
+  never moves a stored key -- so that the script and its catalogue romanisation
   reach the Latin rules by the same road and one rule set serves every
   scheme. `TestAllSchemesFoldToTheirScript` checks that every scheme's output
   folds like its source.

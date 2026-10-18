@@ -10,8 +10,11 @@ and ISO 9984:1996's ``c``/``j`` for ALA-LC's ``ts``/``dz``. ISO 9984:2026
 is the national system's spelling, with a middle dot that the fold
 removes with the other punctuation.
 
-So the rules are: Georgian is rendered through ALA-LC after the archaic
-letters are folded onto their modern values; Latin is lowercased and
+So the rules are: Georgian has its archaic letters folded onto their
+modern values and ``ჶ`` onto the ``f`` that ISO 9984 writes for it, and is
+rendered through ALA-LC -- the 2011 table, frozen in this module as the
+Armenian fold freezes its own, so that a new edition of the display table
+never moves a key; Latin is lowercased and
 stripped of diacritics and apostrophes (which merges each aspirate with
 its ejective), the sibilant spellings are collapsed, ``dz`` and ``j``
 become one, ``ts`` and ``c`` become one, ``q`` becomes ``k`` (so
@@ -21,8 +24,9 @@ is removed.
 
 Known gaps: Russian-mediated forms (*Tiflis* for ``თბილისი``, *Kutais*
 for ``ქუთაისი``) and translated names (*George* for ``გიორგი``) do not
-fold to the Georgian. The test set in ``tests/data/ka_fold_cases.tsv`` is
-the published claim.
+fold to the Georgian, and the phonetic letters of ISO 9984:2026 Table 5
+beyond ``ჶ`` (``ჷ`` to ``ჿ``) are outside the fold's claim. The test set
+in ``tests/data/ka_fold_cases.tsv`` is the published claim.
 """
 
 from __future__ import annotations
@@ -31,11 +35,63 @@ import re
 
 from ..engine import render
 from ..latin import FINISH, Rules, apply, clean
-from .ala_lc import ALA_LC
+from ..script import Scheme
 from .descriptor import SCRIPT
 
-# Archaic letters to the modern letters that replaced them.
-_ARCHAIC = str.maketrans({"ჱ": "ე", "ჲ": "ი", "ჳ": "ვ", "ჴ": "ხ", "ჵ": "ო"})
+# The road Georgian takes into Latin before the skeleton rules: the ALA-LC
+# table as it stood in 2011, frozen here. The fold's keys are data other
+# systems store, so they must not move when the display table follows a
+# new edition of its standard; :mod:`.ala_lc` is free to change and this
+# is not. It is never registered as a scheme.
+_BASIS = Scheme(
+    script=SCRIPT,
+    key="fold_basis",
+    name="Fold basis (ALA-LC 2011)",
+    version="1.0",
+    standard="ALA-LC Romanization Tables, Georgian (2011), frozen for the fold",
+    reversible=False,
+    letters={
+        "ა": "a",
+        "ბ": "b",
+        "გ": "g",
+        "დ": "d",
+        "ე": "e",
+        "ვ": "v",
+        "ზ": "z",
+        "თ": "tʻ",
+        "ი": "i",
+        "კ": "k",
+        "ლ": "l",
+        "მ": "m",
+        "ნ": "n",
+        "ო": "o",
+        "პ": "p",
+        "ჟ": "zh",
+        "რ": "r",
+        "ს": "s",
+        "ტ": "t",
+        "უ": "u",
+        "ფ": "pʻ",
+        "ქ": "kʻ",
+        "ღ": "gh",
+        "ყ": "q",
+        "შ": "sh",
+        "ჩ": "chʻ",
+        "ც": "tsʻ",
+        "ძ": "dz",
+        "წ": "ts",
+        "ჭ": "ch",
+        "ხ": "kh",
+        "ჯ": "j",
+        "ჰ": "h",
+    },
+)
+
+# Letters outside the modern alphabet, to what they fold as: the five
+# archaic letters onto the modern letters that replaced them, and ჶ onto
+# the f that ISO 9984 renders it as, which the frozen ALA-LC table does
+# not define. Latin inside a Georgian token passes through the renderer.
+_ARCHAIC = str.maketrans({"ჱ": "ე", "ჲ": "ი", "ჳ": "ვ", "ჴ": "ხ", "ჵ": "ო", "ჶ": "f"})
 
 _LETTERS = {
     # ISO 9984:2026's middle dot (t·s): gone before ts can be merged.
@@ -68,7 +124,7 @@ def fold_token(token: str, context: str | None = None) -> str:
     rule depends on the rest of the text.
     """
     if SCRIPT.has_letters(token):
-        token = render(token.lower().translate(_ARCHAIC), ALA_LC)
+        token = render(token.lower().translate(_ARCHAIC), _BASIS)
     return apply(clean(token, _LETTERS), _LATIN)
 
 

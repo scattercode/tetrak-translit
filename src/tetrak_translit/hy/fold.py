@@ -8,8 +8,10 @@ the Armenian rules. In order:
    marks: ``ելնելո՞ւ`` is ``ելնելու``), and is normalised across the 1922
    reform, towards the reformed spelling: ``եւ`` becomes ``և``, ``է`` becomes ``ե``, ``եա``
    becomes ``յա`` and ``իւ`` becomes ``յու`` (the classical digraphs for
-   *ya* and *yu*), ``եո`` becomes ``եվո`` (*Գէորգ* is *Gevorg*), and a
-   word-final ``յ`` after a vowel is dropped (``ծառայ`` is ``ծառա``).
+   *ya* and *yu*), ``եո`` becomes ``եվո`` (*Գէորգ* is *Gevorg*), a
+   word-initial ``յ`` before a vowel becomes ``հ`` as the reform wrote it
+   (``Յակոբ`` is ``Հակոբ``, ``յետ`` is ``հետ``), and a word-final ``յ``
+   after a vowel is dropped (``ծառայ`` is ``ծառա``).
    Then it is rendered through ALA-LC -- the 2011 table, frozen in this
    module so that a new edition of the display table never moves a key
    -- so that Armenian and ALA-LC Latin reach the next step by the same
@@ -52,9 +54,14 @@ research): popular spellings that insert an unwritten schwa (*Megerdich*
 for ``Մկրտիչ``) or come through Russian (*Khachaturian* for
 ``Խաչատրյան``) do not fold to the Armenian; a classical ``աւ`` that
 reformed spelling turned into ``օ`` (``աւր``/``օր``) does not either;
-and ISO 9985 or Hübschmann-Meillet ``j`` (which is ``ձ``) folds as if it
+ISO 9985 or Hübschmann-Meillet ``j`` (which is ``ձ``) folds as if it
 were ALA-LC ``j`` (which is ``ջ``) when nothing else in the text shows the
-scheme (a lone *Jayn*) and ``scheme=`` does not say. The
+scheme (a lone *Jayn*) and ``scheme=`` does not say; and a classical
+word beginning ``յե`` romanised with a ``y`` (*Yesu* for ``Յեսու``, as
+BGN/PCGN, ISO 9985, Hübschmann-Meillet and ALA-LC without the orthography
+stated all write it) folds as an initial ``ե`` would, because a Latin
+``ye`` cannot say which it was; ``scheme=`` settles it for the reversible
+two. The
 test set in ``tests/data/hy_fold_cases.tsv`` is the published claim; what
 is not in it is not claimed.
 """
@@ -134,6 +141,11 @@ _ORTHOGRAPHY: Rules = (
     (re.compile(r"եա"), "յա"),
     (re.compile(r"իւ"), "յու"),
     (re.compile(r"եո"), "եվո"),
+    # A word-initial յ before a vowel, which the reform wrote հ (Յակոբ,
+    # Յեսու and յետ are Հակոբ, Հեսու and հետ). The Latin side makes the same
+    # merge (y to h); it is made here as well so that a classical յե does
+    # not reach the Latin rules as ye, which there is BGN/PCGN's initial ե.
+    (re.compile(r"(?<![ա-ֈ])յ(?=[աեէըիոօ])"), "հ"),
     (re.compile(r"(?<=[աոեիօ])յ(?![ա-ֈ])"), ""),
 )
 
@@ -166,10 +178,14 @@ _J_IS_DZ: dict[str, bool] = {}
 
 
 def _j_is_dz(context: str) -> bool:
-    if context not in _J_IS_DZ:
+    found = _J_IS_DZ.get(context)
+    if found is None:
+        found = bool(_ISO_MARKS.search(unicodedata.normalize("NFC", context).lower()))
+        # Another thread may clear the entry between here and the return,
+        # so the answer is the local, never read back from the dict.
         _J_IS_DZ.clear()
-        _J_IS_DZ[context] = bool(_ISO_MARKS.search(unicodedata.normalize("NFC", context).lower()))
-    return _J_IS_DZ[context]
+        _J_IS_DZ[context] = found
+    return found
 
 
 # The Latin skeleton rules, applied in this order to one lowercase token.
@@ -215,12 +231,13 @@ _LATIN: Rules = (
     # Russian has no h, so Russian-mediated forms drop it: Ovanes, Ovsep.
     # Only before o; a general drop would merge իւր (his) with ուր (where).
     (re.compile(r"^ho"), "o"),
-    (re.compile(r"dz"), "ts"),
+    # d is merged into t before ts is, so that Western's ds for տս
+    # (badsbaran) reaches c with ALA-LC's ts; dz goes the same way as tz.
+    (re.compile(r"d"), "t"),
     (re.compile(r"ts|tz"), "c"),
     (re.compile(r"j"), "ch"),
     (re.compile(r"gh"), "\x01"),  # protected while g is merged into k
     (re.compile(r"b"), "p"),
-    (re.compile(r"d"), "t"),
     (re.compile(r"g"), "k"),
     (re.compile(r"\x01"), "gh"),
     (re.compile(r"eo"), "evo"),

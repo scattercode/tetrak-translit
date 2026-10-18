@@ -151,7 +151,8 @@ raises rather than silently applying the wrong rules. The rules, and the
 gaps, are on [the fold page](fold.md).
 
 When the Latin input is known to be in a reversible scheme, say so and
-the fold reads it back exactly before folding. That removes the one
+the fold reads each Latin token back exactly before folding, leaving any
+token already in the script as it is. That removes the one
 ambiguity the Armenian heuristic has, ISO 9985 and Hübschmann-Meillet `j`
 for `ձ`, in the case the heuristic cannot settle: a text with no other
 mark of the scheme. *Jowkn* needs no hint, because ISO's *ow* shows the

@@ -18,7 +18,7 @@ several). Its `__init__.py` exports four names:
 |---|---|
 | `SCRIPT` | A {class}`~tetrak_translit.script.Script`: the alphabet, archaic letters, digraphs every scheme must render, vowels, Unicode ranges, and whether the script has case |
 | `SCHEMES` | `dict[str, Scheme]`, in the order the docs should list them |
-| `fold_token(token)` | The script's fold: one whitespace-free token, in the script or in Latin, to its key |
+| `fold_token(token, context=None)` | The script's fold: one whitespace-free token, in the script or in Latin, to its key. `context` is the whole text the token came from, for a rule that looks beyond the token; a fold with no such rule accepts and ignores it |
 | `variant(text)` | Whatever the script has by way of orthographies or variants, as a string, or `None` |
 
 The Georgian package is the smaller example to copy; the Armenian one
@@ -48,7 +48,11 @@ starts with (lowercase, diacritics off, apostrophes off) and the finish
 every fold ends with (ASCII only, doubled letters collapsed); between
 them go the script's own merges. Render the script side through one
 scheme, usually ALA-LC, so that the script and its catalogue
-romanisation reach the Latin rules by the same road.
+romanisation reach the Latin rules by the same road; and render it
+through a frozen copy of that table kept in the fold module, not the
+scheme itself, so that following a new edition of the standard never
+moves a key that a search index already holds. Both existing folds do
+this (`_BASIS`).
 
 A script whose text is normally unvocalised (Syriac, Arabic) needs a
 different kind of fold — consonantal, dropping vowels on the Latin side
