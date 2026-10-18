@@ -23,17 +23,21 @@ the Armenian rules. In order:
    ``ph``/``p``: *Thoumanian*), an *h* after *v* is dropped
    (``vh``/``v``: *Hovannes*), then its digraphs are collapsed onto one
    spelling each (``ž``/``zh``, ``x``/``kh``, ``ł``/``gh``,
-   ``ow``/``ou``/``oo``/``u``, ``iw``/``iu``, ``w``/``v``), a ``y`` with a
+   ``ow``/``ou``/``oo``/``u``, ``iw``/``iu``, ``w``/``v``, ``ivo``/``io``
+   for the glide Western says in *Virkilivos*), a ``y`` with a
    consonant beside it and no vowel on either side is read as BGN/PCGN's
-   ``ը`` and becomes ``e`` (*zhanry*, *ynker*; a lone ``y``, the initial
-   ``Յ.``, is not), the voiced and voiceless pairs are merged (``b``/``p``,
-   ``d``/``t``, ``g``/``k``, ``dz``/``ts``/``c``, ``j``/``ch``) because
-   Eastern and Western pronunciation spellings disagree on exactly those,
-   the glides are regularised (initial ``ye``/``e``, initial ``vo``/``o``,
-   initial ``iu``/``yu``/``h``, initial ``ho``/``o`` for the Russian-mediated
-   *Ovanes* and *Ovsep*, ``ya``/``ea``/``ia``), a final ``y`` after a vowel
-   is dropped, doubled letters are collapsed and anything that is not a
-   letter or digit is removed.
+   ``ը`` and becomes ``e`` (*zhanry*, *ynker*), the voiced and voiceless
+   pairs are merged (``b``/``p``, ``d``/``t``, ``g``/``k``,
+   ``dz``/``ts``/``c``, ``j``/``ch``) because Eastern and Western
+   pronunciation spellings disagree on exactly those, the glides are
+   regularised (initial ``ye``/``e``, initial ``vo``/``o``, initial
+   ``iu``/``yu``; ``y`` before a vowel at the start of a word or after a
+   hyphen becomes ``h``, and so does the lone initial ``Յ.``, which then
+   shares its key with ``Հ.``; initial ``ho``/``o`` for the
+   Russian-mediated *Ovanes* and *Ovsep*; ``ya``/``ea``/``ia``), a ``y``
+   after a vowel is dropped at the end of a word and before a hyphen or a
+   bracket (the silent ``յ`` of *hay-ṛuseren*), doubled letters are
+   collapsed and anything that is not a letter or digit is removed.
 
 Known gaps, because a fold that claims there is a single right answer is
 lying (LREC 2020, *cross-script name matching*, cited in Tetrak's
@@ -172,6 +176,10 @@ _LATIN: Rules = (
     # schemes that write ւ as w, iu in Western, both yu at the start of a word.
     (re.compile(r"iw"), "iu"),
     (re.compile(r"w"), "v"),
+    # Western writes ո after a vowel as vo (Virkilivos for Վիրգիլիոս), the
+    # glide it is said with; the script and the other schemes write io. Both
+    # sides pass through here, so Լիվոռնո and Livorno still agree (liorno).
+    (re.compile(r"ivo"), "io"),
     # BGN/PCGN writes ը as y, which the other schemes give a vowel letter.
     # A y with a consonant beside it and no vowel on either side cannot be
     # the glide յ (zhanry, ynker, Hayy). Punctuation is still in the token
@@ -181,7 +189,12 @@ _LATIN: Rules = (
     (re.compile(r"^ye"), "e"),
     (re.compile(r"^vo"), "o"),
     (re.compile(r"^iu"), "yu"),
-    (re.compile(r"^y(?=[aeiou])"), "h"),
+    # An initial Յ is said h (Յակոբ is Hakob), also after a hyphen
+    # (Տէր-Յակոբեան), and ALA-LC 2022 writes it Ḥ. The lone initial Յ. goes
+    # the same way, so that Ḥ. and H. find it; it then shares a key with Հ.,
+    # which is declared.
+    (re.compile(r"(?<![a-z])y(?=[aeiou])"), "h"),
+    (re.compile(r"^y(?![a-z])"), "h"),
     # Russian has no h, so Russian-mediated forms drop it: Ovanes, Ovsep.
     # Only before o; a general drop would merge իւր (his) with ուր (where).
     (re.compile(r"^ho"), "o"),
@@ -197,7 +210,9 @@ _LATIN: Rules = (
     (re.compile(r"ya|ea"), "ia"),
     (re.compile(r"yo"), "io"),
     (re.compile(r"yu|eu"), "iu"),
-    (re.compile(r"(?<=[aeiou])y$"), ""),
+    # A final յ after a vowel is silent and the Armenian side drops it; so
+    # here, also before a hyphen or a bracket (hay-ṛuseren, hay[erēn]).
+    (re.compile(r"(?<=[aeiou])y(?![a-z])"), ""),
     *FINISH,
 )
 

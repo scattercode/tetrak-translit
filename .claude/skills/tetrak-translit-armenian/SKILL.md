@@ -237,17 +237,17 @@ Order of operations for one token:
    | `th` → `t`; `ph` → `p` | Older English and French aspirates: *Thoumanian*, *Thoros* |
    | `vh` → `v` | Popular *Hovannes* for *Hovhannes* |
    | `ow`, `ou`, `oo` → `u` | ISO `ow`, French-style *Sourp*, popular *Shooshi* |
-   | `ew` → `ev`; `iw` → `iu`; `w` → `v` | ISO and Hübschmann-Meillet `և`, ALA-LC classical *Erewan*; classical `իւ` (*giwgh*, which the Armenian side has made `յու`); ALA-LC `ւ` |
-   | `y` with a consonant beside it and no vowel on either side → `e` | BGN/PCGN `y` for `ը` (*zhanry*, *ynker*, *Hayy*); the glide `յ` always has a vowel beside it. A lone `y` (the initial `Յ.`) is left, or it would merge with `Ե.`: punctuation is still in the token at this step, so "not a vowel" is not enough |
+   | `ew` → `ev`; `iw` → `iu`; `w` → `v`; `ivo` → `io` | ISO and Hübschmann-Meillet `և`, ALA-LC classical *Erewan*; classical `իւ` (*giwgh*, which the Armenian side has made `յու`); ALA-LC `ւ`; the glide Western says in *Virkilivos* (`Վիրգիլիոս`), read the same way for every input so that `Լիվոռնո` and *Livorno* still agree |
+   | `y` with a consonant beside it and no vowel on either side → `e` | BGN/PCGN `y` for `ը` (*zhanry*, *ynker*, *Hayy*); the glide `յ` always has a vowel beside it. A lone `y` (the initial `Յ.`) has neither and is not touched here: punctuation is still in the token at this step, so "not a vowel" is not enough |
    | initial `yev` → `ev`, `ye` → `e`, `vo` → `o`, `iu` → `yu` | BGN/PCGN and Western glides; classical initial `իւ` (*iwr*, Western *Iur*) meets `յուր` |
-   | initial `y` before a vowel → `h` | Western *Hagop* against *Yakob*; `Յովհաննէս` / `Հովհաննես` |
+   | `y` before a vowel at the start of a word or after a hyphen → `h`; a lone `y` → `h` | Western *Hagop* against *Yakob*; `Յովհաննէս` / `Հովհաննես`; `Տէր-Յակոբեան` / *Tēr-Ḥakobean*; the initial `Յ.`, which ALA-LC 2022 writes *Ḥ.* and a keyboard *H.*, and which then shares a key with `Հ.` (declared) |
    | initial `ho` → `o` | Russian-mediated *Ovanes*, *Ovsep* (Russian has no *h*). Only before `o`: a general initial-*h* drop would merge `իւր` (his) with `ուր` (where), and it would change the keys of every *h*- name |
    | `dz` → `ts`; `ts`, `tz` → `c` | `ծ ձ ց` become one |
    | `j` → `ch` | `ջ ճ չ` become one (and the ISO `j` gap below) |
    | `gh` protected as `\x01`; `b`→`p`, `d`→`t`, `g`→`k`; restored | The Eastern/Western swap, without turning `gh` into `kh` |
    | `eo` → `evo` | *Gēorg* → *kevork* |
    | `ya`, `ea` → `ia`; `yo` → `io`; `yu`, `eu` → `iu` | *-yan*, *-ean*, *-ian*; *Harutiun* |
-   | final `y` after a vowel dropped | The classical silent `յ` |
+   | `y` after a vowel dropped at the end of a word or before a hyphen or bracket | The classical silent `յ`, which the Armenian side drops the same way: `ծառայ`, `հայ-ռուսերէն` / *hay-ṛuseren*, `հայ[երէն]` |
    | `FINISH`: non-alphanumerics removed, doubled letters collapsed | *Boghossian* |
 
    The `\x01` trick is the pattern to copy whenever a later rule would eat
@@ -278,6 +278,11 @@ Sample keys: `Երևան`/*Yerevan*/*Erewan* → `erevan`; `Յակոբ`/*Hagop* 
   *Iur*: classical `իւ` → `յու`, then initial *y* → *h*. Accepted, because
   undoing it costs the `Յ`/`Հ` merge (*Hakob*, *Hovhannes*). Declared in
   `test_declares_the_known_over_merges`.
+- **The initials `Յ.` and `Հ.` over-merge** to `h`, so that ALA-LC 2022's
+  *Ḥ.* and a keyboard's *H.* find `Յ.`. Declared in the same test.
+- **`ivo` is read as `io` for every input**, so a real `v` there
+  (`Լիվոռնո`, *Livorno*) still agrees with itself but would meet a
+  *Liorno*. Declared in the same test.
 
 Before promising a user that two spellings fold together, run them: if the
 pair is not in `tests/data/hy_fold_cases.tsv`, it is not claimed.
