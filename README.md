@@ -7,10 +7,17 @@ material has: the same name exists in its own script, sometimes in more
 than one orthography, and in three or five Latin spellings, and no stock
 search engine treats them as one word.
 
-> **Status: alpha.** The tables and the folds are tested against the sets
-> in [`tests/data/`](tests/data/); what is not in them is not claimed.
-> See [known gaps](#what-it-does-not-do). The API may still change before
-> 1.0.
+> **Status: stable.** The API has not changed since 1.0; the major
+> releases since followed new editions of the standards, which moved
+> renderings. Versions say what moved: a change to what any input renders
+> or folds to is at least a minor release, since indexes built on the fold
+> must be rebuilt, and a change to an existing test case is a major one. The tables and the folds
+> are tested against the sets in [`tests/data/`](tests/data/), 263
+> Armenian fold cases among them; what is not in them is not claimed, and
+> the [known gaps](#what-it-does-not-do) are written down. Measured in
+> catalogue search across scripts over about a thousand records, romanised
+> queries in every scheme now fold to the script's key 99 to 100 times in
+> a hundred, up from 82 at the first release.
 
 ```bash
 pip install tetrak-translit
