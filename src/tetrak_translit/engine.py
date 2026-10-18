@@ -24,6 +24,7 @@ use it without a circular import.
 from __future__ import annotations
 
 import unicodedata
+from itertools import pairwise
 
 from .script import Scheme
 
@@ -75,7 +76,7 @@ def _render_word(word: str, scheme: Scheme, variant: str | None) -> str:
     marks = scheme.script.marks
     letters = [index for index, (unit, _) in enumerate(units) if unit not in marks]
     all_capitals = len(letters) > 1 and all(units[index][1] for index in letters)
-    following = {here: units[there][0] for here, there in zip(letters, letters[1:], strict=False)}
+    following = {here: units[there][0] for here, there in pairwise(letters)}
     vowels = scheme.script.vowels
     rendered: list[str] = []
     previous: str | None = None
@@ -162,6 +163,12 @@ def render(text: str, scheme: Scheme, variant: str | None = None) -> str:
     return "".join(out)
 
 
+# Each scheme's inverse, built once: a fold at query time reads every query
+# back and must not sort the table each time. Keyed by id, with the scheme
+# kept to check it is the same object, since a Scheme is not hashable.
+_INVERSES: dict[str, tuple[Scheme, list[tuple[str, str]]]] = {}
+
+
 def _inverse(scheme: Scheme) -> list[tuple[str, str]]:
     """Latin unit to script unit, longest Latin first, for a reversible table.
 
@@ -170,6 +177,9 @@ def _inverse(scheme: Scheme) -> list[tuple[str, str]]:
     caron, the capital of ``ǰ`` -- lowercases to the same characters as
     the table's letter.
     """
+    cached = _INVERSES.get(scheme.id)
+    if cached is not None and cached[0] is scheme:
+        return cached[1]
     pairs = {
         unicodedata.normalize("NFD", latin.lower()): letter
         for letter, latin in scheme.letters.items()
@@ -179,7 +189,33 @@ def _inverse(scheme: Scheme) -> list[tuple[str, str]]:
     for mark, latin in scheme.punctuation.items():
         if latin:
             pairs.setdefault(unicodedata.normalize("NFD", latin.lower()), mark)
-    return sorted(pairs.items(), key=lambda item: -len(item[0]))
+    inverse = sorted(pairs.items(), key=lambda item: -len(item[0]))
+    _INVERSES[scheme.id] = (scheme, inverse)
+    return inverse
+
+
+def _normalise_marks(text: str, scheme: Scheme, mark: str) -> str:
+    """*text* with the apostrophes people type for the table's *mark* made it.
+
+    Only an apostrophe-like character directly after a letter the table
+    marks is taken for the mark (``t'`` for ``tʻ``); one anywhere else is
+    a quotation mark and is left alone, so ``‘Erewan’`` keeps its quotes.
+    *text* is in NFD, as :func:`read` works.
+    """
+    bases = {
+        unicodedata.normalize("NFD", latin[:-1].lower())
+        for latin in scheme.letters.values()
+        if latin[-1] in APOSTROPHES
+    }
+    longest = max(len(base) for base in bases)
+    out: list[str] = []
+    for index, character in enumerate(text):
+        if character in APOSTROPHES:
+            before = text[max(0, index - longest) : index].lower()
+            if any(before.endswith(base) for base in bases):
+                character = mark
+        out.append(character)
+    return "".join(out)
 
 
 def read(text: str, scheme: Scheme) -> str:
@@ -199,8 +235,7 @@ def read(text: str, scheme: Scheme) -> str:
     )
     text = unicodedata.normalize("NFD", text)
     if aspiration is not None:
-        for mark in APOSTROPHES:
-            text = text.replace(mark, aspiration)
+        text = _normalise_marks(text, scheme, aspiration)
 
     inverse = _inverse(scheme)
     cased = scheme.script.cased

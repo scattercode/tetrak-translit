@@ -247,19 +247,18 @@ class Scheme:
         capital: bool = False,
         variant: str | None = None,
     ) -> str:
-        """The Latin rendering of one lowercase letter, digraph or mark.
+        """The Latin rendering of one lowercase letter or digraph.
 
         A unit the table does not define -- an archaic letter under a
-        scheme that has no rendering for it, or a mark it has no
-        punctuation for -- is returned as it is.
+        scheme that has no rendering for it -- is returned as it is. Marks
+        are the engine's business: it renders them through ``punctuation``
+        where they stand and never asks here.
         """
         for rule in self.rules:
             if rule.unit == unit and rule.applies(
                 initial=initial, following=following, capital=capital, variant=variant
             ):
                 return rule.latin
-        if unit in self.punctuation:
-            return self.punctuation[unit]
         if initial and unit in self.initial:
             return self.initial[unit]
         if after_vowel and unit in self.after_vowel:

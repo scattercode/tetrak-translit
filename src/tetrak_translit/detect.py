@@ -12,7 +12,7 @@ from __future__ import annotations
 import unicodedata
 from dataclasses import dataclass, field
 
-from .registry import PACKAGES, scripts_in
+from .registry import scripts_in
 
 MIXED = "mixed"
 NONE = "none"
@@ -104,4 +104,4 @@ def orthography(text: str) -> str | None:
     return detect(text).orthography
 
 
-__all__ = ["Detection", "PACKAGES", "detect", "orthography"]
+__all__ = ["Detection", "detect", "orthography"]
