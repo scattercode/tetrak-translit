@@ -131,6 +131,11 @@ tumanyan	Tumanian	Western of the classical spelling; the diaspora form
 tumanyan	Toumanyan	French spelling, ou for u
 tumanyan	Toumanian	French spelling of the diaspora form
 tumanyan	Thoumanian	French spelling with th for the aspirated թ
+tumanyan	T̕umanyan	aspiration written with a combining comma above right (U+0315)
+tumanyan	Tʼumanyan	modifier letter apostrophe (U+02BC) for the aspiration mark
+tumanyan	T‘umanyan	left single quotation mark (U+2018) for the aspiration mark
+tumanyan	T′umanyan	prime (U+2032) for the aspiration mark
+tumanyan	T'umanyan	ASCII apostrophe for the aspiration mark
 hovsep	Հովսեփ	reformed
 hovsep	Յովսէփ	classical
 hovsep	Hovsepʻ	ALA-LC reformed
@@ -142,6 +147,7 @@ echmiadzin	Էջմիածին
 echmiadzin	Ējmiatsin	ALA-LC
 echmiadzin	Ēǰmiacin	ISO 9985:2026 and Hübschmann-Meillet
 echmiadzin	Ēǰmiaçin	ISO 9985:1996
+echmiadzin	Êǰmiaçin	ê for է, an ISO 9985-style form met in data
 echmiadzin	Ejmiatsin	BGN/PCGN
 echmiadzin	Echmiadzin	Western
 chash	ճաշ	

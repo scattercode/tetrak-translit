@@ -131,6 +131,12 @@ Armenian:
   before *o* (*Ovanes*, *Ovsep*), so *Akop* and *Arutyunyan* still miss
   *Hakob* and *Harutyunyan*. A general initial-*h* rule would also merge
   `իւր` (his) with `ուր` (where).
+- **German spellings.** *Eriwan*, *Jerewan*, *Tscharenz*, *Chatschaturjan*,
+  *Mikojan*: German writes *j* for `յ`, *z* for `ց`, *tsch* for `չ` and
+  *sch* for `շ`. The fold cannot take them without losing letters every
+  scheme relies on: *j* is `ջ` and *z* is `զ` in all five, and *tsch* is
+  `տ` + `շ`. A search index that must serve German-language records is
+  better served by indexing a German form beside the Armenian one.
 - **Classical `աւ` that reformed spelling turned into `օ`.** `աւր` and
   `օր` (day) do not fold together; the fold reads `ւ` as *v*.
 - **ISO 9985 or Hübschmann-Meillet `j` with nothing to show the scheme.**

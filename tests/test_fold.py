@@ -177,6 +177,11 @@ class TestKey:
         assert fold("Khachaturian", script="hy") != fold("Խաչատրյան")
         assert fold("Akop", script="hy") != fold("Հակոբ")
         assert fold("Arutyunyan", script="hy") != fold("Հարությունյան")
+        # German spellings: z is զ in every scheme, j is ջ, tsch is տ+շ.
+        assert fold("Eriwan", script="hy") != fold("Երևան")
+        assert fold("Jerewan", script="hy") != fold("Երևան")
+        assert fold("Tscharenz", script="hy") != fold("Չարենց")
+        assert fold("Chatschaturjan", script="hy") != fold("Խաչատրյան")
         assert fold("Tiflis", script="ka") != fold("თბილისი")
         assert fold("George", script="ka") != fold("გიორგი")
 

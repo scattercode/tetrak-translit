@@ -271,6 +271,11 @@ Sample keys: `Երևան`/*Yerevan*/*Erewan* → `erevan`; `Յակոբ`/*Hagop* 
 - **Spellings that came through Russian**: *Khachaturian* has a *u* that
   `Խաչատրյան` does not. Initial *h* is restored only before `o`, so *Akop*
   and *Arutyunyan* still miss *Hakob* and *Harutyunyan*.
+- **German spellings**: *Eriwan*, *Jerewan*, *Tscharenz*, *Chatschaturjan*.
+  German *j* is `յ`, *z* is `ց`, *tsch* is `չ`; in every scheme *j* is `ջ`,
+  *z* is `զ` and *tsch* is `տ` + `շ`, so a German rule set would cost
+  letters the schemes rely on. Index a German form beside the Armenian one
+  instead.
 - **Classical `աւ` that reformed writes `օ`**: `աւր` and `օր` stay apart.
 - **ISO or Hübschmann-Meillet `j` with no mark to show the scheme**: ALA-LC
   and BGN/PCGN `j` is `ջ`; ISO 9985 and Hübschmann-Meillet `j` is `ձ`. With
