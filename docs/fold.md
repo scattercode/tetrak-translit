@@ -60,17 +60,21 @@ rules would never find `ბათუმი`.
    dropped (`vh` and `v`, so *Hovannes* finds *Hovhannes*). Then its
    digraphs are collapsed onto one spelling each (`ž` and
    `zh`; `x` and `kh`; `ł`, `ġ` and `gh`; `ow`, `ou`, `oo` and `u`; `iw`
-   and `iu`, for the classical `իւ`; `w` and `v`); a `y` with a consonant
+   and `iu`, for the classical `իւ`; `w` and `v`; `ivo` and `io`, for the
+   glide Western says in *Virkilivos*); a `y` with a consonant
    beside it and no vowel on either side is read as BGN/PCGN's `ը` and
    becomes `e`, the other schemes' letter for it (*zhanry* finds `ժանրը`,
-   *ynker* finds `ընկեր`), while a lone `y`, the initial `Յ.`, is left
-   alone so that it stays apart from `Ե.`;
+   *ynker* finds `ընկեր`);
    the voiced and voiceless pairs are merged (`b`/`p`, `d`/`t`,
    `g`/`k`, `dz`/`ts`/`c`, `j`/`ch`); the glides are regularised
-   (word-initial `ye` and `e`, `vo` and `o`, `iu`, `y` and `h`, and `ho` and
+   (word-initial `ye` and `e`, `vo` and `o`, `iu`; `y` and `h` at the
+   start of a word or after a hyphen, and for the lone initial `Յ.`, so
+   that *Ḥ.* and *H.* find it; and `ho` and
    `o` for the Russian-mediated *Ovanes* and *Ovsep*; `ya`, `ea` and
-   `ia`); a final `y` after a vowel is dropped; doubled letters are
-   collapsed; and anything that is not a letter or a digit is removed.
+   `ia`); a `y` after a vowel is dropped at the end of a word and before
+   a hyphen or a bracket (the silent `յ` of *hay-ṛuseren*); doubled
+   letters are collapsed; and anything that is not a letter or a digit is
+   removed.
 
 ### Georgian
 
@@ -133,6 +137,14 @@ Armenian:
   missed match: a search for one finds the other. Telling them apart
   would cost the `Յ`/`Հ` merge that every *Hakob* and *Hovhannes*
   depends on.
+- **The initials `Յ.` and `Հ.` share a key.** The same merge, for the
+  lone initial: ALA-LC 2022 writes `Յ.` as *Ḥ.* and a keyboard as *H.*,
+  and both must find it. An initial on its own tells little apart.
+- **A real `v` between `i` and `o` is dropped, on both sides.** Western
+  writes the glide it says in `-իոս` names (*Virkilivos* for
+  `Վիրգիլիոս`), and the fold reads `ivo` as `io` for every input, so
+  `Լիվոռնո` and *Livorno* agree with each other (*liorno*) and would meet
+  a *Liorno*. An over-merge, and a rare one.
 
 Georgian:
 

@@ -187,3 +187,8 @@ class TestKey:
         # իւր (his) and հուր (fire): initial y becomes h.
         assert fold("իւր") == fold("հուր")
         assert fold("iwr", script="hy") == fold("Hur", script="hy")
+        # The initials Յ. and Հ.: the lone initial goes the way of the glide.
+        assert fold("Յ.") == fold("Հ.")
+        assert fold("Ḥ.", script="hy") == fold("H.", script="hy") == fold("Յ.")
+        # ivo is io for every input: a real v between i and o goes too.
+        assert fold("Livorno", script="hy") == fold("Լիվոռնո") == fold("Liorno", script="hy")
