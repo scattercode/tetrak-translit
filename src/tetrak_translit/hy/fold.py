@@ -36,8 +36,10 @@ the Armenian rules. In order:
    hyphen becomes ``h``, and so does the lone initial ``Յ.``, which then
    shares its key with ``Հ.``; initial ``ho``/``o`` for the
    Russian-mediated *Ovanes* and *Ovsep*; ``ya``/``ea``/``ia``), a ``y``
-   after a vowel is dropped at the end of a word and before a hyphen or a
-   bracket (the silent ``յ`` of *hay-ṛuseren*), doubled letters are
+   after ``iu`` at the end of a word is BGN/PCGN's ``ը`` and becomes
+   ``e`` (*tʻiwy* for ``թիւը``), any other ``y`` after a vowel is dropped
+   at the end of a word and before a hyphen or a bracket (the silent
+   ``յ`` of *hay-ṛuseren*), doubled letters are
    collapsed and anything that is not a letter or digit is removed.
 
 Known gaps, because a fold that claims there is a single right answer is
@@ -214,6 +216,10 @@ _LATIN: Rules = (
     (re.compile(r"ya|ea"), "ia"),
     (re.compile(r"yo"), "io"),
     (re.compile(r"yu|eu"), "iu"),
+    # BGN/PCGN's y for ը can follow a vowel only after the ւ of classical
+    # իւ (tʻiwy for թիւը), which has just become iu; the article is kept as
+    # the vowel the other schemes write, before the silent յ is dropped.
+    (re.compile(r"(?<=iu)y(?![a-z])"), "e"),
     # A final յ after a vowel is silent and the Armenian side drops it; so
     # here, also before a hyphen or a bracket (hay-ṛuseren, hay[erēn]).
     (re.compile(r"(?<=[aeiou])y(?![a-z])"), ""),

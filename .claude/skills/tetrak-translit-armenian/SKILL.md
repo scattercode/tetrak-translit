@@ -247,6 +247,7 @@ Order of operations for one token:
    | `gh` protected as `\x01`; `b`→`p`, `d`→`t`, `g`→`k`; restored | The Eastern/Western swap, without turning `gh` into `kh` |
    | `eo` → `evo` | *Gēorg* → *kevork* |
    | `ya`, `ea` → `ia`; `yo` → `io`; `yu`, `eu` → `iu` | *-yan*, *-ean*, *-ian*; *Harutiun* |
+   | `y` after `iu` at the end of a word → `e` | BGN/PCGN `y` for `ը` after the `ւ` of classical `իւ`, the one place it follows a vowel: *tʻiwy* for `թիւը`. Before the silent `յ` is dropped, or it would go with it |
    | `y` after a vowel dropped at the end of a word or before a hyphen or bracket | The classical silent `յ`, which the Armenian side drops the same way: `ծառայ`, `հայ-ռուսերէն` / *hay-ṛuseren*, `հայ[երէն]` |
    | `FINISH`: non-alphanumerics removed, doubled letters collapsed | *Boghossian* |
 

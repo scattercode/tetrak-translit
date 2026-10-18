@@ -73,8 +73,10 @@ rules would never find `ბათუმი`.
    start of a word or after a hyphen, and for the lone initial `Յ.`, so
    that *Ḥ.* and *H.* find it; and `ho` and
    `o` for the Russian-mediated *Ovanes* and *Ovsep*; `ya`, `ea` and
-   `ia`); a `y` after a vowel is dropped at the end of a word and before
-   a hyphen or a bracket (the silent `յ` of *hay-ṛuseren*); doubled
+   `ia`); a `y` after `iu` at the end of a word is BGN/PCGN's `ը` and
+   becomes `e` (*tʻiwy* for `թիւը`); any other `y` after a vowel is
+   dropped at the end of a word and before a hyphen or a bracket (the
+   silent `յ` of *hay-ṛuseren*); doubled
    letters are collapsed; and anything that is not a letter or a digit is
    removed.
 
