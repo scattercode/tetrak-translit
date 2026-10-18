@@ -67,7 +67,9 @@ rules would never find `ბათუმი`.
    *ynker* finds `ընկեր`);
    the voiced and voiceless pairs are merged (`b`/`p`, `d`/`t`,
    `g`/`k`, `dz`/`ts`/`c`, `j`/`ch`); the glides are regularised
-   (word-initial `ye` and `e`, `vo` and `o`, `iu`; `y` and `h` at the
+   (word-initial `ye` and `e`, `vo` and `o`, where a hyphen or a bracket
+   also starts a word, as BGN/PCGN and Western count it: *Ter-Yeghishe*,
+   *hay[yeren]*; `iu`; `y` and `h` at the
    start of a word or after a hyphen, and for the lone initial `Յ.`, so
    that *Ḥ.* and *H.* find it; and `ho` and
    `o` for the Russian-mediated *Ovanes* and *Ovsep*; `ya`, `ea` and

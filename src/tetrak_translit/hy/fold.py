@@ -30,8 +30,9 @@ the Armenian rules. In order:
    pairs are merged (``b``/``p``, ``d``/``t``, ``g``/``k``,
    ``dz``/``ts``/``c``, ``j``/``ch``) because Eastern and Western
    pronunciation spellings disagree on exactly those, the glides are
-   regularised (initial ``ye``/``e``, initial ``vo``/``o``, initial
-   ``iu``/``yu``; ``y`` before a vowel at the start of a word or after a
+   regularised (initial ``ye``/``e`` and ``vo``/``o``, where a hyphen or
+   a bracket also starts a word, as BGN/PCGN and Western count it;
+   initial ``iu``/``yu``; ``y`` before a vowel at the start of a word or after a
    hyphen becomes ``h``, and so does the lone initial ``Յ.``, which then
    shares its key with ``Հ.``; initial ``ho``/``o`` for the
    Russian-mediated *Ovanes* and *Ovsep*; ``ya``/``ea``/``ia``), a ``y``
@@ -185,9 +186,12 @@ _LATIN: Rules = (
     # the glide յ (zhanry, ynker, Hayy). Punctuation is still in the token
     # here, so a lone y, the initial Յ., has neither and is left alone.
     (re.compile(r"(?<=[b-df-hj-np-tv-z])y(?![aeiou])|(?<![a-z])y(?=[b-df-hj-np-tv-z])"), "e"),
-    (re.compile(r"^yev"), "ev"),
-    (re.compile(r"^ye"), "e"),
-    (re.compile(r"^vo"), "o"),
+    # BGN/PCGN and Western write an initial ե as ye and an initial ո as vo,
+    # and their renderers count a hyphen or a bracket as a word boundary
+    # (Ter-Yeghishe, hay[yeren], ark'[yepiskopos]); so does the fold.
+    (re.compile(r"(?<![a-z])yev"), "ev"),
+    (re.compile(r"(?<![a-z])ye"), "e"),
+    (re.compile(r"(?<![a-z])vo"), "o"),
     (re.compile(r"^iu"), "yu"),
     # An initial Յ is said h (Յակոբ is Hakob), also after a hyphen
     # (Տէր-Յակոբեան), and ALA-LC 2022 writes it Ḥ. The lone initial Յ. goes

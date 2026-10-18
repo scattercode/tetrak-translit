@@ -56,6 +56,8 @@ oskan	Ոսկան
 oskan	Oskan	ALA-LC; the Library of Congress form
 oskan	Voskan	BGN/PCGN
 oskan	Vosgan	Western
+oskan	(Ոսկան)	bracketed
+oskan	(Voskan)	BGN/PCGN and Western; vo after the bracket
 hayastan	Հայաստան	
 hayastan	Hayastan	ALA-LC
 hayastan	Hayasdan	Western
@@ -213,6 +215,7 @@ haruseren	Hay-ṙowseren	ISO 9985
 haruseren	hay-ruseren	plain keyboard
 haeren	հայ[երէն]	hay before a cataloguer's bracket
 haeren	hay[erēn]	ALA-LC
+haeren	hay[yeren]	BGN/PCGN and Western; ye for the ե after the bracket
 terhakopian	Տէր-Յակոբեան	Յ after a hyphen is said h, as at the start of a word
 terhakopian	Tēr-Ḥakobean	ALA-LC 2022
 terhakopian	Tēr-Yakobean	ALA-LC 2011
@@ -225,3 +228,10 @@ ankiurio	Ankiwrioy	ALA-LC
 ankiurio	Angiurivoy	Western
 liorno	Լիվոռնո	a real v between i and o goes the same way on both sides (declared over-merge with a Liorno)
 liorno	Livorno	as written
+arkepiskopos	արք[եպիսկոպոս]	cataloguer's bracket inside a word
+arkepiskopos	arkʻ[episkopos]	ALA-LC
+arkepiskopos	ark'[yepiskopos]	BGN/PCGN; ye for the ե after the bracket
+arkepiskopos	ark[yebisgobos]	Western
+tereghishe	Տէր-Եղիշէ	classical
+tereghishe	Tēr-Eghishē	ALA-LC
+tereghishe	Ter-Yeghishe	BGN/PCGN and Western; ye after the hyphen
