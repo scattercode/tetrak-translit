@@ -10,15 +10,15 @@ makes every spelling one key for finding.
 
 from __future__ import annotations
 
-from .ala_lc import ALA_LC  # noqa: E402
-from .bgn_pcgn import BGN_PCGN  # noqa: E402
+from .ala_lc import ALA_LC
+from .bgn_pcgn import BGN_PCGN
 from .descriptor import SCRIPT
-from .fold import fold_token  # noqa: E402
-from .hubschmann_meillet import HUBSCHMANN_MEILLET  # noqa: E402
-from .iso_9985 import ISO_9985  # noqa: E402
-from .iso_9985_1996 import ISO_9985_1996  # noqa: E402
-from .orthography import orthography as variant  # noqa: E402
-from .western import WESTERN  # noqa: E402
+from .fold import fold_token
+from .hubschmann_meillet import HUBSCHMANN_MEILLET
+from .iso_9985 import ISO_9985
+from .iso_9985_1996 import ISO_9985_1996
+from .orthography import orthography as variant
+from .western import WESTERN
 
 #: Every Armenian scheme, in the order the documentation lists them.
 SCHEMES = {

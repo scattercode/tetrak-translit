@@ -9,7 +9,7 @@ name = "tetrak-translit"
 # tags it, so a literal here would be a second source of truth that nothing
 # updates.
 dynamic = ["version"]
-description = "Detect, transliterate and fold Armenian text — ALA-LC, ISO 9985, BGN/PCGN, Hübschmann-Meillet and Western pronunciation, plus one canonical index form for cross-script search"
+description = "Detect, transliterate and fold Armenian and Georgian text — ALA-LC, ISO 9985 and ISO 9984, BGN/PCGN, the Georgian national system, Hübschmann-Meillet and Western pronunciation, plus one canonical index form for cross-script search"
 readme = "README.md"
 # A dependency-free library that runs inside other people's search stacks
 # and catalogue tooling: meet the supported Pythons where they are, as
@@ -23,11 +23,13 @@ authors = [
 ]
 keywords = [
     "armenian",
+    "georgian",
     "transliteration",
     "romanization",
     "romanisation",
     "ala-lc",
     "iso-9985",
+    "iso-9984",
     "bgn-pcgn",
     "script-detection",
     "search",
@@ -40,12 +42,14 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Intended Audience :: Information Technology",
     "Natural Language :: Armenian",
+    "Natural Language :: Georgian",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Text Processing :: Linguistic",
     "Topic :: Text Processing :: Indexing",
     "Typing :: Typed",
@@ -93,10 +97,16 @@ select = [
     "I",   # import sorting
     "UP",  # pyupgrade
     "B",   # bugbear
+    "RUF", # ruff's own: stale noqa, unsorted __all__, mutable class defaults
 ]
 ignore = [
     # Line length is enforced by `ruff format`.
     "E501",
+    # The tables, tests and docstrings are full of deliberate non-ASCII:
+    # the apostrophe family, combining marks, the scripts themselves.
+    "RUF001",
+    "RUF002",
+    "RUF003",
 ]
 
 [tool.ruff.lint.isort]
@@ -104,7 +114,9 @@ known-first-party = ["tetrak_translit"]
 
 [tool.mypy]
 strict = true
-packages = ["tetrak_translit"]
+# The package and the tests: a test that passes untyped nonsense to the
+# API is a test of nothing.
+files = ["src/tetrak_translit", "tests"]
 mypy_path = "src"
 
 [tool.pytest.ini_options]

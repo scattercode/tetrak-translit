@@ -14,12 +14,12 @@ are not handled.
 
 from __future__ import annotations
 
-from .ala_lc import ALA_LC  # noqa: E402
+from .ala_lc import ALA_LC
 from .descriptor import SCRIPT
-from .fold import fold_token  # noqa: E402
-from .iso_9984 import ISO_9984  # noqa: E402
-from .iso_9984_1996 import ISO_9984_1996  # noqa: E402
-from .national import NATIONAL  # noqa: E402
+from .fold import fold_token
+from .iso_9984 import ISO_9984
+from .iso_9984_1996 import ISO_9984_1996
+from .national import NATIONAL
 
 #: Every Georgian scheme, in the order the documentation lists them.
 SCHEMES = {scheme.key: scheme for scheme in (ALA_LC, ISO_9984, ISO_9984_1996, NATIONAL)}
