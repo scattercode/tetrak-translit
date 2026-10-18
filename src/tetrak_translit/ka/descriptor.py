@@ -14,8 +14,10 @@ SCRIPT = Script(
     # ISO 9984:2026 Table 5.
     archaic="ჱჲჳჴჵჶჷჸჹჺჼჽჾჿ",
     vowels=frozenset("აეიოუ"),
-    # Mkhedruli (with the archaic and extended letters) and Mtavruli.
-    ranges=((0x10D0, 0x10FF), (0x1C90, 0x1CBF)),
+    # Mkhedruli (with the archaic and extended letters) and Mtavruli. The
+    # paragraph separator ჻ (U+10FB) sits between the two Mkhedruli
+    # ranges and is punctuation, not a letter.
+    ranges=((0x10D0, 0x10FA), (0x10FC, 0x10FF), (0x1C90, 0x1CBF)),
     cased=False,
 )
 

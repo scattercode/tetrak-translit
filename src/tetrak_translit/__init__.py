@@ -75,9 +75,9 @@ def scripts() -> list[Script]:
 
 
 __all__ = [
+    "SCHEMES",
     "Detection",
     "NotReversibleError",
-    "SCHEMES",
     "Scheme",
     "Script",
     "ScriptRequiredError",

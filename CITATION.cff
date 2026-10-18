@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "tetrak-translit: detect, transliterate and fold Armenian text"
+title: "tetrak-translit: detect, transliterate and fold Armenian and Georgian text"
 type: software
 authors:
   - family-names: Masters
@@ -12,9 +12,11 @@ url: "https://scattercode.github.io/tetrak-translit/"
 license: MIT
 keywords:
   - Armenian
+  - Georgian
   - transliteration
   - romanisation
   - ALA-LC
   - ISO 9985
+  - ISO 9984
   - BGN/PCGN
   - cross-script search

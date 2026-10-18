@@ -37,7 +37,16 @@ def test_only_the_standard_library_is_imported() -> None:
     """Checked on the source, not the environment, so a stray import fails here
     rather than in a user's bare interpreter."""
     package = ROOT / "src" / "tetrak_translit"
-    allowed = {"argparse", "collections", "dataclasses", "json", "re", "sys", "unicodedata"}
+    allowed = {
+        "argparse",
+        "collections",
+        "dataclasses",
+        "itertools",
+        "json",
+        "re",
+        "sys",
+        "unicodedata",
+    }
     for module in package.rglob("*.py"):
         tree = ast.parse(module.read_text(encoding="utf-8"))
         for node in ast.walk(tree):

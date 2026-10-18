@@ -12,7 +12,7 @@ search engine treats them as one word.
 > renderings. Versions say what moved: a change to what any input renders
 > or folds to is at least a minor release, since indexes built on the fold
 > must be rebuilt, and a change to an existing test case is a major one. The tables and the folds
-> are tested against the sets in [`tests/data/`](tests/data/), 263
+> are tested against the sets in [`tests/data/`](tests/data/), hundreds of
 > Armenian fold cases among them; what is not in them is not claimed, and
 > the [known gaps](#what-it-does-not-do) are written down. Measured in
 > catalogue search across scripts over about a thousand records, romanised

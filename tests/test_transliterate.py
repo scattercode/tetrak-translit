@@ -7,6 +7,7 @@ import pytest
 from tetrak_translit import (
     SCHEMES,
     NotReversibleError,
+    Scheme,
     UnknownSchemeError,
     UnknownScriptError,
     hy,
@@ -368,7 +369,7 @@ class TestToScript:
     @pytest.mark.parametrize(
         "scheme", [s for s in SCHEMES.values() if s.reversible], ids=lambda s: s.id
     )
-    def test_round_trips_every_letter(self, scheme) -> None:  # type: ignore[no-untyped-def]
+    def test_round_trips_every_letter(self, scheme: Scheme) -> None:
         alphabet = scheme.script.letters + "".join(scheme.script.digraphs)
         assert to_script(to_latin(alphabet, scheme), scheme) == alphabet
 
@@ -401,6 +402,12 @@ class TestToScript:
             assert to_armenian(f"Č{mark}arenc{mark}", "iso_9985") == "Չարենց"
             assert to_armenian(f"Čarenc{mark}", "iso_9985_1996") == "Չարենց"
             assert to_script(f"T{mark}bilisi", "iso_9984_1996") == "თბილისი"
+
+    def test_a_quotation_mark_is_not_an_aspiration_mark(self) -> None:
+        """Only an apostrophe after a letter the table marks is the mark."""
+        assert to_armenian("‘Erewan’", "iso_9985") == "‘Երևան’"
+        assert to_armenian("Č’arenc’ ‘Erewan’", "iso_9985") == "Չարենց ‘Երևան’"
+        assert to_script("‘T’bilisi’", "ka/iso_9984_1996") == "‘თბილისი’"
 
     def test_capitals_with_no_precomposed_form_read_back(self) -> None:
         """Capital ǰ is J and a combining caron; Unicode has no single character."""

@@ -30,8 +30,9 @@ class ScriptPackage:
 
     script: Script
     schemes: dict[str, Scheme]
-    #: Folds a token; the second argument is the whole text it came from.
-    fold_token: Callable[..., str]
+    #: Folds one whitespace-free token; the second argument is the whole
+    #: text it came from, or ``None``, for the rules that look beyond it.
+    fold_token: Callable[[str, str | None], str]
     variant: Callable[[str], str | None]
 
 
@@ -111,6 +112,13 @@ def get_scheme(
     matches = [package.schemes[key] for package in candidates if key in package.schemes]
     if len(matches) == 1:
         return matches[0]
+    if not matches and script is not None:
+        package = candidates[0]
+        known = ", ".join(package.schemes)
+        raise UnknownSchemeError(
+            f"unknown scheme {scheme!r} for {package.script.name} ({package.script.key}); "
+            f"its schemes: {known}"
+        )
     if not matches:
         known = ", ".join(SCHEMES)
         raise UnknownSchemeError(f"unknown scheme {scheme!r}; known schemes: {known}")

@@ -46,8 +46,11 @@ rules would never find `ბათუმი`.
    the `ու`), and is normalised across the 1922 reform, towards the
    reformed spelling: `եւ` becomes `և`; `է` becomes `ե`; the classical
    digraphs `եա` and `իւ` become `յա` and `յու`; `եո` becomes `եվո`
-   (*Գէորգ* is *Gevorg*); and a word-final `յ` after a vowel is dropped
-   (`ծառայ` is `ծառա`). It is then rendered through ALA-LC, so that
+   (*Գէորգ* is *Gevorg*); a word-initial `յ` before a vowel becomes `հ`,
+   as the reform wrote it (`Յակոբ` is `Հակոբ`, `յետ` is `հետ`); and a
+   word-final `յ` after a vowel is dropped (`ծառայ` is `ծառա`). It is
+   then rendered through ALA-LC, the 2011 table frozen inside the fold so
+   that a new edition of the display table never moves a key, so that
    Armenian and ALA-LC Latin reach the next step by the same road.
 2. **Latin `j` is read as `ձ` when the text shows ISO 9985 or
    Hübschmann-Meillet.** Those two schemes write `ձ` as `j` and `ջ` as `ǰ`;
@@ -72,7 +75,9 @@ rules would never find `ბათუმი`.
    becomes `e`, the other schemes' letter for it (*zhanry* finds `ժանրը`,
    *ynker* finds `ընկեր`);
    the voiced and voiceless pairs are merged (`b`/`p`, `d`/`t`,
-   `g`/`k`, `dz`/`ts`/`c`, `j`/`ch`); the glides are regularised
+   `g`/`k`, `dz`/`ts`/`c`, `j`/`ch`; `d` before `ts`, so that Western's
+   `ds` for `տս`, *badsbaran*, reaches `c` with ALA-LC's `ts`); the
+   glides are regularised
    (word-initial `ye` and `e`, `vo` and `o`, where a hyphen or a bracket
    also starts a word, as BGN/PCGN and Western count it: *Ter-Yeghishe*,
    *hay[yeren]*; `iu`; `y` and `h` at the
@@ -89,8 +94,9 @@ rules would never find `ბათუმი`.
 ### Georgian
 
 1. **Georgian input** has its archaic letters folded onto their modern
-   values (`ჱ ე`, `ჲ ი`, `ჳ ვ`, `ჴ ხ`, `ჵ ო`) and is rendered through
-   ALA-LC.
+   values (`ჱ ე`, `ჲ ი`, `ჳ ვ`, `ჴ ხ`, `ჵ ო`) and `ჶ` onto the `f` that
+   ISO 9984 writes for it, and is rendered through ALA-LC, the 2011 table
+   frozen inside the fold as the Armenian one is.
 2. **Latin** is lowercased and stripped of diacritics and apostrophes,
    which merges each aspirate with its ejective whichever system marked
    which; the sibilant spellings are collapsed (`ž`/`zh`, `š`/`sh`,
@@ -131,6 +137,15 @@ Armenian:
   before *o* (*Ovanes*, *Ovsep*), so *Akop* and *Arutyunyan* still miss
   *Hakob* and *Harutyunyan*. A general initial-*h* rule would also merge
   `իւր` (his) with `ուր` (where).
+- **A classical word beginning `յե`, romanised with a `y`.** The fold
+  reads the initial `յ` the reform's way, as `հ`, so `յետ` finds `հետ`
+  and `Յեսու` finds `Հեսու`, *Hesu* and ALA-LC 2022's *Ḥesu*. But
+  BGN/PCGN, ISO 9985, Hübschmann-Meillet and ALA-LC with the orthography
+  not stated write `յ` as `y` in every position, and their *Yesu* cannot
+  be told from an initial `ե`, which BGN/PCGN and Western also write
+  *ye*; it folds as `ե`. Pass `scheme="iso_9985"` or
+  `scheme="hubschmann_meillet"` when you know, and the input is reversed
+  exactly instead.
 - **German spellings.** *Eriwan*, *Jerewan*, *Tscharenz*, *Chatschaturjan*,
   *Mikojan*: German writes *j* for `յ`, *z* for `ց`, *tsch* for `չ` and
   *sch* for `շ`. The fold cannot take them without losing letters every
@@ -167,3 +182,6 @@ Georgian:
 - **Russian-mediated forms.** *Tiflis* for `თბილისი`, *Kutais* for
   `ქუთაისი`.
 - **Translated names.** *George* for `გიორგი`.
+- **The phonetic letters of ISO 9984:2026 Table 5 beyond `ჶ`** (`ჷ` to
+  `ჿ`, for sounds standard Georgian does not write) fold to nothing on the
+  script side and are outside the fold's claim.

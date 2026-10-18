@@ -35,9 +35,7 @@ class ScriptRequiredError(ValueError):
 
 def _package_for(token: str, default: ScriptPackage | None) -> ScriptPackage:
     present = scripts_in(token)
-    if len(present) == 1:
-        return present[0]
-    if len(present) > 1:
+    if present:
         # One token in two scripts is a typo or a homoglyph; the first
         # registered script wins, and the key is still deterministic.
         return present[0]
@@ -52,7 +50,7 @@ def _package_for(token: str, default: ScriptPackage | None) -> ScriptPackage:
 def fold_token(token: str, script: str | Script | None = None) -> str:
     """Fold one whitespace-free token. Empty when nothing survives."""
     default = get_script(script) if script is not None else None
-    return _package_for(token, default).fold_token(token)
+    return _package_for(token, default).fold_token(token, None)
 
 
 def fold(
@@ -69,12 +67,14 @@ def fold(
             recognised regardless. Required if any token is Latin.
         scheme: Optional. When the Latin in *text* is known to be written
             in a reversible scheme (``"iso_9985"``, ``"hubschmann_meillet"``,
-            ``"ka/iso_9984"``), name it and the text is read back into
-            the script exactly before folding, which removes the
+            ``"ka/iso_9984"``), name it and each Latin token is read back
+            into the script exactly before folding, which removes the
             ambiguities the heuristic fold has (Armenian ``j``, when nothing
-            else in the text shows the scheme). For a
-            lossy scheme the heuristic fold is used. Either way the
-            scheme's script becomes the default for Latin tokens.
+            else in the text shows the scheme). Tokens already in the
+            script are folded as they are, so a mixed line gets the hint
+            for its Latin tokens. For a lossy scheme the heuristic fold is
+            used. Either way the scheme's script becomes the default for
+            Latin tokens.
 
     Returns:
         A lowercase ASCII key: for comparing and indexing, never for
@@ -86,15 +86,20 @@ def fold(
     """
     text = unicodedata.normalize("NFC", text)
     default = get_script(script) if script is not None else None
+    table: Scheme | None = None
     if scheme is not None:
         table = get_scheme(scheme, default.script if default else None)
-        if table.reversible and not table.script.has_letters(text):
-            text = engine.read(text, table)
         default = get_script(table.script)
-    keys = (
-        _package_for(match.group(), default).fold_token(match.group(), text)
-        for match in _TOKEN.finditer(text)
-    )
+        if not table.reversible:
+            table = None
+
+    def prepare(token: str) -> str:
+        if table is not None and not table.script.has_letters(token):
+            return engine.read(token, table)
+        return token
+
+    tokens = (prepare(match.group()) for match in _TOKEN.finditer(text))
+    keys = (_package_for(token, default).fold_token(token, text) for token in tokens)
     return " ".join(key for key in keys if key)
 
 

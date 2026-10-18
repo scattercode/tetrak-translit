@@ -182,7 +182,10 @@ What the library does about it:
 ## The fold (`ka/fold.py`)
 
 1. **Georgian input** is lowercased, its archaic letters translated onto the
-   modern ones, and rendered through **ALA-LC**.
+   modern ones and `ჶ` onto the `f` ISO 9984 writes for it, and rendered
+   through **ALA-LC** -- the 2011 table frozen in the module as `_BASIS`, as
+   the Armenian fold does, so that a new edition of `ka/ala_lc` never moves a
+   key.
 2. **`clean()`**: the `_LETTERS` map (`ž`→`zh`, `š`→`sh`, `č`→`ch`, `ǰ`→`j`,
    `ḡ`→`gh`, `ẖ`→`kh`, `x`→`kh`) runs before NFKD strips the remaining
    diacritics, and every apostrophe-like mark is removed — which is the step
@@ -203,6 +206,8 @@ cross-system matching needs. Sample keys: `თბილისი`/*Tʻbilisi*/*T
 
 - **Russian-mediated forms**: *Tiflis* for `თბილისი`, *Kutais* for `ქუთაისი`.
 - **Translated names**: *George* for `გიორგი`.
+- **ISO 9984:2026's phonetic letters beyond `ჶ`** (`ჷ` to `ჿ`) fold to nothing
+  on the script side; outside the claim.
 
 ## The test data
 

@@ -13,7 +13,7 @@ from tetrak_translit import (
     schemes,
     scripts,
 )
-from tetrak_translit.registry import PACKAGES, scripts_in
+from tetrak_translit.registry import PACKAGES, ScriptPackage, scripts_in
 
 
 def test_two_scripts_in_order() -> None:
@@ -33,11 +33,17 @@ def test_script_ranges_do_not_overlap() -> None:
 
 
 @pytest.mark.parametrize("package", PACKAGES.values(), ids=lambda p: p.script.key)
-def test_every_letter_is_in_the_ranges(package) -> None:  # type: ignore[no-untyped-def]
+def test_every_letter_is_in_the_ranges(package: ScriptPackage) -> None:
     script = package.script
     for letter in script.letters + script.archaic:
         assert script.is_letter(letter), f"{script.key}: {letter!r} is outside the ranges"
         assert letter == letter.lower()
+
+
+def test_punctuation_inside_a_block_is_not_a_letter() -> None:
+    """The Georgian paragraph separator sits between two runs of letters."""
+    assert not PACKAGES["ka"].script.is_letter("\u10fb")
+    assert PACKAGES["ka"].script.is_letter("\u10fa") and PACKAGES["ka"].script.is_letter("\u10fc")
 
 
 def test_qualified_ids_are_unique_and_prefixed() -> None:
@@ -85,7 +91,9 @@ class TestGetScheme:
     def test_unknown(self) -> None:
         with pytest.raises(UnknownSchemeError, match="known schemes"):
             get_scheme("wade_giles")
-        with pytest.raises(UnknownSchemeError):
+
+    def test_unknown_for_the_script_named_lists_that_scripts_schemes(self) -> None:
+        with pytest.raises(UnknownSchemeError, match=r"for Georgian \(ka\); its schemes: ala_lc"):
             get_scheme("western", "ka")
 
 

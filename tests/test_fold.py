@@ -2,12 +2,27 @@
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 import pytest
 from conftest import FOLD_CASES
 
-from tetrak_translit import SCHEMES, ScriptRequiredError, fold, fold_token, transliterate
+from tetrak_translit import (
+    SCHEMES,
+    Scheme,
+    ScriptRequiredError,
+    UnknownSchemeError,
+    fold,
+    fold_token,
+    transliterate,
+)
 
 Groups = dict[str, list[tuple[str, str]]]
+
+#: The Armenian schemes that write յ as y in every position.
+WRITES_INITIAL_Y = frozenset(
+    {"hy/ala_lc", "hy/iso_9985", "hy/iso_9985_1996", "hy/bgn_pcgn", "hy/hubschmann_meillet"}
+)
 
 
 def test_there_is_a_test_set_for_every_script() -> None:
@@ -51,48 +66,43 @@ class TestPublishedCases:
 
 
 class TestAllSchemesFoldToTheirScript:
-    """What the engine renders, the fold must take back -- for every scheme."""
+    """What the engine renders, the fold must take back -- for every scheme,
+    for every script form in the published test sets."""
 
-    SAMPLES = {
-        "hy": [
-            "Երևան",
-            "Երեւան",
-            "Յակոբ",
-            "Գևորգ",
-            "Պողոսյան",
-            "Պօղոսեան",
-            "Չարենց",
-            "Մեսրոպ Մաշտոց",
-            "Սուրբ Էջմիածին",
-            "Խաչատրյան",
-            "Հովհաննես",
-            "Ժամանակ",
-            "Շուշի",
-            "Եղիշե",
-            "Վարդանեան",
-        ],
-        "ka": [
-            "თბილისი",
-            "ქუთაისი",
-            "ბათუმი",
-            "მცხეთა",
-            "ჭავჭავაძე",
-            "წერეთელი",
-            "ჯავახიშვილი",
-            "ჟორდანია",
-            "ყაზბეგი",
-            "ღვინო",
-            "შოთა რუსთაველი",
-            "ძველი",
-            "ხელი",
-        ],
+    #: Renderings the fold is known not to take back, each a declared gap in
+    #: docs/fold.md: text to the schemes whose rendering of it misses.
+    KNOWN: ClassVar[dict[str, frozenset[str]]] = {
+        # Hübschmann-Meillet's bare j for ձ, with no mark in the word to
+        # show the scheme.
+        "Ձուկն": frozenset({"hy/hubschmann_meillet"}),
+        # A classical word beginning յե, which the schemes that write յ as y
+        # in every position render ye, and a Latin ye reads as an initial ե.
+        # ALA-LC is among them when the orthography is not stated.
+        "յետ": WRITES_INITIAL_Y,
+        "Յեսու": WRITES_INITIAL_Y,
     }
 
     @pytest.mark.parametrize("scheme", SCHEMES.values(), ids=lambda s: s.id)
-    def test_rendering_folds_like_its_source(self, scheme) -> None:  # type: ignore[no-untyped-def]
+    def test_rendering_folds_like_its_source(
+        self, fold_groups: dict[str, Groups], scheme: Scheme
+    ) -> None:
         key = scheme.script.key
-        for text in self.SAMPLES[key]:
-            assert fold(transliterate(text, scheme), script=key) == fold(text), (scheme.id, text)
+        misses = []
+        for forms in fold_groups[key].values():
+            for text, _ in forms:
+                if not scheme.script.has_letters(text) or scheme.id in self.KNOWN.get(text, ()):
+                    continue
+                rendered = transliterate(text, scheme)
+                if fold(rendered, script=key) != fold(text):
+                    misses.append((text, rendered))
+        assert not misses
+
+    def test_the_known_misses_still_miss(self) -> None:
+        """If one starts folding, take it out of KNOWN and out of the gaps."""
+        for text, scheme_ids in self.KNOWN.items():
+            for scheme_id in scheme_ids:
+                key = scheme_id.partition("/")[0]
+                assert fold(transliterate(text, scheme_id), script=key) != fold(text), scheme_id
 
 
 class TestScriptArgument:
@@ -147,6 +157,25 @@ class TestSchemeHint:
     def test_a_hint_is_ignored_for_script_input(self) -> None:
         assert fold("Երևան", scheme="iso_9985") == fold("Երևան")
 
+    def test_a_hint_settles_a_classical_initial_ye(self) -> None:
+        """Yesu is Յեսու under ISO 9985 and an initial ե to the heuristic."""
+        assert fold("Yesu", scheme="iso_9985") == fold("Յեսու") == fold("Հեսու")
+        assert fold("Yesu", script="hy") != fold("Յեսու")
+
+    def test_a_hint_reaches_the_latin_tokens_of_a_mixed_line(self) -> None:
+        """Token by token: the Armenian is folded as it is, the Latin read back."""
+        assert fold("Ձայն Jayn", scheme="iso_9985") == "cayn cayn"
+        assert fold("Jayn Ձայն 1985", scheme="iso_9985") == "cayn cayn 1985"
+
+    def test_a_hint_for_another_script_names_that_script(self) -> None:
+        with pytest.raises(UnknownSchemeError, match="for Georgian \\(ka\\); its schemes"):
+            fold("x", script="ka", scheme="iso_9985")
+
+    def test_the_georgian_f_folds_with_its_iso_rendering(self) -> None:
+        """ჶ is f in ISO 9984 and undefined in ALA-LC; the fold takes ISO's side."""
+        assert fold("ჶილმი") == fold("filmi", script="ka") == "filmi"
+        assert fold(transliterate("ჶილმი", "ka/iso_9984"), script="ka") == fold("ჶილმი")
+
 
 class TestKey:
     def test_is_lowercase_ascii(self) -> None:
@@ -177,6 +206,9 @@ class TestKey:
         assert fold("Khachaturian", script="hy") != fold("Խաչատրյան")
         assert fold("Akop", script="hy") != fold("Հակոբ")
         assert fold("Arutyunyan", script="hy") != fold("Հարությունյան")
+        # ALA-LC 2011 and BGN/PCGN of a classical word beginning յե: a Latin
+        # ye cannot say whether it was յե or an initial ե, and reads as ե.
+        assert fold("Yesu", script="hy") != fold("Յեսու") == fold("Հեսու")
         # German spellings: z is զ in every scheme, j is ջ, tsch is տ+շ.
         assert fold("Eriwan", script="hy") != fold("Երևան")
         assert fold("Jerewan", script="hy") != fold("Երևան")
