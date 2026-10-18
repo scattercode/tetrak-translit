@@ -79,7 +79,9 @@ Punctuation follows the standard's Table 2, each mark where it stands:
 |---|---|---|---|---|---|---|---|---|
 | ISO 9985 | `.` | `:` | `;` | `?` | `!` | `ˆ` | `-` | `,` |
 
-The stress marks stay over their vowel, so `կարդացե՞լ` is `kardac'e?l`,
+The stress marks stay over their vowel, so `կարդացե՞լ` is `kardac'e?l`;
+a mark set inside the `ու` digraph follows it, so `ելնելո՞ւ` is
+`elnelow?`;
 and reading back maps each Latin mark to its Armenian one: a full stop
 in the Latin becomes `։`.
 
