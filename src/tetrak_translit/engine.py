@@ -37,18 +37,27 @@ class NotReversibleError(ValueError):
 
 
 def _units(word: str, scheme: Scheme) -> list[tuple[str, bool]]:
-    """Split a word into (lowercase unit, was-capitalised) pairs."""
+    """Split a word into (lowercase unit, was-capitalised) pairs.
+
+    A mark set inside a digraph (Armenian's ``ո՞ւ``, the question mark on
+    the stressed vowel) does not split it: the digraph is one unit and the
+    mark follows it.
+    """
     lowered = [character.lower() for character in word]
     capitals = [character.isupper() for character in word]
     digraphs = {key for key in scheme.digraphs if len(key) == 2}
+    marks = scheme.script.marks
 
     units: list[tuple[str, bool]] = []
     index = 0
     while index < len(lowered):
-        pair = "".join(lowered[index : index + 2])
-        if pair in digraphs:
-            units.append((pair, capitals[index]))
-            index += 2
+        second = index + 1
+        while second < len(lowered) and lowered[second] in marks:
+            second += 1
+        if second < len(lowered) and lowered[index] + lowered[second] in digraphs:
+            units.append((lowered[index] + lowered[second], capitals[index]))
+            units.extend((lowered[inside], False) for inside in range(index + 1, second))
+            index = second + 1
         else:
             units.append((lowered[index], capitals[index]))
             index += 1

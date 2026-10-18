@@ -3,8 +3,10 @@
 For what a fold is for, see :mod:`tetrak_translit.fold`. This module is
 the Armenian rules. In order:
 
-1. **Armenian input** is normalised across the 1922 reform, towards the
-   reformed spelling: ``եւ`` becomes ``և``, ``է`` becomes ``ե``, ``եա``
+1. **Armenian input** loses the intonation marks Armenian sets inside a
+   word, on the stressed vowel (the question, exclamation and emphasis
+   marks: ``ելնելո՞ւ`` is ``ելնելու``), and is normalised across the 1922
+   reform, towards the reformed spelling: ``եւ`` becomes ``և``, ``է`` becomes ``ե``, ``եա``
    becomes ``յա`` and ``իւ`` becomes ``յու`` (the classical digraphs for
    *ya* and *yu*), ``եո`` becomes ``եվո`` (*Գէորգ* is *Gevorg*), and a
    word-final ``յ`` after a vowel is dropped (``ծառայ`` is ``ծառա``).
@@ -19,7 +21,9 @@ the Armenian rules. In order:
    ISO ``ow``) anywhere in the text being folded, not only in the token:
    then its bare ``j`` is read as ``dz``.
 3. **Latin** is lowercased and stripped of every diacritic and
-   aspiration mark, an aspirate written with *h* loses it (``th``/``t``,
+   aspiration mark, an intonation mark inside a word goes (the schemes
+   render it where it stands, *kardac'e?l*, and a hand may set it inside
+   a digraph, *elnelo?w*), an aspirate written with *h* loses it (``th``/``t``,
    ``ph``/``p``: *Thoumanian*), an *h* after *v* is dropped
    (``vh``/``v``: *Hovannes*), then its digraphs are collapsed onto one
    spelling each (``ž``/``zh``, ``x``/``kh``, ``ł``/``gh``,
@@ -30,13 +34,16 @@ the Armenian rules. In order:
    pairs are merged (``b``/``p``, ``d``/``t``, ``g``/``k``,
    ``dz``/``ts``/``c``, ``j``/``ch``) because Eastern and Western
    pronunciation spellings disagree on exactly those, the glides are
-   regularised (initial ``ye``/``e``, initial ``vo``/``o``, initial
-   ``iu``/``yu``; ``y`` before a vowel at the start of a word or after a
+   regularised (initial ``ye``/``e`` and ``vo``/``o``, where a hyphen or
+   a bracket also starts a word, as BGN/PCGN and Western count it;
+   initial ``iu``/``yu``; ``y`` before a vowel at the start of a word or after a
    hyphen becomes ``h``, and so does the lone initial ``Յ.``, which then
    shares its key with ``Հ.``; initial ``ho``/``o`` for the
    Russian-mediated *Ovanes* and *Ovsep*; ``ya``/``ea``/``ia``), a ``y``
-   after a vowel is dropped at the end of a word and before a hyphen or a
-   bracket (the silent ``յ`` of *hay-ṛuseren*), doubled letters are
+   after ``iu`` at the end of a word is BGN/PCGN's ``ը`` and becomes
+   ``e`` (*tʻiwy* for ``թիւը``), any other ``y`` after a vowel is dropped
+   at the end of a word and before a hyphen or a bracket (the silent
+   ``յ`` of *hay-ṛuseren*), doubled letters are
    collapsed and anything that is not a letter or digit is removed.
 
 Known gaps, because a fold that claims there is a single right answer is
@@ -118,7 +125,10 @@ _BASIS = Scheme(
 )
 
 # Classical-orthography spellings, lowercase, towards their reformed forms.
+# First the intonation marks, which Armenian sets on the stressed vowel
+# inside the word (ելնելո՞ւ): left in, they split a digraph.
 _ORTHOGRAPHY: Rules = (
+    (re.compile(r"[\u055b\u055c\u055e]"), ""),
     (re.compile(r"եւ"), "և"),
     (re.compile(r"է"), "ե"),
     (re.compile(r"եա"), "յա"),
@@ -164,6 +174,10 @@ def _j_is_dz(context: str) -> bool:
 
 # The Latin skeleton rules, applied in this order to one lowercase token.
 _LATIN: Rules = (
+    # The schemes render an intonation mark where it stands, inside the word
+    # (ISO 9985 as ? ! ˆ, the others as the Armenian mark): out before the
+    # digraphs are read, as on the Armenian side.
+    (re.compile(r"(?<=[a-z])[?!ˆ\u055b\u055c\u055e](?=[a-z])"), ""),
     # Older English and French spellings mark an aspirate with h (Thoumanian,
     # Thoros, Pharantsem), where the schemes use an apostrophe or nothing.
     (re.compile(r"th"), "t"),
@@ -185,9 +199,12 @@ _LATIN: Rules = (
     # the glide յ (zhanry, ynker, Hayy). Punctuation is still in the token
     # here, so a lone y, the initial Յ., has neither and is left alone.
     (re.compile(r"(?<=[b-df-hj-np-tv-z])y(?![aeiou])|(?<![a-z])y(?=[b-df-hj-np-tv-z])"), "e"),
-    (re.compile(r"^yev"), "ev"),
-    (re.compile(r"^ye"), "e"),
-    (re.compile(r"^vo"), "o"),
+    # BGN/PCGN and Western write an initial ե as ye and an initial ո as vo,
+    # and their renderers count a hyphen or a bracket as a word boundary
+    # (Ter-Yeghishe, hay[yeren], ark'[yepiskopos]); so does the fold.
+    (re.compile(r"(?<![a-z])yev"), "ev"),
+    (re.compile(r"(?<![a-z])ye"), "e"),
+    (re.compile(r"(?<![a-z])vo"), "o"),
     (re.compile(r"^iu"), "yu"),
     # An initial Յ is said h (Յակոբ is Hakob), also after a hyphen
     # (Տէր-Յակոբեան), and ALA-LC 2022 writes it Ḥ. The lone initial Յ. goes
@@ -210,6 +227,10 @@ _LATIN: Rules = (
     (re.compile(r"ya|ea"), "ia"),
     (re.compile(r"yo"), "io"),
     (re.compile(r"yu|eu"), "iu"),
+    # BGN/PCGN's y for ը can follow a vowel only after the ւ of classical
+    # իւ (tʻiwy for թիւը), which has just become iu; the article is kept as
+    # the vowel the other schemes write, before the silent յ is dropped.
+    (re.compile(r"(?<=iu)y(?![a-z])"), "e"),
     # A final յ after a vowel is silent and the Armenian side drops it; so
     # here, also before a hyphen or a bracket (hay-ṛuseren, hay[erēn]).
     (re.compile(r"(?<=[aeiou])y(?![a-z])"), ""),

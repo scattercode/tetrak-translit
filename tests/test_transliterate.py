@@ -311,6 +311,12 @@ class TestMarksInsideAWord:
     def test_the_letter_after_a_mark_is_not_word_initial(self) -> None:
         # BGN/PCGN writes initial ե as ye; inside a word it is e.
         assert transliterate("կարդացե՞լ", "bgn_pcgn") == "kardats'e՞l"
+
+    def test_a_mark_inside_a_digraph_follows_it(self) -> None:
+        # The question mark sits on the stressed vowel, inside ու.
+        assert transliterate("ելնելո՞ւ", "bgn_pcgn") == "yelnelu՞"
+        assert transliterate("ելնելո՞ւ", "iso_9985") == "elnelow?"
+        assert transliterate("Ո՞ւր", "western") == "U՞r"
         assert transliterate("Երե՞ւան", "bgn_pcgn").startswith("Yere")
 
     def test_a_scheme_without_punctuation_leaves_marks_where_they_stand(self) -> None:

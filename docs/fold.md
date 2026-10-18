@@ -40,7 +40,10 @@ rules would never find `ბათუმი`.
 
 ### Armenian
 
-1. **Armenian input** is normalised across the 1922 reform, towards the
+1. **Armenian input** loses the intonation marks Armenian sets inside a
+   word, on the stressed vowel (the question, exclamation and emphasis
+   marks `՞ ՜ ՛`: `ելնելո՞ւ` folds as `ելնելու`; left in, the mark splits
+   the `ու`), and is normalised across the 1922 reform, towards the
    reformed spelling: `եւ` becomes `և`; `է` becomes `ե`; the classical
    digraphs `եա` and `իւ` become `յա` and `յու`; `եո` becomes `եվո`
    (*Գէորգ* is *Gevorg*); and a word-final `յ` after a vowel is dropped
@@ -55,7 +58,10 @@ rules would never find `ბათუმი`.
    in it into `dz`: *Jayn hayreneacʿ* finds `Ձայն հայրենեաց`. A bare `c`
    is not counted, because popular spellings use it.
 3. **Latin** is lowercased and stripped of every diacritic and aspiration
-   mark. An aspirate written with an *h* loses it (`th` and `t`, `ph`
+   mark, and an intonation mark inside a word goes, since the schemes
+   render it where it stands (`կարդացե՞լ` is *kardac'e?l*) and a hand, or
+   a release before 3.4.0, may set it inside a digraph (*elnelo?w*). An
+   aspirate written with an *h* loses it (`th` and `t`, `ph`
    and `p`, so *Thoumanian* finds `Թումանյան`), and an *h* after *v* is
    dropped (`vh` and `v`, so *Hovannes* finds *Hovhannes*). Then its
    digraphs are collapsed onto one spelling each (`ž` and
@@ -67,12 +73,16 @@ rules would never find `ბათუმი`.
    *ynker* finds `ընկեր`);
    the voiced and voiceless pairs are merged (`b`/`p`, `d`/`t`,
    `g`/`k`, `dz`/`ts`/`c`, `j`/`ch`); the glides are regularised
-   (word-initial `ye` and `e`, `vo` and `o`, `iu`; `y` and `h` at the
+   (word-initial `ye` and `e`, `vo` and `o`, where a hyphen or a bracket
+   also starts a word, as BGN/PCGN and Western count it: *Ter-Yeghishe*,
+   *hay[yeren]*; `iu`; `y` and `h` at the
    start of a word or after a hyphen, and for the lone initial `Յ.`, so
    that *Ḥ.* and *H.* find it; and `ho` and
    `o` for the Russian-mediated *Ovanes* and *Ovsep*; `ya`, `ea` and
-   `ia`); a `y` after a vowel is dropped at the end of a word and before
-   a hyphen or a bracket (the silent `յ` of *hay-ṛuseren*); doubled
+   `ia`); a `y` after `iu` at the end of a word is BGN/PCGN's `ը` and
+   becomes `e` (*tʻiwy* for `թիւը`); any other `y` after a vowel is
+   dropped at the end of a word and before a hyphen or a bracket (the
+   silent `յ` of *hay-ṛuseren*); doubled
    letters are collapsed; and anything that is not a letter or a digit is
    removed.
 
@@ -121,6 +131,12 @@ Armenian:
   before *o* (*Ovanes*, *Ovsep*), so *Akop* and *Arutyunyan* still miss
   *Hakob* and *Harutyunyan*. A general initial-*h* rule would also merge
   `իւր` (his) with `ուր` (where).
+- **German spellings.** *Eriwan*, *Jerewan*, *Tscharenz*, *Chatschaturjan*,
+  *Mikojan*: German writes *j* for `յ`, *z* for `ց`, *tsch* for `չ` and
+  *sch* for `շ`. The fold cannot take them without losing letters every
+  scheme relies on: *j* is `ջ` and *z* is `զ` in all five, and *tsch* is
+  `տ` + `շ`. A search index that must serve German-language records is
+  better served by indexing a German form beside the Armenian one.
 - **Classical `աւ` that reformed spelling turned into `օ`.** `աւր` and
   `օր` (day) do not fold together; the fold reads `ւ` as *v*.
 - **ISO 9985 or Hübschmann-Meillet `j` with nothing to show the scheme.**
