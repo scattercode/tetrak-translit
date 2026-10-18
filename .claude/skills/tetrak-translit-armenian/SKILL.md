@@ -219,8 +219,11 @@ rules. Each scheme does what its standard says and nothing more:
 
 Order of operations for one token:
 
-1. **Armenian input** is lowercased, normalised classical → reformed by the
-   `_ORTHOGRAPHY` rules above, and rendered through **ALA-LC**.
+1. **Armenian input** is lowercased, loses the intonation marks Armenian
+   sets inside a word on the stressed vowel (`՞ ՜ ՛`: `ելնելո՞ւ` is
+   `ելնելու`; left in, the mark splits the `ու`), is normalised
+   classical → reformed by the `_ORTHOGRAPHY` rules above, and rendered
+   through **ALA-LC**.
    **Latin input** whose whole text (`context`, which `fold()` passes; the
    token alone otherwise) carries an ISO 9985 or Hübschmann-Meillet mark
    (`_ISO_MARKS`: `č ǰ š ž ġ ł ə ë ç`, `ʿ`, `c` + apostrophe, `ow`) has
@@ -234,6 +237,7 @@ Order of operations for one token:
 
    | Rule | Why |
    |---|---|
+   | an intonation mark between letters removed (`? ! ˆ`, `՞ ՜ ՛`) | The schemes render the mark where it stands inside the word (*kardac'e?l*), and a hand, or a release before 3.4.0, may set it inside a digraph (*elnelo?w*), where it would split the digraph here as on the Armenian side |
    | `th` → `t`; `ph` → `p` | Older English and French aspirates: *Thoumanian*, *Thoros* |
    | `vh` → `v` | Popular *Hovannes* for *Hovhannes* |
    | `ow`, `ou`, `oo` → `u` | ISO `ow`, French-style *Sourp*, popular *Shooshi* |

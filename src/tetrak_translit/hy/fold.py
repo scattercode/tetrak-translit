@@ -3,8 +3,10 @@
 For what a fold is for, see :mod:`tetrak_translit.fold`. This module is
 the Armenian rules. In order:
 
-1. **Armenian input** is normalised across the 1922 reform, towards the
-   reformed spelling: ``եւ`` becomes ``և``, ``է`` becomes ``ե``, ``եա``
+1. **Armenian input** loses the intonation marks Armenian sets inside a
+   word, on the stressed vowel (the question, exclamation and emphasis
+   marks: ``ելնելո՞ւ`` is ``ելնելու``), and is normalised across the 1922
+   reform, towards the reformed spelling: ``եւ`` becomes ``և``, ``է`` becomes ``ե``, ``եա``
    becomes ``յա`` and ``իւ`` becomes ``յու`` (the classical digraphs for
    *ya* and *yu*), ``եո`` becomes ``եվո`` (*Գէորգ* is *Gevorg*), and a
    word-final ``յ`` after a vowel is dropped (``ծառայ`` is ``ծառա``).
@@ -19,7 +21,9 @@ the Armenian rules. In order:
    ISO ``ow``) anywhere in the text being folded, not only in the token:
    then its bare ``j`` is read as ``dz``.
 3. **Latin** is lowercased and stripped of every diacritic and
-   aspiration mark, an aspirate written with *h* loses it (``th``/``t``,
+   aspiration mark, an intonation mark inside a word goes (the schemes
+   render it where it stands, *kardac'e?l*, and a hand may set it inside
+   a digraph, *elnelo?w*), an aspirate written with *h* loses it (``th``/``t``,
    ``ph``/``p``: *Thoumanian*), an *h* after *v* is dropped
    (``vh``/``v``: *Hovannes*), then its digraphs are collapsed onto one
    spelling each (``ž``/``zh``, ``x``/``kh``, ``ł``/``gh``,
@@ -121,7 +125,10 @@ _BASIS = Scheme(
 )
 
 # Classical-orthography spellings, lowercase, towards their reformed forms.
+# First the intonation marks, which Armenian sets on the stressed vowel
+# inside the word (ելնելո՞ւ): left in, they split a digraph.
 _ORTHOGRAPHY: Rules = (
+    (re.compile(r"[\u055b\u055c\u055e]"), ""),
     (re.compile(r"եւ"), "և"),
     (re.compile(r"է"), "ե"),
     (re.compile(r"եա"), "յա"),
@@ -167,6 +174,10 @@ def _j_is_dz(context: str) -> bool:
 
 # The Latin skeleton rules, applied in this order to one lowercase token.
 _LATIN: Rules = (
+    # The schemes render an intonation mark where it stands, inside the word
+    # (ISO 9985 as ? ! ˆ, the others as the Armenian mark): out before the
+    # digraphs are read, as on the Armenian side.
+    (re.compile(r"(?<=[a-z])[?!ˆ\u055b\u055c\u055e](?=[a-z])"), ""),
     # Older English and French spellings mark an aspirate with h (Thoumanian,
     # Thoros, Pharantsem), where the schemes use an apostrophe or nothing.
     (re.compile(r"th"), "t"),

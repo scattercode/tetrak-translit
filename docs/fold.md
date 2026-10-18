@@ -40,7 +40,10 @@ rules would never find `ბათუმი`.
 
 ### Armenian
 
-1. **Armenian input** is normalised across the 1922 reform, towards the
+1. **Armenian input** loses the intonation marks Armenian sets inside a
+   word, on the stressed vowel (the question, exclamation and emphasis
+   marks `՞ ՜ ՛`: `ելնելո՞ւ` folds as `ելնելու`; left in, the mark splits
+   the `ու`), and is normalised across the 1922 reform, towards the
    reformed spelling: `եւ` becomes `և`; `է` becomes `ե`; the classical
    digraphs `եա` and `իւ` become `յա` and `յու`; `եո` becomes `եվո`
    (*Գէորգ* is *Gevorg*); and a word-final `յ` after a vowel is dropped
@@ -55,7 +58,10 @@ rules would never find `ბათუმი`.
    in it into `dz`: *Jayn hayreneacʿ* finds `Ձայն հայրենեաց`. A bare `c`
    is not counted, because popular spellings use it.
 3. **Latin** is lowercased and stripped of every diacritic and aspiration
-   mark. An aspirate written with an *h* loses it (`th` and `t`, `ph`
+   mark, and an intonation mark inside a word goes, since the schemes
+   render it where it stands (`կարդացե՞լ` is *kardac'e?l*) and a hand, or
+   a release before 3.4.0, may set it inside a digraph (*elnelo?w*). An
+   aspirate written with an *h* loses it (`th` and `t`, `ph`
    and `p`, so *Thoumanian* finds `Թումանյան`), and an *h* after *v* is
    dropped (`vh` and `v`, so *Hovannes* finds *Hovhannes*). Then its
    digraphs are collapsed onto one spelling each (`ž` and
