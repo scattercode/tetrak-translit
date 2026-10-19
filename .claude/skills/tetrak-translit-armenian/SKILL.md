@@ -244,7 +244,7 @@ Order of operations for one token:
    | `ow`, `ou`, `oo` → `u` | ISO `ow`, French-style *Sourp*, popular *Shooshi* |
    | `ew` → `ev`; `iw` → `iu`; `w` → `v`; `ivo` → `io` | ISO and Hübschmann-Meillet `և`, ALA-LC classical *Erewan*; classical `իւ` (*giwgh*, which the Armenian side has made `յու`); ALA-LC `ւ`; the glide Western says in *Virkilivos* (`Վիրգիլիոս`), read the same way for every input so that `Լիվոռնո` and *Livorno* still agree |
    | `y` with a consonant beside it and no vowel on either side → `e` | BGN/PCGN `y` for `ը` (*zhanry*, *ynker*, *Hayy*); the glide `յ` always has a vowel beside it. A lone `y` (the initial `Յ.`) has neither and is not touched here: punctuation is still in the token at this step, so "not a vowel" is not enough |
-   | initial `yev` → `ev`, `ye` → `e`, `vo` → `o`, where a hyphen or a bracket also starts a word; initial `iu` → `yu` | BGN/PCGN and Western glides, whose renderers count a hyphen or a bracket as a word boundary (*Ter-Yeghishe*, *hay[yeren]*, *ark'[yepiskopos]*); classical initial `իւ` (*iwr*, Western *Iur*) meets `յուր` |
+   | initial `yev` → `ev`, `ye` → `e`, `he` → `e`, `vo` → `o`, where a hyphen or a bracket also starts a word; initial `iu` → `yu` | BGN/PCGN and Western glides, whose renderers count a hyphen or a bracket as a word boundary (*Ter-Yeghishe*, *hay[yeren]*, *ark'[yepiskopos]*); the `he` because a classical `յե` is the reform's `հե` and the schemes that write `յ` as `y` everywhere render it *ye* (*Yeghapʻokhakan*, *Heghapʻokhakan*, `յեղափոխական`, `հեղափոխական` are one key); classical initial `իւ` (*iwr*, Western *Iur*) meets `յուր` |
    | `y` before a vowel at the start of a word or after a hyphen → `h`; a lone `y` → `h` | Western *Hagop* against *Yakob*; `Յովհաննէս` / `Հովհաննես`; `Տէր-Յակոբեան` / *Tēr-Ḥakobean*; the initial `Յ.`, which ALA-LC 2022 writes *Ḥ.* and a keyboard *H.*, and which then shares a key with `Հ.` (declared) |
    | initial `ho` → `o` | Russian-mediated *Ovanes*, *Ovsep* (Russian has no *h*). Only before `o`: a general initial-*h* drop would merge `իւր` (his) with `ուր` (where), and it would change the keys of every *h*- name |
    | `d` → `t`; `ts`, `tz` → `c` | `ծ ձ ց` become one; `d` first, so that Western's `ds` for `տս` (*badsbaran*) reaches `c` with ALA-LC's `ts` and `dz` goes the way of `tz` |
@@ -272,12 +272,6 @@ Sample keys: `Երևան`/*Yerevan*/*Erewan* → `erevan`; `Յակոբ`/*Hagop* 
 - **Spellings that came through Russian**: *Khachaturian* has a *u* that
   `Խաչատրյան` does not. Initial *h* is restored only before `o`, so *Akop*
   and *Arutyunyan* still miss *Hakob* and *Harutyunyan*.
-- **A classical word beginning `յե`, romanised with a `y`**: the Armenian
-  side reads the initial `յ` as `հ` (`յետ` / `հետ`, `Յեսու` / `Հեսու`, *Hesu*,
-  *Ḥesu*), but BGN/PCGN, ISO 9985, Hübschmann-Meillet and ALA-LC with the
-  orthography not stated write *Yesu*, and a Latin `ye` reads as an initial
-  `ե`. `scheme=` settles it for the reversible two. Declared in `KNOWN` in
-  `TestAllSchemesFoldToTheirScript`.
 - **German spellings**: *Eriwan*, *Jerewan*, *Tscharenz*, *Chatschaturjan*.
   German *j* is `յ`, *z* is `ց`, *tsch* is `չ`; in every scheme *j* is `ջ`,
   *z* is `զ` and *tsch* is `տ` + `շ`, so a German rule set would cost
@@ -300,6 +294,13 @@ Sample keys: `Երևան`/*Yerevan*/*Erewan* → `erevan`; `Յակոբ`/*Hagop* 
 - **`ivo` is read as `io` for every input**, so a real `v` there
   (`Լիվոռնո`, *Livorno*) still agrees with itself but would meet a
   *Liorno*. Declared in the same test.
+- **An initial `հե` over-merges with an initial `ե`** (4.0.0): a classical
+  `յե` is the reform's `հե`, but BGN/PCGN, ISO 9985, Hübschmann-Meillet and
+  a catalogue's ALA-LC write it *ye*, which is also BGN/PCGN's initial `ե`,
+  so the `h` goes on both sides. `Հեթում`, *Hetum* and *Yetum* are one key
+  (`etum`) and would meet a bare *Etum*; `յեղափոխական`, `հեղափոխական` and
+  a catalogue's *Yeghapʻokhakan* are one, which they were not before.
+  Declared in the same test.
 
 Before promising a user that two spellings fold together, run them: if the
 pair is not in `tests/data/hy_fold_cases.tsv`, it is not claimed.

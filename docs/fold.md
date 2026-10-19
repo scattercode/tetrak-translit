@@ -78,9 +78,13 @@ rules would never find `ბათუმი`.
    `g`/`k`, `dz`/`ts`/`c`, `j`/`ch`; `d` before `ts`, so that Western's
    `ds` for `տս`, *badsbaran*, reaches `c` with ALA-LC's `ts`); the
    glides are regularised
-   (word-initial `ye` and `e`, `vo` and `o`, where a hyphen or a bracket
-   also starts a word, as BGN/PCGN and Western count it: *Ter-Yeghishe*,
-   *hay[yeren]*; `iu`; `y` and `h` at the
+   (word-initial `ye`, `he` and `e`, `vo` and `o`, where a hyphen or a
+   bracket also starts a word, as BGN/PCGN and Western count it:
+   *Ter-Yeghishe*, *hay[yeren]*; the `he` because a classical `յե` is the
+   reform's `հե`, which the Armenian side has just made it, while the
+   schemes that write `յ` as `y` in every position render the classical
+   spelling *ye*, so *Yeghapʻokhakan*, *Heghapʻokhakan* and
+   *Ḥeghapʻokhakan* must be one; `iu`; `y` and `h` at the
    start of a word or after a hyphen, and for the lone initial `Յ.`, so
    that *Ḥ.* and *H.* find it; and `ho` and
    `o` for the Russian-mediated *Ovanes* and *Ovsep*; `ya`, `ea` and
@@ -137,15 +141,6 @@ Armenian:
   before *o* (*Ovanes*, *Ovsep*), so *Akop* and *Arutyunyan* still miss
   *Hakob* and *Harutyunyan*. A general initial-*h* rule would also merge
   `իւր` (his) with `ուր` (where).
-- **A classical word beginning `յե`, romanised with a `y`.** The fold
-  reads the initial `յ` the reform's way, as `հ`, so `յետ` finds `հետ`
-  and `Յեսու` finds `Հեսու`, *Hesu* and ALA-LC 2022's *Ḥesu*. But
-  BGN/PCGN, ISO 9985, Hübschmann-Meillet and ALA-LC with the orthography
-  not stated write `յ` as `y` in every position, and their *Yesu* cannot
-  be told from an initial `ե`, which BGN/PCGN and Western also write
-  *ye*; it folds as `ե`. Pass `scheme="iso_9985"` or
-  `scheme="hubschmann_meillet"` when you know, and the input is reversed
-  exactly instead.
 - **German spellings.** *Eriwan*, *Jerewan*, *Tscharenz*, *Chatschaturjan*,
   *Mikojan*: German writes *j* for `յ`, *z* for `ց`, *tsch* for `չ` and
   *sch* for `շ`. The fold cannot take them without losing letters every
@@ -171,6 +166,17 @@ Armenian:
 - **The initials `Յ.` and `Հ.` share a key.** The same merge, for the
   lone initial: ALA-LC 2022 writes `Յ.` as *Ḥ.* and a keyboard as *H.*,
   and both must find it. An initial on its own tells little apart.
+- **An initial `հե` shares a key with an initial `ե`.** A classical word
+  beginning `յե` is the reform's `հե` (`յեղափոխական`, `հեղափոխական`), and
+  the fold reads it so; but BGN/PCGN, ISO 9985, Hübschmann-Meillet and a
+  catalogue's ALA-LC write the classical spelling *ye*, which is also
+  BGN/PCGN's and Western's initial `ե` (*Yerevan*), and a Latin *ye*
+  cannot say which it was. Until 4.0.0 that was a gap: *Yesu* missed
+  `Յեսու`, and a catalogue's *Yeghapʻokhakani* missed its own
+  `յեղափոխականի`. Now the `h` goes on both sides, so `Հեթում`, *Hetum*
+  and *Yetum* are one key and meet a bare *Etum*. An over-merge, and a
+  rare one: words beginning `ե` and `հե` that differ only in the `հ` are
+  few, and the different-names test holds.
 - **A real `v` between `i` and `o` is dropped, on both sides.** Western
   writes the glide it says in `-իոս` names (*Virkilivos* for
   `Վիրգիլիոս`), and the fold reads `ivo` as `io` for every input, so

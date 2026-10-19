@@ -19,11 +19,6 @@ from tetrak_translit import (
 
 Groups = dict[str, list[tuple[str, str]]]
 
-#: The Armenian schemes that write յ as y in every position.
-WRITES_INITIAL_Y = frozenset(
-    {"hy/ala_lc", "hy/iso_9985", "hy/iso_9985_1996", "hy/bgn_pcgn", "hy/hubschmann_meillet"}
-)
-
 
 def test_there_is_a_test_set_for_every_script() -> None:
     assert set(FOLD_CASES) == {"hy", "ka"}
@@ -75,11 +70,6 @@ class TestAllSchemesFoldToTheirScript:
         # Hübschmann-Meillet's bare j for ձ, with no mark in the word to
         # show the scheme.
         "Ձուկն": frozenset({"hy/hubschmann_meillet"}),
-        # A classical word beginning յե, which the schemes that write յ as y
-        # in every position render ye, and a Latin ye reads as an initial ե.
-        # ALA-LC is among them when the orthography is not stated.
-        "յետ": WRITES_INITIAL_Y,
-        "Յեսու": WRITES_INITIAL_Y,
     }
 
     @pytest.mark.parametrize("scheme", SCHEMES.values(), ids=lambda s: s.id)
@@ -157,10 +147,10 @@ class TestSchemeHint:
     def test_a_hint_is_ignored_for_script_input(self) -> None:
         assert fold("Երևան", scheme="iso_9985") == fold("Երևան")
 
-    def test_a_hint_settles_a_classical_initial_ye(self) -> None:
-        """Yesu is Յեսու under ISO 9985 and an initial ե to the heuristic."""
+    def test_a_classical_initial_ye_needs_no_hint(self) -> None:
+        """Yesu is Յեսու under ISO 9985 and Հեսու under the reform: one key either way."""
         assert fold("Yesu", scheme="iso_9985") == fold("Յեսու") == fold("Հեսու")
-        assert fold("Yesu", script="hy") != fold("Յեսու")
+        assert fold("Yesu", script="hy") == fold("Յեսու") == fold("Esu", script="hy")
 
     def test_a_hint_reaches_the_latin_tokens_of_a_mixed_line(self) -> None:
         """Token by token: the Armenian is folded as it is, the Latin read back."""
@@ -206,9 +196,6 @@ class TestKey:
         assert fold("Khachaturian", script="hy") != fold("Խաչատրյան")
         assert fold("Akop", script="hy") != fold("Հակոբ")
         assert fold("Arutyunyan", script="hy") != fold("Հարությունյան")
-        # ALA-LC 2011 and BGN/PCGN of a classical word beginning յե: a Latin
-        # ye cannot say whether it was յե or an initial ե, and reads as ե.
-        assert fold("Yesu", script="hy") != fold("Յեսու") == fold("Հեսու")
         # German spellings: z is զ in every scheme, j is ջ, tsch is տ+շ.
         assert fold("Eriwan", script="hy") != fold("Երևան")
         assert fold("Jerewan", script="hy") != fold("Երևան")
@@ -229,3 +216,6 @@ class TestKey:
         assert fold("Ḥ.", script="hy") == fold("H.", script="hy") == fold("Յ.")
         # ivo is io for every input: a real v between i and o goes too.
         assert fold("Livorno", script="hy") == fold("Լիվոռնո") == fold("Liorno", script="hy")
+        # An initial հե shares a key with an initial ե, since a Latin ye is
+        # both the classical յե and BGN/PCGN's initial ե.
+        assert fold("Հեթում") == fold("Hetum", script="hy") == fold("Etum", script="hy")
