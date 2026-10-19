@@ -36,7 +36,7 @@ the Armenian rules. In order:
    pairs are merged (``b``/``p``, ``d``/``t``, ``g``/``k``,
    ``dz``/``ts``/``c``, ``j``/``ch``) because Eastern and Western
    pronunciation spellings disagree on exactly those, the glides are
-   regularised (initial ``ye``/``e`` and ``vo``/``o``, where a hyphen or
+   regularised (initial ``ye``/``he``/``e`` and ``vo``/``o``, where a hyphen or
    a bracket also starts a word, as BGN/PCGN and Western count it;
    initial ``iu``/``yu``; ``y`` before a vowel at the start of a word or after a
    hyphen becomes ``h``, and so does the lone initial ``Յ.``, which then
@@ -56,12 +56,11 @@ for ``Մկրտիչ``) or come through Russian (*Khachaturian* for
 reformed spelling turned into ``օ`` (``աւր``/``օր``) does not either;
 ISO 9985 or Hübschmann-Meillet ``j`` (which is ``ձ``) folds as if it
 were ALA-LC ``j`` (which is ``ջ``) when nothing else in the text shows the
-scheme (a lone *Jayn*) and ``scheme=`` does not say; and a classical
-word beginning ``յե`` romanised with a ``y`` (*Yesu* for ``Յեսու``, as
-BGN/PCGN, ISO 9985, Hübschmann-Meillet and ALA-LC without the orthography
-stated all write it) folds as an initial ``ե`` would, because a Latin
-``ye`` cannot say which it was; ``scheme=`` settles it for the reversible
-two. The
+scheme (a lone *Jayn*) and ``scheme=`` does not say. A word beginning
+``հե``, ``յե`` or ``ե`` folds to one key, since a Latin ``ye`` is both
+the classical ``յե`` (the reform's ``հե``) and BGN/PCGN's initial ``ե``;
+*Hetum* therefore shares a key with a bare *Etum*, an over-merge that is
+declared rather than a gap. The
 test set in ``tests/data/hy_fold_cases.tsv`` is the published claim; what
 is not in it is not claimed.
 """
@@ -220,6 +219,14 @@ _LATIN: Rules = (
     # (Ter-Yeghishe, hay[yeren], ark'[yepiskopos]); so does the fold.
     (re.compile(r"(?<![a-z])yev"), "ev"),
     (re.compile(r"(?<![a-z])ye"), "e"),
+    # An initial հե shares that key. A classical word beginning յե is the
+    # reform's հե (յեղափոխական, հեղափոխական) and the Armenian side has just
+    # read it so; but BGN/PCGN, ISO 9985, Hübschmann-Meillet and a
+    # catalogue's ALA-LC write the classical spelling ye, which is also
+    # BGN/PCGN's initial ե, and a Latin ye cannot say which it was. So the
+    # h is dropped on both sides: Հեթում and Hetum, Yesu and Hesu, all e.
+    # Hetum thereby shares a key with a bare Etum, which is declared.
+    (re.compile(r"(?<![a-z])he"), "e"),
     (re.compile(r"(?<![a-z])vo"), "o"),
     (re.compile(r"^iu"), "yu"),
     # An initial Յ is said h (Յակոբ is Hakob), also after a hyphen
