@@ -26,6 +26,14 @@ class TestDetect:
             "georgian\tთბილისი",
         ]
 
+    def test_plain_shows_romanisation_marks(self, capsys: pytest.CaptureFixture[str]) -> None:
+        status, out, _ = run(capsys, "detect", "Keankʻi mĕ", "Łazar")
+        assert status == 0
+        assert out.splitlines() == [
+            "latin [hy marks: aspirate, e-breve]\tKeankʻi mĕ",
+            "latin [hy marks: scholarly, shared]\tŁazar",
+        ]
+
     def test_json(self, capsys: pytest.CaptureFixture[str]) -> None:
         status, out, _ = run(capsys, "detect", "--json", "Երևան")
         record = json.loads(out)

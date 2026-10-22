@@ -61,7 +61,10 @@ orthography: *classical* (everything printed before the 1922 reform, and
 the diaspora still), *reformed* (Soviet and post-Soviet Armenia) or
 *indeterminate* (the string reads the same under both). Unicode character
 names plus a few orthographic tells, chiefly a free `ւ` outside the `ու`
-digraph.
+digraph. For catalogue search across scripts, where a title's language
+code often says nothing, a Latin value is also read for the marks a
+romanisation leaves: the aspirate in *Patmutʻiwn*, the *ĕ* of *Keankʻi
+mĕ*. Detection reports the marks it finds as evidence, never as a verdict.
 
 **Transliteration**, between a script and its named Latin schemes, each a
 versioned, tested table written from its published standard:

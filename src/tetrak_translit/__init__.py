@@ -41,7 +41,7 @@ an accessibility one.
 
 from __future__ import annotations
 
-from .detect import Detection, detect, orthography
+from .detect import Detection, Romanisation, detect, orthography
 from .engine import NotReversibleError
 from .fold import ScriptRequiredError, fold, fold_token
 from .registry import (
@@ -78,6 +78,7 @@ __all__ = [
     "SCHEMES",
     "Detection",
     "NotReversibleError",
+    "Romanisation",
     "Scheme",
     "Script",
     "ScriptRequiredError",

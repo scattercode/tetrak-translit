@@ -12,7 +12,7 @@ changes.
 Create `src/tetrak_translit/<key>/` where `<key>` is the short code
 users will type (`hy`, `ka`; use the ISO 639 code of the language the
 script is used for, or the ISO 15924 script code if the script serves
-several). Its `__init__.py` exports four names:
+several). Its `__init__.py` exports five names:
 
 | Name | What |
 |---|---|
@@ -20,6 +20,7 @@ several). Its `__init__.py` exports four names:
 | `SCHEMES` | `dict[str, Scheme]`, in the order the docs should list them |
 | `fold_token(token, context=None)` | The script's fold: one whitespace-free token, in the script or in Latin, to its key. `context` is the whole text the token came from, for a rule that looks beyond the token; a fold with no such rule accepts and ignores it |
 | `variant(text)` | Whatever the script has by way of orthographies or variants, as a string, or `None` |
+| `MARKS` | A tuple of {class}`~tetrak_translit.script.RomanisationMark`: the signs that a Latin value is a romanisation of this script, most distinctive first. An empty tuple until they have been measured on real data |
 
 The Georgian package is the smaller example to copy; the Armenian one
 shows positional rules, digraphs, a variant detector and a fold with
