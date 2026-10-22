@@ -58,6 +58,47 @@ Georgian has one orthography, so its `orthography` is `None`. The
 Armenian tells come from the measurements in Tetrak brief 014; the
 reasoning is in {mod}`tetrak_translit.hy.orthography`.
 
+### Romanisation marks
+
+A romanised title is written in the same letters as an English or French
+one, and in catalogue search across scripts its language code often says
+nothing. For any text with Latin letters, `romanisations` lists each
+registered script whose romanisation marks it carries:
+
+```python
+>>> tt.detect("Keankʻi mĕ").romanisations
+(Romanisation(key='hy', marks=('aspirate', 'e-breve'), distinctive=True),)
+>>> tt.detect("Łazar Pʿarpecʿi").romanisations
+(Romanisation(key='hy', marks=('scholarly',), distinctive=False),)
+>>> tt.detect("Histoire de l’Arménie").romanisations
+()
+```
+
+`marks` names every mark found, most distinctive first; `distinctive`
+says whether any of them is one no other language's ordinary spelling
+uses. The Armenian marks are in {mod}`tetrak_translit.hy.romanised`:
+
+| Mark | What | Distinctive |
+|---|---|---|
+| `aspirate` | An apostrophe (`ʻ ’ ' ʼ`) after `t`, `k`, `p`, `c`, `ch` or `ts`, as ALA-LC, ISO 9985 and BGN/PCGN write the aspirate | yes |
+| `combining-comma` | The aspirate as a combining comma above right (U+0315) | yes |
+| `e-breve` | `ĕ` for `ը` | yes |
+| `r-dot` | `ṛ` or `ṙ` for `ռ` | yes |
+| `long-vowel` | `ē` or `ō` for `է` or `օ` | no |
+| `caron-or-dot` | `ġ`, `č`, `š`, `ž` or `ǰ` | no: Czech, Slovak, Croatian |
+| `scholarly` | `ʿ` for the aspirate, `ł` for `ղ`, `ə` for `ը` | no: Polish has `ł` |
+| `german` | `tsch` or `sch`, as German romanisations write `չ` and `շ` | no |
+
+The aspirate is not read in English `'s`, in a French elision after any
+other consonant (`l’Arménie`, `jusqu’au`), or in `c'est`. On a
+hand-judged sample of forty catalogue titles, the distinctive marks found
+19 of 21 Armenian works and none of the other 19.
+
+This is evidence for search and display, not a classification. A
+romanisation without marks (*Erker*, *Hayery*) shows nothing, so never
+use the result to exclude a record: use it to count, to rank, or to say
+which records a fold will serve. Georgian has no marks yet.
+
 ## Transliteration
 
 ```python

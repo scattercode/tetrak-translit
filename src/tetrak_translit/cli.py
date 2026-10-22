@@ -59,7 +59,11 @@ def _cmd_detect(args: argparse.Namespace) -> int:
                 yield json.dumps({"text": text, **found.as_dict()}, ensure_ascii=False)
             else:
                 orthography = f" ({found.orthography})" if found.orthography else ""
-                yield f"{found.script}{orthography}\t{text}"
+                marks = "".join(
+                    f" [{r.key} marks: {', '.join(r.marks)}{'' if r.distinctive else ', shared'}]"
+                    for r in found.romanisations
+                )
+                yield f"{found.script}{orthography}{marks}\t{text}"
 
     return _emit(lines())
 
@@ -119,7 +123,9 @@ def build_parser() -> argparse.ArgumentParser:
     commands = parser.add_subparsers(dest="command", required=True)
 
     detect_parser = commands.add_parser(
-        "detect", help="say which script a string is in and, for Armenian, which orthography"
+        "detect",
+        help="say which script a string is in, for Armenian which orthography, "
+        "and which romanisation marks a Latin value carries",
     )
     detect_parser.add_argument("text", nargs="*", help="text to examine; stdin lines if omitted")
     detect_parser.add_argument("--json", action="store_true", help="one JSON object per line")

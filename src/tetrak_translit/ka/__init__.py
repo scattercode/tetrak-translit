@@ -14,6 +14,7 @@ are not handled.
 
 from __future__ import annotations
 
+from ..script import RomanisationMark
 from .ala_lc import ALA_LC
 from .descriptor import SCRIPT
 from .fold import fold_token
@@ -25,6 +26,11 @@ from .national import NATIONAL
 SCHEMES = {scheme.key: scheme for scheme in (ALA_LC, ISO_9984, ISO_9984_1996, NATIONAL)}
 
 
+#: No marks yet: the Georgian schemes' apostrophe marks an aspirate in some
+#: and an ejective in others, and is not measured as evidence.
+MARKS: tuple[RomanisationMark, ...] = ()
+
+
 def variant(text: str) -> None:
     """Georgian has one orthography; there is no variant to detect."""
     return None
@@ -34,6 +40,7 @@ __all__ = [
     "ALA_LC",
     "ISO_9984",
     "ISO_9984_1996",
+    "MARKS",
     "NATIONAL",
     "SCHEMES",
     "SCRIPT",

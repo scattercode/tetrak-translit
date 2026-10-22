@@ -91,6 +91,22 @@ reformed in `հայ` and `թեյ`; `markers()` reports it and `orthography()`
 ignores it. A free `ւ` outranks a ligature, so a classical press that sets
 `և` is still called classical.
 
+### Romanisation marks (`hy/romanised.py`)
+
+For text with Latin letters, `detect()` also reports `romanisations`: which
+of the eight marks in `MARKS` occur, and whether any is distinctive. The
+four distinctive ones are the aspirate apostrophe after `t k p c ch ts`
+(not `'s`, not French `l’`, `jusqu’`, `c'est`), the combining comma
+U+0315, `ĕ`, and `ṛ`/`ṙ`. The four shared ones are `ē`/`ō`, `ġ č š ž ǰ`,
+the scholarly `ʿ ł ə`, and German `tsch`/`sch`. They came from a
+catalogue aggregator's selection rule, which took 19 of 21 Armenian works
+in a hand-judged sample of forty and none of the 19 others; the library's
+result matched that rule on the sample exactly. It is evidence, never a
+filter: *Erker* has no marks. Two known limits: the aspirate pattern does
+not read `čʻ` (the `č` is caught by the shared mark instead), and the
+scholarly and German romanisations carry only shared
+marks.
+
 ## Two pronunciations
 
 Eastern Armenian keeps a three-way stop series: voiced, voiceless, aspirated.

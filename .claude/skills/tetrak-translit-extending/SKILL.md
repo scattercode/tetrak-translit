@@ -92,7 +92,7 @@ A mapping is wrong, or the standard says something the table does not.
 ## 3. Adding a script
 
 `docs/adding-a-script.md` is the public procedure: package with `SCRIPT`,
-`SCHEMES`, `fold_token`, `variant`; tables from the standards; a fold; a case
+`SCHEMES`, `fold_token`, `variant`, `MARKS`; tables from the standards; a fold; a case
 set of at least fifteen groups; registration. Follow it, and also do these,
 which it does not say:
 

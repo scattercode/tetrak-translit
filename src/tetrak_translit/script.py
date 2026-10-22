@@ -20,10 +20,15 @@ Two kinds of scheme live here and the distinction matters:
   which maps every scheme of a script, and the script itself, onto a
   single index form. A scheme says how a name *looks*; the fold says which
   names are the *same*.
+
+A third, smaller kind of data, :class:`RomanisationMark`, runs the other
+way: a sign in Latin text that it is a romanisation of a script, which
+:func:`tetrak_translit.detect` reports as evidence.
 """
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 
@@ -268,4 +273,29 @@ class Scheme:
         return self.letters.get(unit, unit)
 
 
-__all__ = ["Rule", "Scheme", "Script"]
+@dataclass(frozen=True)
+class RomanisationMark:
+    """A sign that a Latin-script value is a romanisation of a script.
+
+    Marks are evidence, not a classification. A romanisation without marks
+    (*Erker*) shows none, and a mark names a family of schemes rather than
+    one: ALA-LC, ISO 9985 and BGN/PCGN all write an aspirate with an
+    apostrophe.
+
+    Attributes:
+        key: A stable name for the mark, for code to compare against.
+        description: What the mark is, for a reader.
+        pattern: Where it occurs in a value, matched against NFC text.
+        distinctive: Whether no other language's ordinary spelling uses the
+            mark, so that it alone is good evidence. False for marks that
+            other languages share: Czech has *č* and *ž*, Polish *ł*,
+            German *tsch*.
+    """
+
+    key: str
+    description: str
+    pattern: re.Pattern[str]
+    distinctive: bool
+
+
+__all__ = ["RomanisationMark", "Rule", "Scheme", "Script"]

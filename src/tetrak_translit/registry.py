@@ -1,7 +1,7 @@
 """The scripts this package handles, and how to find the one a string is in.
 
-A script package exports four names -- ``SCRIPT``, ``SCHEMES``,
-``fold_token`` and ``variant`` -- and is registered here. Everything
+A script package exports five names -- ``SCRIPT``, ``SCHEMES``,
+``fold_token``, ``variant`` and ``MARKS`` -- and is registered here. Everything
 above this module (detection, transliteration, the fold, the command
 line) goes through the registry and never names a script directly, which
 is what keeps a new script a matter of adding a package.
@@ -13,7 +13,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from . import hy, ka
-from .script import Scheme, Script
+from .script import RomanisationMark, Scheme, Script
 
 
 class UnknownScriptError(KeyError):
@@ -34,14 +34,16 @@ class ScriptPackage:
     #: text it came from, or ``None``, for the rules that look beyond it.
     fold_token: Callable[[str, str | None], str]
     variant: Callable[[str], str | None]
+    #: The signs that a Latin value is a romanisation of this script.
+    marks: tuple[RomanisationMark, ...] = ()
 
 
 #: Every registered script, by key, in documentation order.
 PACKAGES: dict[str, ScriptPackage] = {
     package.script.key: package
     for package in (
-        ScriptPackage(hy.SCRIPT, dict(hy.SCHEMES), hy.fold_token, hy.variant),
-        ScriptPackage(ka.SCRIPT, dict(ka.SCHEMES), ka.fold_token, ka.variant),
+        ScriptPackage(hy.SCRIPT, dict(hy.SCHEMES), hy.fold_token, hy.variant, hy.MARKS),
+        ScriptPackage(ka.SCRIPT, dict(ka.SCHEMES), ka.fold_token, ka.variant, ka.MARKS),
     )
 }
 
