@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from tetrak_translit import SCHEMES, Scheme, Script, hy, ka
+from tetrak_translit import SCHEMES, Scheme, Script, hy, ka, ru
 
 
 def test_armenian_has_thirty_eight_letters() -> None:
@@ -17,6 +17,13 @@ def test_georgian_has_thirty_three_letters_and_fourteen_others() -> None:
     assert ka.SCRIPT.letters[0] == "ა" and ka.SCRIPT.letters[-1] == "ჰ"
     assert ka.SCRIPT.archaic == "ჱჲჳჴჵჶჷჸჹჺჼჽჾჿ"
     assert not ka.SCRIPT.cased
+
+
+def test_russian_has_thirty_three_letters_and_the_four_the_reform_removed() -> None:
+    assert len(ru.SCRIPT.letters) == 33
+    assert ru.SCRIPT.letters[0] == "а" and ru.SCRIPT.letters[-1] == "я"
+    assert ru.SCRIPT.archaic == "іѣѳѵ"
+    assert ru.SCRIPT.cased
 
 
 @pytest.mark.parametrize("scheme", SCHEMES.values(), ids=lambda s: s.id)
@@ -57,6 +64,9 @@ def test_lossy_schemes_are_declared_lossy() -> None:
     assert SCHEMES["ka/ala_lc"].reversible is False
     assert SCHEMES["ka/ala_lc"].letters["ძ"] == "dz"  # also დ + ზ
     assert SCHEMES["ka/national"].reversible is False
+    assert SCHEMES["ru/ala_lc"].reversible is False
+    assert SCHEMES["ru/ala_lc"].letters["щ"] == "shch"  # also ш + ч
+    assert SCHEMES["ru/bgn_pcgn"].reversible is False
 
 
 def test_the_two_georgian_apostrophe_conventions_are_opposite() -> None:

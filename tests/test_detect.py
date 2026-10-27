@@ -7,6 +7,7 @@ import pytest
 from tetrak_translit import detect, orthography
 from tetrak_translit.detect import romanisations
 from tetrak_translit.hy.orthography import markers
+from tetrak_translit.ru.orthography import orthography as russian_orthography
 
 
 class TestScript:
@@ -17,9 +18,10 @@ class TestScript:
             ("თბილისი", "georgian", "ka"),
             ("ᲗᲑᲘᲚᲘᲡᲘ", "georgian", "ka"),
             ("Yerevan", "latin", None),
-            ("Ереван", "cyrillic", None),
+            ("Ереван", "cyrillic", "ru"),
             ("Erevan (Երևան)", "mixed", "hy"),
             ("Երևան და თბილისი", "mixed", None),
+            ("Українська мова", "cyrillic", "ru"),
             ("1922 — ...", "none", None),
             ("", "none", None),
         ],
@@ -97,6 +99,52 @@ class TestArmenianOrthography:
     def test_final_y_is_reported_but_does_not_decide(self) -> None:
         assert markers("ծառայ").final_y == 1
         assert detect("ծառայ").orthography == "indeterminate"
+
+
+class TestRussianOrthography:
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "Русскій вѣстникъ",
+            "Ѳеодоръ",  # fita
+            "мѵро",  # izhitsa
+            "Миръ",  # the final hard sign alone
+            "РОССІЯ",  # capitals
+            "Пушкинъ и Москва",  # one tell is enough
+        ],
+    )
+    def test_pre_reform(self, text: str) -> None:
+        assert detect(text).orthography == "pre-reform"
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "Пушкин",  # a final consonant with no hard sign
+            "Екатеринбург",
+            "Подъезд",  # a hard sign inside a word is modern too
+            "Русский вестник",
+        ],
+    )
+    def test_reformed(self, text: str) -> None:
+        assert detect(text).orthography == "reformed"
+
+    def test_no_cyrillic_has_no_orthography(self) -> None:
+        assert russian_orthography("Moskva") is None
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "Москва",  # ends in a vowel
+            "Толстой",  # ends in й, which both spellings write bare
+            "Гоголь",
+            "СССР",  # an acronym in capitals
+            "г.",  # an abbreviation
+            "стр. 5",
+            "от",  # too short to say
+        ],
+    )
+    def test_indeterminate_when_both_spellings_agree(self, text: str) -> None:
+        assert detect(text).orthography == "indeterminate"
 
 
 class TestRomanisationMarks:

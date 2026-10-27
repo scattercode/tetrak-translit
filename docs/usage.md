@@ -9,14 +9,15 @@ import tetrak_translit as tt
 
 ## Scripts and schemes
 
-Two scripts are registered, each by a short key: `hy` (Armenian) and
-`ka` (Georgian). Each has its own romanisation schemes, identified by a
+Three scripts are registered, each by a short key: `hy` (Armenian),
+`ka` (Georgian) and `ru` (Russian). Each has its own romanisation schemes, identified by a
 key within the script and by a qualified id across scripts:
 
 | Script | Schemes |
 |---|---|
 | `hy` Armenian | `ala_lc`, `iso_9985`, `iso_9985_1996`, `bgn_pcgn`, `hubschmann_meillet`, `western` |
 | `ka` Georgian | `ala_lc`, `iso_9984`, `iso_9984_1996`, `national` |
+| `ru` Russian | `ala_lc`, `bgn_pcgn` |
 
 A scheme key alone is enough when the text settles which script is meant
 (`transliterate("თბილისი", "ala_lc")`), or when only one script has a
@@ -53,6 +54,25 @@ ready to pass as `script=`, or `None`. For Armenian, `orthography` is:
   when no classical tell is present.
 - `indeterminate` — the string reads the same under both. `Արմեն` is
   `Արմեն` in any orthography, and the function says so rather than guess.
+
+For Russian, `orthography` is:
+
+- `pre-reform` — the spelling before the 1918 reform, which émigré
+  presses kept for decades. Called on any of the four letters the reform
+  removed (`і`, `ѣ`, `ѳ`, `ѵ`) or a hard sign closing a word (`Миръ`).
+- `reformed` — called on a word of three or more letters that ends in a
+  hard consonant with no hard sign after it (`Пушкин`), when no
+  pre-reform tell is present. Abbreviations (`г.`, `стр.`) and acronyms
+  in capitals (`СССР`) are left out, since they ended bare under both
+  spellings.
+- `indeterminate` — `Москва` is `Москва` either way.
+
+```python
+>>> tt.detect("Русскій вѣстникъ").orthography
+'pre-reform'
+>>> tt.detect("Русский вестник").orthography
+'reformed'
+```
 
 Georgian has one orthography, so its `orthography` is `None`. The
 Armenian tells come from the measurements in Tetrak brief 014; the
@@ -215,8 +235,8 @@ Elasticsearch is a small service, or an update processor, that adds a
 the user's input before searching that field. Because the output is
 plain ASCII, the folded field needs nothing more than a whitespace
 tokeniser. Keep the original field too, for display and for exact
-search. An index holding both Armenian and Georgian material folds a
-Latin query under each script and searches for either key.
+search. An index holding material in more than one script folds a Latin
+query under each script and searches for any of the keys.
 
 ## On the command line
 

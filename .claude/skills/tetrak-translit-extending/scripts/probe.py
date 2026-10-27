@@ -141,13 +141,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     render = commands.add_parser("render", help="every scheme's rendering, detection and fold key")
     render.add_argument("text", nargs="+")
-    render.add_argument("-S", "--script", help="script for Latin text (hy, ka)")
+    render.add_argument("-S", "--script", help="script for Latin text (hy, ka, ru)")
     render.add_argument("-s", "--scheme", help="also read back through this scheme if reversible")
     render.set_defaults(func=cmd_render)
 
     trace = commands.add_parser("trace", help="the fold, rule by rule, for one or more tokens")
     trace.add_argument("token", nargs="+", help="whitespace-free tokens to fold")
-    trace.add_argument("-S", "--script", help="script whose rules Latin tokens get (hy, ka)")
+    trace.add_argument("-S", "--script", help="script whose rules Latin tokens get (hy, ka, ru)")
     trace.add_argument("-s", "--scheme", help="reversible scheme the Latin is written in")
     trace.set_defaults(func=cmd_trace)
     return parser

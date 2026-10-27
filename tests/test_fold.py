@@ -21,7 +21,7 @@ Groups = dict[str, list[tuple[str, str]]]
 
 
 def test_there_is_a_test_set_for_every_script() -> None:
-    assert set(FOLD_CASES) == {"hy", "ka"}
+    assert set(FOLD_CASES) == {"hy", "ka", "ru"}
 
 
 @pytest.mark.parametrize("script", list(FOLD_CASES))
@@ -118,6 +118,32 @@ class TestScriptArgument:
 
     def test_a_mixed_line_folds_each_token_by_its_own_script(self) -> None:
         assert fold("Երևան და თბილისი", script="ka") == "erevan da tbilisi"
+        assert fold("Ереван Երևան") == "erevan erevan"
+
+    def test_the_error_names_every_script(self) -> None:
+        with pytest.raises(ScriptRequiredError, match="script='ru' \\(Russian\\)"):
+            fold("Moskva")
+
+
+class TestRussian:
+    def test_pre_reform_and_reformed_spelling_share_a_key(self) -> None:
+        assert fold("Русскій вѣстникъ") == fold("Русский вестник") == "ruski vestnik"
+        assert fold("Ѳома") == fold("Фома")
+        assert fold("мѵро") == fold("миро")
+
+    def test_the_final_hard_sign_and_its_romanisations_go(self) -> None:
+        """ALA-LC kept it from 2012 and dropped it before; BGN/PCGN writes ”."""
+        for latin in ("Mirʺ", "Mir", "Mir”"):
+            assert fold(latin, script="ru") == fold("Миръ") == fold("Мир")
+
+    def test_the_old_ligature_halves_fold_like_the_tie(self) -> None:
+        """Records older than the 2004 MARC mapping carry U+FE20 and U+FE21."""
+        assert fold("T\ufe20S\ufe21vetaeva", script="ru") == fold("Цветаева")
+
+    def test_the_same_latin_folds_differently_per_script(self) -> None:
+        """Armenian merges b with p; Russian keeps them apart."""
+        assert fold("Batumi", script="ru") == "batumi"
+        assert fold("Batumi", script="hy") == "patumi"
 
 
 class TestSchemeHint:
@@ -142,7 +168,7 @@ class TestSchemeHint:
         assert fold("ﬕայն") == fold("միայն") != fold("այն")
 
     def test_a_lossy_scheme_hint_is_ignored(self) -> None:
-        assert fold("Yerevan", scheme="bgn_pcgn") == fold("Yerevan", script="hy")
+        assert fold("Yerevan", scheme="hy/bgn_pcgn") == fold("Yerevan", script="hy")
 
     def test_a_hint_is_ignored_for_script_input(self) -> None:
         assert fold("Երևան", scheme="iso_9985") == fold("Երևան")
@@ -203,6 +229,18 @@ class TestKey:
         assert fold("Chatschaturjan", script="hy") != fold("Խաչատրյան")
         assert fold("Tiflis", script="ka") != fold("თბილისი")
         assert fold("George", script="ka") != fold("გიორგი")
+        # German and French letters for another sound: ch for х, z for ц,
+        # French ch for ш; the English Rachmaninoff; translated names.
+        assert fold("Michail", script="ru") != fold("Михаил")
+        assert fold("Chruschtschow", script="ru") != fold("Хрущёв")
+        assert fold("Zwetajewa", script="ru") != fold("Цветаева")
+        assert fold("Pouchkine", script="ru") != fold("Пушкин")
+        assert fold("Rachmaninoff", script="ru") != fold("Рахманинов")
+        assert fold("Peter", script="ru") != fold("Пётр")
+        # The English c for к: c is ц in the scholarly and ISO spellings.
+        assert fold("Nicolai", script="ru") != fold("Николай")
+        # Pre-reform endings are a spelling change, not a letter change.
+        assert fold("Русскаго") != fold("Русского")
 
     def test_declares_the_known_over_merges(self) -> None:
         """Different words that share a key, documented in docs/fold.md. If one
@@ -219,3 +257,6 @@ class TestKey:
         # An initial հե shares a key with an initial ե, since a Latin ye is
         # both the classical յե and BGN/PCGN's initial ե.
         assert fold("Հեթում") == fold("Hetum", script="hy") == fold("Etum", script="hy")
+        # A glide before e is dropped, since ALA-LC writes none: Майер
+        # (Mayer) and Маер share a key.
+        assert fold("Майер") == fold("Маер")
