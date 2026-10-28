@@ -117,7 +117,7 @@ def build_parser() -> argparse.ArgumentParser:
     """The ``tetrak-translit`` argument parser."""
     parser = argparse.ArgumentParser(
         prog="tetrak-translit",
-        description="Detect, transliterate and fold Armenian, Georgian and Russian text.",
+        description="Detect, transliterate and fold Armenian, Georgian, Russian and Syriac text.",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -146,7 +146,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_script_flag(
         transliterate_parser,
-        "the script (hy, ka, ru) when the text and the scheme key do not settle it",
+        "the script (hy, ka, ru, syr) when the text and the scheme key do not settle it",
     )
     transliterate_parser.add_argument(
         "--to",
@@ -167,7 +167,7 @@ def build_parser() -> argparse.ArgumentParser:
         "fold", help="map any spelling onto the canonical index form, for matching"
     )
     fold_parser.add_argument("text", nargs="*", help="text to fold; stdin lines if omitted")
-    _add_script_flag(fold_parser, "the script whose rules Latin text gets (hy, ka, ru)")
+    _add_script_flag(fold_parser, "the script whose rules Latin text gets (hy, ka, ru, syr)")
     fold_parser.add_argument(
         "-s",
         "--scheme",

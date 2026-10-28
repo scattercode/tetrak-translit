@@ -1,7 +1,7 @@
 # tetrak-translit
 
 Detect, transliterate and fold text in scripts that have several
-romanisations: Armenian, Georgian and Russian so far. A dependency-free Python
+romanisations: Armenian, Georgian, Russian and Syriac so far. A dependency-free Python
 library and command-line tool for the problem every catalogue of such
 material has: the same name exists in its own script, sometimes in more
 than one orthography, and in three or five Latin spellings, and no stock
@@ -45,6 +45,8 @@ True
 'pre-reform'
 >>> tt.fold("Tchaikovsky", script="ru") == tt.fold("Чайковский") == tt.fold("Chaĭkovskiĭ", script="ru")
 True
+>>> tt.fold("Fenqitho", script="syr") == tt.fold("ܦܢܩܝܬܐ") == tt.fold("Penqítā", script="syr")
+True
 ```
 
 ```bash
@@ -65,7 +67,9 @@ orthography: *classical* (everything printed before the 1922 reform, and
 the diaspora still), *reformed* (Soviet and post-Soviet Armenia) or
 *indeterminate* (the string reads the same under both). For Russian,
 *pre-reform* (the four letters and the final hard sign the 1918 reform
-removed, which émigré presses kept) or *reformed*. Unicode character
+removed, which émigré presses kept) or *reformed*. For Syriac, whether
+the text carries vowel points, and which system: *west*, *east* or
+*unvocalised*, as nearly all Syriac is. Unicode character
 names plus a few orthographic tells, chiefly a free `ւ` outside the `ու`
 digraph. For catalogue search across scripts, where a title's language
 code often says nothing, a Latin value is also read for the marks a
@@ -89,6 +93,7 @@ versioned, tested table written from its published standard:
 | `ka/national` | Georgian national system (2002) | Road signs, passports, maps: *Tbilisi*, *Kutaisi* | no |
 | `ru/ala_lc` | ALA-LC Russian (2012), with the pre-1918 letters | Library catalogues: *Chaĭkovskiĭ*, *vi͡estnikʺ* | no |
 | `ru/bgn_pcgn` | BGN/PCGN 1947 | Maps and place names: *Yekaterinburg* | no |
+| `syr/ala_lc` | ALA-LC Syriac (2012) | Library catalogues; renders the vowels only where the text has them | no |
 
 A scheme key alone is enough when the text or the key settles the script;
 otherwise say `script="ka"` or use the qualified id. Reversible where the
@@ -113,6 +118,9 @@ package does not pretend there is one.
 ## What it does not do
 
 - **Translate.** Transliteration is the same words in different letters.
+- **Supply vowels.** ALA-LC Syriac asks a cataloguer to vocalise
+  unpointed text from a dictionary; this library renders what is written
+  (`ܡܠܟܐ` is *mlkʾ*) and folds Syriac on its consonants.
 - **Guess at lossy reversals.** `transliterate(..., to="script")` works for
   ISO 9985, Hübschmann-Meillet and ISO 9984 and raises for the rest.
 - **Fold every popular spelling.** Spellings that insert an unwritten
@@ -120,11 +128,11 @@ package does not pretend there is one.
   for `Խաչատրյան`, *Tiflis* for `თბილისი`) or are translations (*George*
   for `გიორგი`) do not fold to the script, nor do the German and French
   spellings of Russian names that use a letter for another sound
-  (*Michail*, *Zwetajewa*, *Pouchkine*), and a classical Armenian `աւ`
+  (*Michail*, *Zwetajewa*, *Pouchkine*), nor Greek and Latin forms of
+  Syriac names (*Edessa*, *Nisibis*), and a classical Armenian `աւ`
   that reformed spelling turned into `օ` does not either. The test sets
   are the claim.
-- **Handle every script.** Armenian, Georgian and Russian so far; Syriac
-  is next. The engine is
+- **Handle every script.** Armenian, Georgian, Russian and Syriac so far. The engine is
   script-agnostic and a new script is a package of tables; see
   [adding a script](https://scattercode.github.io/tetrak-translit/adding-a-script.html).
 

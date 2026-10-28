@@ -8,6 +8,7 @@ from tetrak_translit import detect, orthography
 from tetrak_translit.detect import romanisations
 from tetrak_translit.hy.orthography import markers
 from tetrak_translit.ru.orthography import orthography as russian_orthography
+from tetrak_translit.syr.vocalisation import vocalisation
 
 
 class TestScript:
@@ -22,6 +23,7 @@ class TestScript:
             ("Erevan (Երևան)", "mixed", "hy"),
             ("Երևան და თბილისი", "mixed", None),
             ("Українська мова", "cyrillic", "ru"),
+            ("ܟܬܒܐ ܕܩܕܡ ܘܕܒܬܪ", "syriac", "syr"),
             ("1922 — ...", "none", None),
             ("", "none", None),
         ],
@@ -145,6 +147,24 @@ class TestRussianOrthography:
     )
     def test_indeterminate_when_both_spellings_agree(self, text: str) -> None:
         assert detect(text).orthography == "indeterminate"
+
+
+class TestSyriacVocalisation:
+    @pytest.mark.parametrize(
+        ("text", "expected"),
+        [
+            ("ܟܬܒܐ", "unvocalised"),
+            ("ܡܠܟ̈ܐ", "unvocalised"),  # seyāmē is not a vowel
+            ("ܙܰܕܺܝܩܳܐ", "west"),
+            ("ܒܝܼܘ", "east"),
+            ("ܙܰܕܺܝܩܳܐ ܒܝܼܘ", "mixed"),
+        ],
+    )
+    def test_vocalisation(self, text: str, expected: str) -> None:
+        assert detect(text).orthography == expected
+
+    def test_no_syriac_has_no_vocalisation(self) -> None:
+        assert vocalisation("Ktaba") is None
 
 
 class TestRomanisationMarks:

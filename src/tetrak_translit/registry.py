@@ -12,7 +12,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from . import hy, ka, ru
+from . import hy, ka, ru, syr
 from .script import RomanisationMark, Scheme, Script
 
 
@@ -45,6 +45,7 @@ PACKAGES: dict[str, ScriptPackage] = {
         ScriptPackage(hy.SCRIPT, dict(hy.SCHEMES), hy.fold_token, hy.variant, hy.MARKS),
         ScriptPackage(ka.SCRIPT, dict(ka.SCHEMES), ka.fold_token, ka.variant, ka.MARKS),
         ScriptPackage(ru.SCRIPT, dict(ru.SCHEMES), ru.fold_token, ru.variant, ru.MARKS),
+        ScriptPackage(syr.SCRIPT, dict(syr.SCHEMES), syr.fold_token, syr.variant, syr.MARKS),
     )
 }
 
