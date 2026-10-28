@@ -2,7 +2,7 @@
 
 Detect, transliterate and fold text in scripts that have several
 romanisations. A dependency-free Python library and command-line tool for
-the problem every catalogue of Armenian, Georgian or Russian material has: the
+the problem every catalogue of Armenian, Georgian, Russian or Syriac material has: the
 same name exists in its own script, sometimes in more than one
 orthography, and in three or five Latin spellings, and no stock search
 engine treats them as one word.
@@ -22,7 +22,7 @@ True
 ```
 
 Three functions for three jobs. [Detection](usage.md#detection) says which
-script a string is in and, for Armenian and Russian, which orthography.
+script a string is in and, for Armenian and Russian, which orthography, or for Syriac, which vocalisation.
 [Transliteration](schemes.md) renders a script in a named romanisation
 scheme, for display, and reads the reversible ones back. [The
 fold](fold.md) maps every spelling onto one index form, for finding. The

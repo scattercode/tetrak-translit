@@ -140,13 +140,39 @@ rules would never find `ბათუმი`. Russian keeps them apart too.
      a digit is removed. *-sky*, *-skiy*, *-skij* and *-skiĭ* all end
      *-ski*.
 
+### Syriac
+
+Syriac is written without vowels, and every romanisation supplies its
+own: ALA-LC from a dictionary (*Penqítā*), the West Syriac pronunciation
+with *o* for ALA-LC's *ā* and the soft consonants spelled out
+(*Fenqīthō*), the East Syriac one (*Ḥūdrā*). What they share is the
+consonants, so the key is the consonants.
+
+1. **Syriac** is rendered through ALA-LC's consonants, frozen inside the
+   fold; vowel points become vowels the next step drops, and the signs
+   (rukkākā, quššāyā, seyāmē) go. The Garshuni and Persian letters fold
+   onto the consonants they write.
+2. **Both sides** are then lowercased and stripped of diacritics and the
+   half rings, which drops alaph and ʿē. `š` and *sh* are kept apart from
+   *s* and *h*, and written *c* in the key, a letter no other rule leaves
+   behind. The soft consonants spelled out (*th ph kh gh dh bh*) and the
+   Greek *ch* become single letters; `f` becomes *p*, `c` and `q` become
+   *k*. Then every vowel goes, and with them `w`, `y`, `j` and `v`, which
+   are waw and yod, the letters that also write long vowels: *ú* and ``ܘ``
+   must meet. `ḥ` and `h` become one, as do `ṭ` and `t`, `ṣ` and `s`.
+   Doubled letters are collapsed, and anything that is not a letter or a
+   digit is removed, so ALA-LC's *da-qdām* is the script's `ܕܩܕܡ`.
+
+*Penqítā*, *Fenqīthō*, *Fenqitho* and `ܦܢܩܝܬܐ` are all *pnkt*.
+
 Tokens are folded one at a time and joined with single spaces, so a
 title folds to a sequence of keys that a whitespace tokeniser can index.
 
 ## The test sets are the claim
 
-`tests/data/hy_fold_cases.tsv`, `tests/data/ka_fold_cases.tsv` and
-`tests/data/ru_fold_cases.tsv` in the repository list groups of spellings that fold together: the cities, the
+`tests/data/hy_fold_cases.tsv`, `tests/data/ka_fold_cases.tsv`,
+`tests/data/ru_fold_cases.tsv` and `tests/data/syr_fold_cases.tsv` in the
+repository list groups of spellings that fold together: the cities, the
 surnames, the saints and the poets, each in their script (and for
 Armenian in both orthographies) and in every scheme that renders them,
 plus the popular spellings. The whole set must keep passing, and a
@@ -248,3 +274,15 @@ Russian:
   folds as Russian, to *khachaturian*, and does not meet `Խաչատրյան`;
   joining another script's name to its Russian form is a job for a name
   authority, not a fold.
+
+Syriac:
+
+- **Greek, Latin and translated forms of names.** *Edessa* for `ܐܘܪܗܝ`
+  (*ʾÚrhāy*), *Nisibis* for `ܢܨܝܒܝܢ` (*Naṣíbín*), *Bar Hebraeus* for
+  `ܒܪ ܥܒܪܝܐ`, *Isaac* without the `ḥ` of `ܐܝܣܚܩ`. A name authority's job.
+- **Arabic in Syriac letters.** Its romanisation writes *j* for `ܓ`
+  (*Jirjis*); the fold reads *j* as yod, as in *Jacob* and *Joseph*.
+- **Words that differ only in alaph, ʿē, waw or yod share a key.** `ܥܠ`
+  (on) and `ܠܐ` (not) are both *l*. An over-merge, and the price of a key
+  that every romanisation reaches: the letters they disagree about are
+  exactly these.

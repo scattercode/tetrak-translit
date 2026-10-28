@@ -89,7 +89,7 @@ class TestArmenianToLatin:
         with pytest.raises(UnknownSchemeError, match="known schemes"):
             transliterate("Երևան", "wade-giles")
         with pytest.raises(UnknownScriptError):
-            transliterate("Երևան", "ala_lc", script="syr")
+            transliterate("Երևան", "ala_lc", script="cop")
         with pytest.raises(UnknownScriptError):
             transliterate("Erewan", "iso_9985", to="greek")
 
@@ -428,6 +428,52 @@ class TestRussianToLatin:
         assert transliterate("Москва", "ala_lc") == "Moskva"
 
 
+class TestSyriacToLatin:
+    @pytest.mark.parametrize(
+        ("text", "expected"),
+        [
+            # The table's own examples, West Syriac pointing.
+            ("ܩܰܛܶܠ", "qaṭel"),
+            ("ܙܰܕܺܝܩܳܐ", "zadíqā"),
+            ("ܝܺܕܰܥ", "ídaʿ"),
+            ("ܐܺܝܳܠܳܐ", "ʾiyālā"),
+            ("ܟܽܠ", "kul"),
+            ("ܡܶܛܽܠ", "meṭul"),
+            ("ܗܳܠܶܝܢ", "hālén"),
+            ("ܒܶܝܬ", "bét"),
+            ("ܒܰܘ", "baw"),
+            ("ܗܰܝ", "hay"),
+            ("ܓܰܒܺܝܘ", "gabíw"),
+            # East Syriac pointing.
+            ("ܒܵܘ", "bāw"),
+            ("ܒܝܼܘ", "bíw"),
+            ("ܒܘܼ", "bú"),
+            ("ܒܘܿ", "bo"),
+            ("ܒܹܝ", "bé"),
+        ],
+    )
+    def test_the_tables_examples(self, text: str, expected: str) -> None:
+        assert transliterate(text, "syr/ala_lc") == expected
+
+    def test_an_alaph_after_a_is_kept_inside_a_word(self) -> None:
+        """Disregarded only at the end of a word: ʾÍsrāʾyel keeps its second ʾ."""
+        assert transliterate("ܪܳܐܝ", "syr/ala_lc") == "rāʾy"
+        assert transliterate("ܪܳܐ", "syr/ala_lc") == "rā"
+
+    def test_unvocalised_text_is_rendered_as_written(self) -> None:
+        """The table's vowels are supplied by a cataloguer; we write the consonants."""
+        assert transliterate("ܡܠܟܐ", "syr/ala_lc") == "mlkʾ"
+        assert transliterate("ܟܬܒܐ ܕܩܕܡ ܘܕܒܬܪ", "ala_lc") == "ktbʾ dqdm wdbtr"
+
+    def test_signs_the_table_does_not_render_are_dropped(self) -> None:
+        """Rukkākā and quššāyā (hard and soft bgdkpt), and the seyāmē of the plural."""
+        assert transliterate("ܟܬ݂ܒ݂ܐ", "syr/ala_lc") == "ktbʾ"
+        assert transliterate("ܡܠܟ̈ܐ", "syr/ala_lc") == "mlkʾ"
+
+    def test_punctuation_and_other_scripts_pass_through(self) -> None:
+        assert transliterate("ܟܬܒܐ (Ktaba)", "syr/ala_lc") == "ktbʾ (Ktaba)"
+
+
 class TestToScript:
     @pytest.mark.parametrize(
         "scheme", [s for s in SCHEMES.values() if s.reversible], ids=lambda s: s.id
@@ -498,7 +544,15 @@ class TestToScript:
         assert transliterate("T'bilisi", "iso_9984_1996", to="Georgian") == "თბილისი"
 
     def test_lossy_schemes_refuse(self) -> None:
-        for key in ("hy/ala_lc", "hy/bgn_pcgn", "ru/bgn_pcgn", "western", "ka/ala_lc", "national"):
+        for key in (
+            "hy/ala_lc",
+            "hy/bgn_pcgn",
+            "ru/bgn_pcgn",
+            "syr/ala_lc",
+            "western",
+            "ka/ala_lc",
+            "national",
+        ):
             with pytest.raises(NotReversibleError, match="not reversible"):
                 transliterate("Erevan", key, to="script")
 

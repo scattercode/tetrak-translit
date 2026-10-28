@@ -21,7 +21,7 @@ Groups = dict[str, list[tuple[str, str]]]
 
 
 def test_there_is_a_test_set_for_every_script() -> None:
-    assert set(FOLD_CASES) == {"hy", "ka", "ru"}
+    assert set(FOLD_CASES) == {"hy", "ka", "ru", "syr"}
 
 
 @pytest.mark.parametrize("script", list(FOLD_CASES))
@@ -123,6 +123,34 @@ class TestScriptArgument:
     def test_the_error_names_every_script(self) -> None:
         with pytest.raises(ScriptRequiredError, match="script='ru' \\(Russian\\)"):
             fold("Moskva")
+
+
+class TestSyriac:
+    def test_the_key_is_the_consonants(self) -> None:
+        assert fold("ܦܢܩܝܬܐ") == fold("Fenqīthō", script="syr") == "pnkt"
+
+    def test_points_and_signs_do_not_change_the_key(self) -> None:
+        assert fold("ܙܰܕܺܝܩܳܐ") == fold("ܙܕܝܩܐ")
+        assert fold("ܟܬ݂ܒ݂ܐ") == fold("ܟܬܒܐ")
+        assert fold("ܡܠܟ̈ܐ") == fold("ܡܠܟܐ")
+
+    def test_heth_and_a_soft_consonant_stay_apart_until_the_end(self) -> None:
+        """ܬܚ is t and ḥ, not a soft t; ܫ is š, not s and h."""
+        assert fold("ܬܚܘܝܬܐ") == fold("Taḥwyātā", script="syr") == "tht"
+        assert fold("ܫܚܝܡܐ") == "chm" != fold("ܣܚܝܡܐ") == "shm"
+
+    def test_a_letter_before_he_is_not_a_soft_consonant(self) -> None:
+        """ܕܗܘܕ̈ܝܐ is d and h; only a Latin dh is a soft d."""
+        assert fold("ܕܗܘܕ̈ܝܐ") == fold("d-húdāye", script="syr") == "dhd"
+        assert fold("ܒܗ") == fold("beh", script="syr") == "bh"
+        assert fold("Kthobo", script="syr") == fold("ܟܬܒܐ")
+
+    def test_the_garshuni_letters_fold_as_the_consonants_they_write(self) -> None:
+        assert fold("ݎܠܝܠ") == fold("ܟܠܝܠ")
+
+    def test_a_proclitic_is_part_of_the_word(self) -> None:
+        """ALA-LC hyphenates da-qdām; the script writes ܕܩܕܡ as one word."""
+        assert fold("da-qdām", script="syr") == fold("ܕܩܕܡ")
 
 
 class TestRussian:
@@ -241,6 +269,13 @@ class TestKey:
         assert fold("Nicolai", script="ru") != fold("Николай")
         # Pre-reform endings are a spelling change, not a letter change.
         assert fold("Русскаго") != fold("Русского")
+        # Greek, Latin and translated forms of Syriac names, and the j of
+        # Arabic romanisation for ܓ.
+        assert fold("Edessa", script="syr") != fold("ܐܘܪܗܝ")
+        assert fold("Nisibis", script="syr") != fold("ܢܨܝܒܝܢ")
+        assert fold("Bar Hebraeus", script="syr") != fold("ܒܪ ܥܒܪܝܐ")
+        assert fold("Isaac", script="syr") != fold("ܐܝܣܚܩ")
+        assert fold("Jirjis", script="syr") != fold("ܓܪܓܝܣ")
 
     def test_declares_the_known_over_merges(self) -> None:
         """Different words that share a key, documented in docs/fold.md. If one
@@ -260,3 +295,6 @@ class TestKey:
         # A glide before e is dropped, since ALA-LC writes none: Майер
         # (Mayer) and Маер share a key.
         assert fold("Майер") == fold("Маер")
+        # The Syriac key is the consonants without alaph, ʿē, waw and yod:
+        # ܥܠ (on) and ܠܐ (not) are both l.
+        assert fold("ܥܠ") == fold("ܠܐ") == "l"

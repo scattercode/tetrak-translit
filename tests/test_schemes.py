@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from tetrak_translit import SCHEMES, Scheme, Script, hy, ka, ru
+from tetrak_translit import SCHEMES, Scheme, Script, hy, ka, ru, syr
 from tetrak_translit.engine import render
 from tetrak_translit.script import Rule
 
@@ -26,6 +26,13 @@ def test_russian_has_thirty_three_letters_and_the_four_the_reform_removed() -> N
     assert ru.SCRIPT.letters[0] == "а" and ru.SCRIPT.letters[-1] == "я"
     assert ru.SCRIPT.archaic == "іѣѳѵ"
     assert ru.SCRIPT.cased
+
+
+def test_syriac_has_twenty_two_letters_and_sixteen_points() -> None:
+    assert len(syr.SCRIPT.letters) == 22
+    assert syr.SCRIPT.letters[0] == "ܐ" and syr.SCRIPT.letters[-1] == "ܬ"
+    assert len(syr.descriptor.POINTS) == 16
+    assert not syr.SCRIPT.cased
 
 
 @pytest.mark.parametrize("scheme", SCHEMES.values(), ids=lambda s: s.id)
@@ -69,6 +76,7 @@ def test_lossy_schemes_are_declared_lossy() -> None:
     assert SCHEMES["ru/ala_lc"].reversible is False
     assert SCHEMES["ru/ala_lc"].letters["щ"] == "shch"  # also ш + ч
     assert SCHEMES["ru/bgn_pcgn"].reversible is False
+    assert SCHEMES["syr/ala_lc"].reversible is False
 
 
 def test_the_two_georgian_apostrophe_conventions_are_opposite() -> None:

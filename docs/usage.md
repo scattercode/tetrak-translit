@@ -9,8 +9,8 @@ import tetrak_translit as tt
 
 ## Scripts and schemes
 
-Three scripts are registered, each by a short key: `hy` (Armenian),
-`ka` (Georgian) and `ru` (Russian). Each has its own romanisation schemes, identified by a
+Four scripts are registered, each by a short key: `hy` (Armenian),
+`ka` (Georgian), `ru` (Russian) and `syr` (Syriac). Each has its own romanisation schemes, identified by a
 key within the script and by a qualified id across scripts:
 
 | Script | Schemes |
@@ -18,6 +18,7 @@ key within the script and by a qualified id across scripts:
 | `hy` Armenian | `ala_lc`, `iso_9985`, `iso_9985_1996`, `bgn_pcgn`, `hubschmann_meillet`, `western` |
 | `ka` Georgian | `ala_lc`, `iso_9984`, `iso_9984_1996`, `national` |
 | `ru` Russian | `ala_lc`, `bgn_pcgn` |
+| `syr` Syriac | `ala_lc` |
 
 A scheme key alone is enough when the text settles which script is meant
 (`transliterate("თბილისი", "ala_lc")`), or when only one script has a
@@ -72,6 +73,20 @@ For Russian, `orthography` is:
 'pre-reform'
 >>> tt.detect("Русский вестник").orthography
 'reformed'
+```
+
+For Syriac, `orthography` says whether the text carries vowel points and
+which system: `west` (the Greek-letter vowels above and below the line),
+`east` (the dots), `mixed`, or `unvocalised`, which is nearly all Syriac.
+The three script styles, Estrangela, Serto and Madnhaya, share one
+encoding and differ only in the font, so nothing in the text tells them
+apart.
+
+```python
+>>> tt.detect("ܦܢܩܝܬܐ").orthography
+'unvocalised'
+>>> tt.detect("ܙܰܕܺܝܩܳܐ").orthography
+'west'
 ```
 
 Georgian has one orthography, so its `orthography` is `None`. The

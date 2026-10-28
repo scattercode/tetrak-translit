@@ -297,6 +297,68 @@ letter: *t·s* for `тс`, *sh·ch* for `шч`, *y·a* for `йа`, *m·er* for
 `мэр`. The table has no pre-1918 letters, and they pass through.
 Lossy: *y* is `й` and `ы`, *e* is `е` and `э`.
 
+## Syriac
+
+| Id | Scheme | Standard | Where you meet it | Reversible |
+|---|---|---|---|---|
+| `syr/ala_lc` | ALA-LC | ALA-LC Romanization Tables, Syriac (2012 version, the first) | Library catalogues | no |
+
+ISO has no Syriac standard. ALA-LC is the one table in wide use; the
+scholarly conventions of editions and lexica vary, and catalogue records
+also carry romanisations by West or East Syriac pronunciation
+(*Fenqīthō*, *Ḥūdrā*), which the fold takes but which are not tables
+here.
+
+### What a table can and cannot do
+
+ALA-LC transliterates the consonants and the vowels. Syriac is normally
+written without vowels: in one large catalogue of Syriac manuscripts,
+fewer than one title in a hundred, written in the script, carries a
+vowel point. For unvocalised text the standard tells the cataloguer to
+supply the vowels from J. Payne Smith's *Syriac English Dictionary*, and
+for East Syriac texts to adjust them by special rules. That is knowledge
+of the language, not a mapping, and this library does not attempt it.
+
+So `syr/ala_lc` renders what is written. Where the text is pointed, the
+vowels are rendered as the table gives them, West and East alike:
+
+| Syriac | `ala_lc` |
+|---|---|
+| ܩܰܛܶܠ | qaṭel |
+| ܙܰܕܺܝܩܳܐ | zadíqā |
+| ܗܳܠܶܝܢ | hālén |
+| ܐܺܝܳܠܳܐ | ʾiyālā |
+| ܒܝܼܘ (East) | bíw |
+
+Where it is not, the rendering is the consonants, with alaph, waw and yod
+written as the consonants `ʾ`, `w` and `y`:
+
+| Syriac | `ala_lc` | A catalogue heading |
+|---|---|---|
+| ܡܠܟܐ | mlkʾ | malkā |
+| ܟܬܒܐ ܕܩܕܡ ܘܕܒܬܪ | ktbʾ dqdm wdbtr | ktābā da-qdām wad-bātar |
+
+That is a faithful transliteration of the page, not a catalogue heading,
+and `detect()` says which a text will get: its `orthography` is
+`unvocalised`, `west`, `east` or `mixed`.
+
+### ALA-LC
+
+Consonants one letter each, with the modifier letters right and left
+half ring for alaph `ʾ` (U+02BE) and ʿē `ʿ` (U+02BF). The hard and soft
+bgdkpt are one letter, so rukkākā and quššāyā are dropped, as is the
+seyāmē of the plural; doubling is not written. Vowels `a ā e i o u`; `é`,
+`í` and `ú` when the vowel is carried by yod or waw; an alaph that
+carries `ā` or `e` at the end of a word is disregarded (*malkā*), and
+written elsewhere (*ʾÍsrāʾyel*). Not attempted: supplying vowels,
+silent letters, the hyphen after a prefix (*da-qdām*), capitals (Syriac
+has no case, so the output is lowercase), the Greek *-os* exception, and
+the modern letters `ǧ č ž`, which render as the letters under the tilde.
+
+Garshuni, Arabic and other languages written in Syriac letters, is
+detected as Syriac; the table is not written for it, and its extra
+letters pass through unrendered.
+
 ## Versioning
 
 Each scheme carries its own `version`, separate from the package's. A
