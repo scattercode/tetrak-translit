@@ -91,6 +91,7 @@ def _render_word(word: str, scheme: Scheme, variant: str | None) -> str:
         latin = scheme.render(
             unit,
             initial=previous is None,
+            final=index == letters[-1],
             after_vowel=previous is not None and previous[-1] in vowels,
             following=following.get(index),
             capital=capital,
