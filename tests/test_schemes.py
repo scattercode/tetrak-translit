@@ -5,6 +5,8 @@ from __future__ import annotations
 import pytest
 
 from tetrak_translit import SCHEMES, Scheme, Script, hy, ka, ru
+from tetrak_translit.engine import render
+from tetrak_translit.script import Rule
 
 
 def test_armenian_has_thirty_eight_letters() -> None:
@@ -112,3 +114,31 @@ class TestSchemeValidation:
     def test_a_positional_rule_on_an_unknown_unit_is_refused(self) -> None:
         with pytest.raises(ValueError, match="unknown units"):
             Scheme(**self.table(initial={"q": "q"}))  # type: ignore[arg-type]
+
+
+class TestFinalRule:
+    """A rule that holds only at the end of a word, as ALA-LC Syriac drops a
+    final alaph that carries its vowel."""
+
+    SCRIPT = Script("xx", "Test", "test", "abc", marks="!", ranges=((97, 99),))
+    SCHEME = Scheme(
+        script=SCRIPT,
+        key="t",
+        name="T",
+        version="0",
+        standard="none",
+        reversible=False,
+        letters={"a": "a", "b": "bʾ", "c": "c"},
+        rules=(Rule("b", "b", final=True),),
+    )
+
+    def test_applies_only_at_the_end_of_a_word(self) -> None:
+        assert render("bab cab", self.SCHEME) == "bʾab cab"
+
+    def test_a_one_letter_word_is_initial_and_final(self) -> None:
+        assert render("b", self.SCHEME) == "b"
+
+    def test_a_mark_after_the_last_letter_does_not_stop_it(self) -> None:
+        assert render("cab!", self.SCHEME) == "cab!"
+        assert render("ca!b", self.SCHEME) == "ca!b"
+        assert render("cb!a", self.SCHEME) == "cbʾ!a"

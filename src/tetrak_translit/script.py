@@ -110,6 +110,8 @@ class Rule:
         unit: The lowercase letter or digraph the rule renders.
         latin: Its rendering when the rule applies.
         initial: Only at the start of a word.
+        final: Only at the end of a word. Marks set after the unit (a stress
+            mark, a sign the scheme drops) do not stop it being final.
         before: Only when the next letter in the word starts with one of
             these characters (``""`` for any, including none).
         capital: ``True`` only when the unit is a capital, ``False`` only
@@ -122,15 +124,24 @@ class Rule:
     unit: str
     latin: str
     initial: bool = False
+    final: bool = False
     before: str = ""
     capital: bool | None = None
     variant: str | None = None
 
     def applies(
-        self, *, initial: bool, following: str | None, capital: bool, variant: str | None
+        self,
+        *,
+        initial: bool,
+        following: str | None,
+        capital: bool,
+        variant: str | None,
+        final: bool = False,
     ) -> bool:
         """Whether the rule holds for a unit in this position."""
         if self.initial and not initial:
+            return False
+        if self.final and not final:
             return False
         if self.before and not (following and following[0] in self.before):
             return False
@@ -247,6 +258,7 @@ class Scheme:
         unit: str,
         *,
         initial: bool = False,
+        final: bool = False,
         after_vowel: bool = False,
         following: str | None = None,
         capital: bool = False,
@@ -261,7 +273,11 @@ class Scheme:
         """
         for rule in self.rules:
             if rule.unit == unit and rule.applies(
-                initial=initial, following=following, capital=capital, variant=variant
+                initial=initial,
+                final=final,
+                following=following,
+                capital=capital,
+                variant=variant,
             ):
                 return rule.latin
         if initial and unit in self.initial:
