@@ -11,4 +11,5 @@ applies to everyone there, not here.
 The guides under `.claude/skills/` are Claude Code skills: load them with
 the Skill tool by name (`tetrak-translit-romanisation`,
 `tetrak-translit-armenian`, `tetrak-translit-georgian`,
-`tetrak-translit-russian`, `tetrak-translit-extending`) when the work matches their descriptions.
+`tetrak-translit-russian`, `tetrak-translit-syriac`,
+`tetrak-translit-extending`) when the work matches their descriptions.
