@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0] - 2026-10-28
+
+### Added
+
+- Add Russian, with pre-reform spelling, ALA-LC and BGN/PCGN
+- Add the tetrak-translit-russian skill
+
+### Changed
+
+- Bump ruff from 0.17.0 to 0.17.1
+
 ## [4.1.0] - 2026-10-22
 
 ### Changed
