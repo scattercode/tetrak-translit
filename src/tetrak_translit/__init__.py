@@ -4,7 +4,8 @@ Three functions, one each for the three jobs:
 
 - :func:`detect` says which script a string is in and, where the script
   has variants, which -- for Armenian, the classical (pre-1922, still used
-  in the diaspora) or reformed orthography.
+  in the diaspora) or reformed orthography; for Russian, the spelling
+  before or after the 1918 reform.
 - :func:`transliterate` renders a script in a named romanisation scheme
   and reads the reversible ones back. The schemes are for *display*.
 - :func:`fold` maps any of the above -- the script itself, Latin in any
@@ -12,12 +13,14 @@ Three functions, one each for the three jobs:
   one way finds a record written another. The fold is for *finding*; its
   output is a key, not a spelling.
 
-Two scripts so far, each a package of tables the engine runs over:
+Three scripts so far, each a package of tables the engine runs over:
 **Armenian** (:mod:`tetrak_translit.hy`: ALA-LC, ISO 9985 in its 2026
 and 1996 editions, BGN/PCGN, Hübschmann-Meillet and the Western
-pronunciation spelling) and
+pronunciation spelling),
 **Georgian** (:mod:`tetrak_translit.ka`: ALA-LC, ISO 9984 in its 2026
-and 1996 editions, and the national system).
+and 1996 editions, and the national system) and
+**Russian** (:mod:`tetrak_translit.ru`: ALA-LC, with the pre-1918
+letters, and BGN/PCGN).
 
 ::
 

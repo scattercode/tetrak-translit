@@ -16,8 +16,8 @@ from tetrak_translit import (
 from tetrak_translit.registry import PACKAGES, ScriptPackage, scripts_in
 
 
-def test_two_scripts_in_order() -> None:
-    assert [script.key for script in scripts()] == ["hy", "ka"]
+def test_three_scripts_in_order() -> None:
+    assert [script.key for script in scripts()] == ["hy", "ka", "ru"]
 
 
 def test_script_ranges_do_not_overlap() -> None:
@@ -56,6 +56,10 @@ class TestGetScript:
     def test_by_key_or_name(self, name: str) -> None:
         assert get_script(name).script.key == "hy"
 
+    @pytest.mark.parametrize("name", ["ru", "Russian", "cyrillic"])
+    def test_russian_by_key_name_or_unicode_name(self, name: str) -> None:
+        assert get_script(name).script.key == "ru"
+
     def test_by_object(self) -> None:
         script = get_script("ka").script
         assert get_script(script).script is script
@@ -77,14 +81,17 @@ class TestGetScheme:
     def test_text_settles_it(self) -> None:
         assert get_scheme("ala_lc", text="თბილისი").id == "ka/ala_lc"
         assert get_scheme("ala_lc", text="Երևան").id == "hy/ala_lc"
+        assert get_scheme("bgn_pcgn", text="Екатеринбург").id == "ru/bgn_pcgn"
 
     def test_a_unique_key_needs_nothing(self) -> None:
         assert get_scheme("national").id == "ka/national"
         assert get_scheme("western").id == "hy/western"
 
     def test_an_ambiguous_key_names_the_choices(self) -> None:
-        with pytest.raises(UnknownSchemeError, match="hy/ala_lc, ka/ala_lc"):
+        with pytest.raises(UnknownSchemeError, match="hy/ala_lc, ka/ala_lc, ru/ala_lc"):
             get_scheme("ala_lc")
+        with pytest.raises(UnknownSchemeError, match="hy/bgn_pcgn, ru/bgn_pcgn"):
+            get_scheme("bgn_pcgn")
         with pytest.raises(UnknownSchemeError, match="hy/ala_lc, ka/ala_lc"):
             get_scheme("ala_lc", text="Tbilisi")
 
@@ -104,4 +111,5 @@ def test_schemes_lists_all_or_one_script() -> None:
 
 def test_scripts_in() -> None:
     assert [p.script.key for p in scripts_in("Երևան და თბილისი")] == ["hy", "ka"]
+    assert [p.script.key for p in scripts_in("Ереван, Երևան")] == ["hy", "ru"]
     assert scripts_in("Tbilisi") == []

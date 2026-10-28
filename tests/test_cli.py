@@ -26,6 +26,14 @@ class TestDetect:
             "georgian\tთბილისი",
         ]
 
+    def test_russian_orthography(self, capsys: pytest.CaptureFixture[str]) -> None:
+        status, out, _ = run(capsys, "detect", "Русскій вѣстникъ", "Пушкин")
+        assert status == 0
+        assert out.splitlines() == [
+            "cyrillic (pre-reform)\tРусскій вѣстникъ",
+            "cyrillic (reformed)\tПушкин",
+        ]
+
     def test_plain_shows_romanisation_marks(self, capsys: pytest.CaptureFixture[str]) -> None:
         status, out, _ = run(capsys, "detect", "Keankʻi mĕ", "Łazar")
         assert status == 0
@@ -71,6 +79,10 @@ class TestTransliterate:
             run(capsys, "transliterate", "-s", "iso_9984_1996", "--to", "script", "T'bilisi")[1]
             == "თბილისი\n"
         )
+
+    def test_russian(self, capsys: pytest.CaptureFixture[str]) -> None:
+        assert run(capsys, "transliterate", "Цветаева") == (0, "T͡Svetaeva\n", "")
+        assert run(capsys, "transliterate", "-s", "bgn_pcgn", "Ёлкин")[1] == "Yëlkin\n"
 
     def test_script_flag(self, capsys: pytest.CaptureFixture[str]) -> None:
         assert (

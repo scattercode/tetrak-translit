@@ -1,6 +1,6 @@
 ---
 name: tetrak-translit-extending
-description: The workflows for changing tetrak-translit — correct a romanisation table, add a scheme to an existing script, add a whole new script package (Syriac design notes included), and extend or fix a fold with its test cases first. Covers the sequence for each, the hardcoded tests and docs that silently go stale, the Scheme validator and the reversibility tests, the rule-ordering traps in a fold, which commit type cuts which version (a table or fold-rule change is never a patch; a changed fold case is breaking), the checks to run and the probe script that renders a name through every scheme or traces a fold rule by rule. Load this whenever editing anything under src/tetrak_translit/hy/ or ka/, adding a scheme or a script, touching tests/data/*_fold_cases.tsv, debugging why two spellings do not fold together, planning Syriac, or preparing a commit or release in this repository.
+description: The workflows for changing tetrak-translit — correct a romanisation table, add a scheme to an existing script, add a whole new script package (Syriac design notes included), and extend or fix a fold with its test cases first. Covers the sequence for each, the hardcoded tests and docs that silently go stale, the Scheme validator and the reversibility tests, the rule-ordering traps in a fold, which commit type cuts which version (a table or fold-rule change is never a patch; a changed fold case is breaking), the checks to run and the probe script that renders a name through every scheme or traces a fold rule by rule. Load this whenever editing anything under src/tetrak_translit/hy/, ka/ or ru/, adding a scheme or a script, touching tests/data/*_fold_cases.tsv, debugging why two spellings do not fold together, planning Syriac, or preparing a commit or release in this repository.
 ---
 
 # Extending tetrak-translit
@@ -98,8 +98,8 @@ which it does not say:
 
 - **Two tests hardcode the script list** and must be updated:
   `test_there_is_a_test_set_for_every_script` in `tests/test_fold.py`
-  (`{"hy", "ka"}`) and `test_two_scripts_in_order` in `tests/test_registry.py`
-  (`["hy", "ka"]`).
+  (`{"hy", "ka", "ru"}`) and `test_three_scripts_in_order` in
+  `tests/test_registry.py` (`["hy", "ka", "ru"]`). Rename the latter.
 - **`unicode_name` must be the first word of the letters' Unicode character
   names, lowercased** (`unicodedata.name("ա").split()[0].lower()`), because
   that is how `detect()` finds the script; and **`ranges` must contain every
@@ -115,12 +115,18 @@ which it does not say:
 - **`variant()` returns `None`** when the script has nothing to say; it is
   still required, because the registry calls it.
 - **Four places mention the scripts by name**: the `description` in
-  `cli.py`'s `build_parser()` ("Armenian and Georgian text"), the project
+  `cli.py`'s `build_parser()` ("Armenian, Georgian and Russian text", and
+  the `(hy, ka, ru)` in two option helps), the project
   `description`, `keywords` and `Natural Language` classifiers in
   `pyproject.toml`, the title and keywords in `CITATION.cff`, and the
   README's opening sentence. Update all four.
 - **`docs/api.md`'s autosummary** lists each package; add the new one or the
   Sphinx build (`-W`) still passes but the reference is silently incomplete.
+- **A scheme key another script already has** (`ala_lc`, `bgn_pcgn`)
+  becomes ambiguous as a bare key for Latin-only input: `get_scheme("bgn_pcgn")`
+  raised once Russian arrived, where it had found Armenian. The tests that
+  used a bare key with Latin text need the qualified id, and the commit
+  body should say so.
 - Registry order is documentation order and CLI order; append.
 - A **right-to-left or unvocalised script** needs its fold designed before its
   tables. `references/syriac-design-notes.md` holds the open questions for

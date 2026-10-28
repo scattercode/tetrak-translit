@@ -11,8 +11,9 @@ checks and the commit style at more length.
 **tetrak-translit** is a dependency-free Python library and CLI that
 detects the script and orthography of a string, transliterates a script to
 and from its named Latin schemes, and folds any spelling onto one
-canonical index form for cross-script search. Armenian (five schemes, ISO 9985 in two editions) and
-Georgian (three schemes, ISO 9984 in two editions) are the scripts so far; Syriac is planned. It was specified in Tetrak's
+canonical index form for cross-script search. Armenian (five schemes, ISO 9985 in two editions),
+Georgian (three schemes, ISO 9984 in two editions) and Russian (ALA-LC with the pre-1918 letters,
+and BGN/PCGN) are the scripts so far; Syriac is planned. It was specified in Tetrak's
 brief 015 (product zone, private), and is a separate repository rather than a fourth
 `tetrak` package because its audience — catalogue and search developers —
 will never install an OCR tool.
@@ -26,7 +27,7 @@ same as Tetrak itself.
 ### The engine is script-agnostic; a script is a package of data
 
 `engine.py` reads a `Scheme` and the `Script` it belongs to, and nothing
-else. A script lives in its own package (`hy/`, `ka/`) exporting `SCRIPT`,
+else. A script lives in its own package (`hy/`, `ka/`, `ru/`) exporting `SCRIPT`,
 `SCHEMES`, `fold_token` and `variant`, and is listed in `registry.py`.
 Nothing above the registry names a script. Adding one is documented in
 `docs/adding-a-script.md`; if adding a script needs a change to the
@@ -83,7 +84,7 @@ only.
 
 ## Skills: the knowledge this file does not repeat
 
-Four Markdown guides under `.claude/skills/<name>/SKILL.md` carry the
+Five Markdown guides under `.claude/skills/<name>/SKILL.md` carry the
 domain knowledge and the workflows. They are plain Markdown with a short
 YAML header: **Claude Code loads them by name on demand; any other agent,
 and any person, can simply read the files.** Open the matching one before
@@ -102,6 +103,10 @@ the work rather than reconstructing it:
   library does not handle, the aspirate/ejective pairs and the apostrophe that
   runs the opposite way between ALA-LC and the national system (which ISO
   9984:2026 now follows), the schemes, the fold.
+- **`tetrak-translit-russian`** — the Cyrillic ranges and why other Cyrillic
+  languages are detected as Russian, the 1918 reform and the pre-reform tells,
+  ALA-LC 2012 (the U+0361 tie, the final hard sign) and BGN/PCGN, why ISO 9 is
+  not a table yet, the fold.
 - **`tetrak-translit-extending`** — the workflows: correct a table, add a
   scheme, add a script (with Syriac design notes in its `references/`),
   extend a fold with its cases first; the hardcoded tests that go stale, the
@@ -122,10 +127,11 @@ the work rather than reconstructing it:
 | `src/tetrak_translit/fold.py` | Dispatches each token to its script's fold |
 | `src/tetrak_translit/hy/` | Armenian: descriptor, six tables, orthography detector, fold |
 | `src/tetrak_translit/ka/` | Georgian: descriptor, three tables, fold |
+| `src/tetrak_translit/ru/` | Russian: descriptor, two tables, orthography detector, fold |
 | `src/tetrak_translit/cli.py` | `tetrak-translit`, argparse |
 | `tests/` | pytest; `tests/data/<script>_fold_cases.tsv` are the fold test sets |
 | `docs/` | Sphinx (furo, MyST), published to GitHub Pages at each release |
-| `.claude/skills/` | The four guides above; plain Markdown, readable by any tool |
+| `.claude/skills/` | The five guides above; plain Markdown, readable by any tool |
 
 ## Checks
 

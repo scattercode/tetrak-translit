@@ -36,7 +36,7 @@ Latin token gets the rules of the script named by `script=`, and raises
 if none is named: Armenian folds *b* with *p* because Eastern and
 Western spellings swap them, Georgian must not because `ბ` and `პ` are
 different letters that never swap, and *Batumi* folded under Armenian
-rules would never find `ბათუმი`.
+rules would never find `ბათუმი`. Russian keeps them apart too.
 
 ### Armenian
 
@@ -109,13 +109,44 @@ rules would never find `ბათუმი`.
    `y` becomes `i` and `w` becomes `v`; doubled letters are collapsed;
    and anything that is not a letter or a digit is removed.
 
+### Russian
+
+1. **Cyrillic** is rendered through ALA-LC, the 2012 table frozen inside
+   the fold. Because that table covers the letters the 1918 reform
+   removed, pre-reform spelling reaches the Latin side with them already
+   on their modern values: `ѣ` and `е` both become *e*, `і` and `и` both
+   *i*, `ѳ` *f*, `ѵ` *y*, and the final hard sign is dropped with the
+   other signs. `Русскій вѣстникъ` and `Русский вестник` share a key.
+2. **Latin** is lowercased; the scholarly háček letters become the
+   ALA-LC digraphs (`ž` *zh*, `š` *sh*, `č` *ch*, `ŝ` *shch*) and ISO
+   9's `â` and `û` become *ia* and *iu*; diacritics, ties (U+0361 and the
+   older U+FE20/U+FE21), signs, apostrophes and BGN/PCGN's middle dot
+   go. Then, in order:
+   - the German and French sibilants collapse: *schtsch* to *shch*,
+     *tsch* and *tch* to *ch*, *sch* to *sh*, and *ou* becomes *u*;
+   - `x` becomes *ks* (*Alexei*), `w` becomes *v* (*Tschaikowski*), and
+     `j` and `y` become *i*;
+   - a `c` that does not begin *ch* is `ц`, as in ISO 9 and the
+     scholarly spelling, and becomes *ts*, as does *tz*;
+   - an `h` that is not part of *zh*, *kh*, *ch* or *sh* is `х`, as in
+     ISO 9 and *Mihail*, and becomes *kh*;
+   - an *i* before *e* goes, because ALA-LC writes the glide nowhere:
+     *Yevgeniy*, *Andreyev* and *Vasilyev* meet *Evgeniĭ*, *Andreev* and
+     *Vasilʹev*;
+   - *io* after a consonant becomes *e*, because ALA-LC writes `ё` as
+     *ë*: *Fyodor* and *Pyotr* meet *Fëdor* and *Pëtr*;
+   - a closing *ff* becomes *v* (*Prokofieff*);
+   - doubled letters are collapsed, and anything that is not a letter or
+     a digit is removed. *-sky*, *-skiy*, *-skij* and *-skiĭ* all end
+     *-ski*.
+
 Tokens are folded one at a time and joined with single spaces, so a
 title folds to a sequence of keys that a whitespace tokeniser can index.
 
 ## The test sets are the claim
 
-`tests/data/hy_fold_cases.tsv` and `tests/data/ka_fold_cases.tsv` in the
-repository list groups of spellings that fold together: the cities, the
+`tests/data/hy_fold_cases.tsv`, `tests/data/ka_fold_cases.tsv` and
+`tests/data/ru_fold_cases.tsv` in the repository list groups of spellings that fold together: the cities, the
 surnames, the saints and the poets, each in their script (and for
 Armenian in both orthographies) and in every scheme that renders them,
 plus the popular spellings. The whole set must keep passing, and a
@@ -191,3 +222,29 @@ Georgian:
 - **The phonetic letters of ISO 9984:2026 Table 5 beyond `ჶ`** (`ჷ` to
   `ჿ`, for sounds standard Georgian does not write) fold to nothing on the
   script side and are outside the fold's claim.
+
+Russian:
+
+- **German and French letters for another sound.** German writes *ch* for
+  `х` (*Michail*, *Chruschtschow*) and *z* for `ц` (*Zwetajewa*); French
+  writes *ch* for `ш` (*Pouchkine*) and *j* for `ж`. Every other spelling
+  uses *ch* for `ч` and *z* for `з`, and those win.
+- **The English *-off* with *ch* for `х`.** *Rachmaninoff* folds to
+  *rachmaninov*, which misses *Rakhmaninov*.
+- **The English *c* for `к`.** *Nicolai* and *Victor* miss `Николай` and
+  `Виктор`, because *c* is `ц` in the scholarly and ISO spellings that
+  European library records use.
+- **Translated names.** *Peter* for `Пётр`, *Moscow* for `Москва`.
+- **Pre-reform endings and prefixes.** The reform changed spelling as well
+  as letters: `-аго` became `-ого` (`Русскаго`, `Русского`) and `без-`
+  became `бес-` before a voiceless consonant. Those words differ by a
+  letter that the fold keeps.
+- **A glide before *e* is dropped on both sides.** `Майер` and `Маер`
+  share a key, and so would any two names that differ only by an *i* or
+  *y* before an *e*. An over-merge, and a rare one; the alternative would
+  leave every BGN/PCGN *ye* and every popular *-yev* missing its ALA-LC
+  spelling.
+- **Armenian, Georgian and other names written in Russian.** `Хачатурян`
+  folds as Russian, to *khachaturian*, and does not meet `Խաչատրյան`;
+  joining another script's name to its Russian form is a job for a name
+  authority, not a fold.

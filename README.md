@@ -1,7 +1,7 @@
 # tetrak-translit
 
 Detect, transliterate and fold text in scripts that have several
-romanisations: Armenian and Georgian so far. A dependency-free Python
+romanisations: Armenian, Georgian and Russian so far. A dependency-free Python
 library and command-line tool for the problem every catalogue of such
 material has: the same name exists in its own script, sometimes in more
 than one orthography, and in three or five Latin spellings, and no stock
@@ -41,6 +41,10 @@ True
 True
 >>> tt.fold("Chavchavadze", script="ka") == tt.fold("ჭავჭავაძე") == tt.fold("Ch'avch'avadze", script="ka")
 True
+>>> tt.detect("Русскій вѣстникъ").orthography
+'pre-reform'
+>>> tt.fold("Tchaikovsky", script="ru") == tt.fold("Чайковский") == tt.fold("Chaĭkovskiĭ", script="ru")
+True
 ```
 
 ```bash
@@ -59,7 +63,9 @@ $ cut -f2 titles.tsv | tetrak-translit fold --script hy
 **Detection.** Which script a string is in and, for Armenian, which
 orthography: *classical* (everything printed before the 1922 reform, and
 the diaspora still), *reformed* (Soviet and post-Soviet Armenia) or
-*indeterminate* (the string reads the same under both). Unicode character
+*indeterminate* (the string reads the same under both). For Russian,
+*pre-reform* (the four letters and the final hard sign the 1918 reform
+removed, which émigré presses kept) or *reformed*. Unicode character
 names plus a few orthographic tells, chiefly a free `ւ` outside the `ու`
 digraph. For catalogue search across scripts, where a title's language
 code often says nothing, a Latin value is also read for the marks a
@@ -81,6 +87,8 @@ versioned, tested table written from its published standard:
 | `ka/iso_9984` | ISO 9984:2026 | Data exchange; the national system made reversible | **yes** |
 | `ka/iso_9984_1996` | ISO 9984:1996, superseded | Reading data romanised under the first edition | **yes** |
 | `ka/national` | Georgian national system (2002) | Road signs, passports, maps: *Tbilisi*, *Kutaisi* | no |
+| `ru/ala_lc` | ALA-LC Russian (2012), with the pre-1918 letters | Library catalogues: *Chaĭkovskiĭ*, *vi͡estnikʺ* | no |
+| `ru/bgn_pcgn` | BGN/PCGN 1947 | Maps and place names: *Yekaterinburg* | no |
 
 A scheme key alone is enough when the text or the key settles the script;
 otherwise say `script="ka"` or use the qualified id. Reversible where the
@@ -110,10 +118,13 @@ package does not pretend there is one.
 - **Fold every popular spelling.** Spellings that insert an unwritten
   schwa (*Megerdich* for `Մկրտիչ`), come through Russian (*Khachaturian*
   for `Խաչատրյան`, *Tiflis* for `თბილისი`) or are translations (*George*
-  for `გიორგი`) do not fold to the script, and a classical Armenian `աւ`
+  for `გიორგი`) do not fold to the script, nor do the German and French
+  spellings of Russian names that use a letter for another sound
+  (*Michail*, *Zwetajewa*, *Pouchkine*), and a classical Armenian `աւ`
   that reformed spelling turned into `օ` does not either. The test sets
   are the claim.
-- **Handle every script.** Armenian and Georgian so far. The engine is
+- **Handle every script.** Armenian, Georgian and Russian so far; Syriac
+  is next. The engine is
   script-agnostic and a new script is a package of tables; see
   [adding a script](https://scattercode.github.io/tetrak-translit/adding-a-script.html).
 

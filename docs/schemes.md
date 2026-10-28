@@ -233,6 +233,70 @@ Cartography, adopted by BGN/PCGN in 2009: no diacritics, apostrophe on
 the ejective. The spelling on signs, passports and maps. Does not define
 the archaic letters, which pass through unchanged. Lossy.
 
+## Russian
+
+| Id | Scheme | Standard | Where you meet it | Reversible |
+|---|---|---|---|---|
+| `ru/ala_lc` | ALA-LC | ALA-LC Romanization Tables, Russian (2012 version) | Library catalogues, for modern and pre-1918 spelling | no |
+| `ru/bgn_pcgn` | BGN/PCGN | BGN/PCGN 1947 System, checked June 2019 | Maps and place names: *Yekaterinburg* | no |
+
+The same name two ways:
+
+| Russian | `ala_lc` | `bgn_pcgn` |
+|---|---|---|
+| Чайковский | Chaĭkovskiĭ | Chaykovskiy |
+| Екатеринбург | Ekaterinburg | Yekaterinburg |
+| Цветаева | T͡Svetaeva | Tsvetayeva |
+| Наталья | Natalʹi͡a | Natal’ya |
+| Хрущёв | Khrushchëv | Khrushchëv |
+| подъезд | podʺezd | pod”yezd |
+| Русскій вѣстникъ (pre-reform) | Russkīĭ vi͡estnikʺ | Russkіy vѣstnik” |
+
+ISO 9, the international standard for Cyrillic, is not here yet. Its
+third edition, which will replace ISO 9:1995 and its 2024 amendment,
+was approved as a final draft in July 2026; the table will be written
+from whichever edition is current when we have the text, with the other
+kept beside it as `ru/iso_9_1995` if both are needed, as for ISO 9985
+and ISO 9984. The scholarly transliteration of Slavists (*Čajkovskij*)
+and GOST 7.79 are not tables here either, but the fold takes their
+spellings.
+
+Other languages written in Cyrillic are detected as `ru`, since they share
+its letters, but the letters Russian does not have (Ukrainian `є ї ґ`,
+Serbian `ђ љ`) pass through unrendered.
+
+### ALA-LC
+
+Written from the 2012 version of the Library of Congress table, which
+covers the four letters the 1918 reform removed: `і` *ī*, `ѣ` *i͡e*, `ѳ`
+*ḟ* and `ѵ` *ẏ*. So pre-reform and émigré imprints romanise under the
+same table as Soviet ones. Since 2012 a hard sign at the end of a word
+is written like any other (*vi͡estnikʺ*); the 2011 and 1997 tables
+disregarded it, so older catalogue records write *vi͡estnik*. The fold
+takes both.
+
+The soft and hard signs are the modifier letters prime `ʹ` (U+02B9) and
+double prime `ʺ` (U+02BA). `ц`, `ю`, `я` and `ѣ` take a tie over two
+letters, encoded as the combining double inverted breve U+0361
+(*t͡s*, *i͡u*, *i͡a*, *i͡e*): the form the MARC-8 mapping has used since
+2004. Records older than that carry the ligature halves U+FE20 and
+U+FE21, which the fold also takes. A capital takes both letters of the
+tie in capitals, as the table's upper-case column gives them: *T͡Svetaeva*,
+*I͡Uriĭ*. Lossy: without the tie *ts* is `ц` or `т` and `с`, and *shch* is
+`щ` or `ш` and `ч`.
+
+### BGN/PCGN
+
+Written from *Romanization of Russian*, the BGN/PCGN 1947 System (BGN
+1944, PCGN 1947), in the edition checked for validity and accuracy in
+June 2019. `е` is *ye* at the start of a word, after a vowel and after
+`й`, `ъ` and `ь`, and *e* elsewhere; `ё` is *yë* and *ë* in the same
+places. The signs are `’` (U+2019) and `”` (U+201D). The middle dot of
+Note 3 separates the sequences that would otherwise read as another
+letter: *t·s* for `тс`, *sh·ch* for `шч`, *y·a* for `йа`, *m·er* for
+`мэр`. The table has no pre-1918 letters, and they pass through.
+Lossy: *y* is `й` and `ы`, *e* is `е` and `э`.
+
 ## Versioning
 
 Each scheme carries its own `version`, separate from the package's. A

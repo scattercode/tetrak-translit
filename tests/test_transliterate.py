@@ -1,4 +1,4 @@
-"""Transliteration in both directions, for both scripts."""
+"""Transliteration in both directions, for every script."""
 
 from __future__ import annotations
 
@@ -365,6 +365,69 @@ class TestGeorgianToLatin:
         assert transliterate("ჴელი", "national") == "ჴeli"
 
 
+class TestRussianToLatin:
+    @pytest.mark.parametrize(
+        ("text", "scheme", "expected"),
+        [
+            ("Чайковский", "ala_lc", "Chaĭkovskiĭ"),
+            ("Чайковский", "bgn_pcgn", "Chaykovskiy"),
+            ("Щедрин", "ala_lc", "Shchedrin"),
+            ("Хрущёв", "ala_lc", "Khrushchëv"),
+            ("Хрущёв", "bgn_pcgn", "Khrushchëv"),
+            ("Гоголь", "ala_lc", "Gogolʹ"),
+            ("Гоголь", "bgn_pcgn", "Gogol’"),
+            ("подъезд", "ala_lc", "podʺezd"),
+            ("подъезд", "bgn_pcgn", "pod”yezd"),
+            ("Наталья", "ala_lc", "Natalʹi͡a"),
+            ("Наталья", "bgn_pcgn", "Natal’ya"),
+            ("Юрий", "ala_lc", "I͡Uriĭ"),
+            ("Юрий", "bgn_pcgn", "Yuriy"),
+            ("Цветаева", "ala_lc", "T͡Svetaeva"),
+            ("Цветаева", "bgn_pcgn", "Tsvetayeva"),
+            ("Екатеринбург", "ala_lc", "Ekaterinburg"),
+            ("Екатеринбург", "bgn_pcgn", "Yekaterinburg"),
+            ("Ёлкин", "bgn_pcgn", "Yëlkin"),
+            ("поэт", "ala_lc", "poėt"),
+            ("Ростов-на-Дону", "bgn_pcgn", "Rostov-na-Donu"),
+        ],
+    )
+    def test_known_forms(self, text: str, scheme: str, expected: str) -> None:
+        assert transliterate(text, "ru/" + scheme) == expected
+
+    def test_a_tie_in_a_word_in_capitals(self) -> None:
+        assert transliterate("ЦАРЬ", "ru/ala_lc") == "T͡SARʹ"
+        assert transliterate("царь", "ru/ala_lc") == "t͡sarʹ"
+
+    def test_the_tie_is_the_double_inverted_breve(self) -> None:
+        assert transliterate("ц", "ru/ala_lc") == "t\u0361s"
+
+    def test_ala_lc_renders_the_pre_reform_letters(self) -> None:
+        """The 2012 table: the four letters, and the final hard sign kept."""
+        assert transliterate("Русскій вѣстникъ", "ru/ala_lc") == "Russkīĭ vi͡estnikʺ"
+        assert transliterate("Ѳеодоръ", "ru/ala_lc") == "Ḟeodorʺ"
+        assert transliterate("мѵро", "ru/ala_lc") == "mẏro"
+
+    def test_bgn_pcgn_ye_after_a_vowel_and_after_the_signs(self) -> None:
+        """Notes 1 and 2: ye initially, after a vowel and after й, ъ and ь."""
+        assert transliterate("Андреев", "ru/bgn_pcgn") == "Andreyev"
+        assert transliterate("Майер", "ru/bgn_pcgn") == "Mayyer"
+        assert transliterate("Васильев", "ru/bgn_pcgn") == "Vasil’yev"
+        assert transliterate("Берёза", "ru/bgn_pcgn") == "Berëza"
+
+    def test_bgn_pcgn_middle_dot(self) -> None:
+        """Note 3: the sequences that would read as another letter."""
+        assert transliterate("Тсуга", "ru/bgn_pcgn") == "T·suga"
+        assert transliterate("мэр", "ru/bgn_pcgn") == "m·er"
+        assert transliterate("Йошкар-Ола", "ru/bgn_pcgn") == "Yoshkar-Ola"
+        assert transliterate("Айа", "ru/bgn_pcgn") == "Ay·a"
+
+    def test_bgn_pcgn_passes_the_pre_reform_letters_through(self) -> None:
+        assert transliterate("вѣра", "ru/bgn_pcgn") == "vѣra"
+
+    def test_a_scheme_key_shared_with_another_script_is_settled_by_the_text(self) -> None:
+        assert transliterate("Москва", "ala_lc") == "Moskva"
+
+
 class TestToScript:
     @pytest.mark.parametrize(
         "scheme", [s for s in SCHEMES.values() if s.reversible], ids=lambda s: s.id
@@ -435,7 +498,7 @@ class TestToScript:
         assert transliterate("T'bilisi", "iso_9984_1996", to="Georgian") == "თბილისი"
 
     def test_lossy_schemes_refuse(self) -> None:
-        for key in ("hy/ala_lc", "bgn_pcgn", "western", "ka/ala_lc", "national"):
+        for key in ("hy/ala_lc", "hy/bgn_pcgn", "ru/bgn_pcgn", "western", "ka/ala_lc", "national"):
             with pytest.raises(NotReversibleError, match="not reversible"):
                 transliterate("Erevan", key, to="script")
 

@@ -9,7 +9,7 @@ name = "tetrak-translit"
 # tags it, so a literal here would be a second source of truth that nothing
 # updates.
 dynamic = ["version"]
-description = "Detect, transliterate and fold Armenian and Georgian text — ALA-LC, ISO 9985 and ISO 9984, BGN/PCGN, the Georgian national system, Hübschmann-Meillet and Western pronunciation, plus one canonical index form for cross-script search"
+description = "Detect, transliterate and fold Armenian, Georgian and Russian text — ALA-LC, ISO 9985 and ISO 9984, BGN/PCGN, the Georgian national system, Hübschmann-Meillet and Western pronunciation, plus one canonical index form for cross-script search"
 readme = "README.md"
 # A dependency-free library that runs inside other people's search stacks
 # and catalogue tooling: meet the supported Pythons where they are, as
@@ -24,6 +24,8 @@ authors = [
 keywords = [
     "armenian",
     "georgian",
+    "russian",
+    "cyrillic",
     "transliteration",
     "romanization",
     "romanisation",
@@ -43,6 +45,7 @@ classifiers = [
     "Intended Audience :: Information Technology",
     "Natural Language :: Armenian",
     "Natural Language :: Georgian",
+    "Natural Language :: Russian",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",

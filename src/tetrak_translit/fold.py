@@ -23,7 +23,7 @@ import re
 import unicodedata
 
 from . import engine
-from .registry import ScriptPackage, get_scheme, get_script, scripts_in
+from .registry import PACKAGES, ScriptPackage, get_scheme, get_script, scripts_in
 from .script import Scheme, Script
 
 _TOKEN = re.compile(r"\S+")
@@ -40,9 +40,11 @@ def _package_for(token: str, default: ScriptPackage | None) -> ScriptPackage:
         # registered script wins, and the key is still deterministic.
         return present[0]
     if default is None:
+        choices = ", ".join(
+            f"script={key!r} ({package.script.name})" for key, package in PACKAGES.items()
+        )
         raise ScriptRequiredError(
-            "fold() needs to know which script's rules to apply to Latin text: "
-            "pass script='hy' (Armenian) or script='ka' (Georgian)"
+            f"fold() needs to know which script's rules to apply to Latin text: pass {choices}"
         )
     return default
 
