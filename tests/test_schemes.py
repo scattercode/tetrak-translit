@@ -123,6 +123,32 @@ class TestSchemeValidation:
         with pytest.raises(ValueError, match="unknown units"):
             Scheme(**self.table(initial={"q": "q"}))  # type: ignore[arg-type]
 
+    def test_a_reading_of_an_ambiguous_sequence_is_accepted(self) -> None:
+        Scheme(**self.table(reversible=True, readings={"ab": "ab"}))  # type: ignore[arg-type]
+
+    def test_a_reading_on_a_lossy_table_is_refused(self) -> None:
+        with pytest.raises(ValueError, match="not reversible"):
+            Scheme(**self.table(readings={"ab": "ab"}))  # type: ignore[arg-type]
+
+    def test_a_reading_the_table_would_not_write_is_refused(self) -> None:
+        with pytest.raises(ValueError, match="not what the table writes"):
+            Scheme(**self.table(reversible=True, readings={"ba": "ab"}))  # type: ignore[arg-type]
+
+    def test_a_reading_of_unknown_letters_is_refused(self) -> None:
+        with pytest.raises(ValueError, match="unknown units"):
+            Scheme(**self.table(reversible=True, readings={"aq": "aq"}))  # type: ignore[arg-type]
+
+    def test_a_reading_of_letters_the_table_separates_is_refused(self) -> None:
+        with pytest.raises(ValueError, match="separates"):
+            Scheme(
+                **self.table(  # type: ignore[arg-type]
+                    reversible=True,
+                    separator="·",
+                    separate=frozenset({("a", "b")}),
+                    readings={"ab": "ab"},
+                )
+            )
+
 
 class TestFinalRule:
     """A rule that holds only at the end of a word, as ALA-LC Syriac drops a

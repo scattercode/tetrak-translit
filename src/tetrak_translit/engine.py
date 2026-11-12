@@ -190,6 +190,10 @@ def _inverse(scheme: Scheme) -> list[tuple[str, str]]:
     for mark, latin in scheme.punctuation.items():
         if latin:
             pairs.setdefault(unicodedata.normalize("NFD", latin.lower()), mark)
+    # A sequence the standard leaves with two readings is longer than either
+    # of its parts, so it is tried before them.
+    for latin, units in scheme.readings.items():
+        pairs[unicodedata.normalize("NFD", latin.lower())] = units
     inverse = sorted(pairs.items(), key=lambda item: -len(item[0]))
     _INVERSES[scheme.id] = (scheme, inverse)
     return inverse

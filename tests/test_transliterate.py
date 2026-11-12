@@ -176,11 +176,51 @@ class TestIso9984Edition2026:
         assert to_script("ēywẖōfȳʔĝʕⁿæʸʷ", "ka/iso_9984") == "ჱჲჳჴჵჶჷჸჹჺჼჽჾჿ"
 
     def test_sequences_the_standards_list_leaves_ambiguous(self) -> None:
-        """dzh and tsh read two ways; reading back takes the digraph first."""
-        assert transliterate("დჟ", "ka/iso_9984") == transliterate("ძჰ", "ka/iso_9984")
-        assert transliterate("თშ", "ka/iso_9984") == transliterate("ცჰ", "ka/iso_9984")
-        assert to_script("dzh", "ka/iso_9984") == "ძჰ"
-        assert to_script("tsh", "ka/iso_9984") == "ცჰ"
+        """tsh and dzh read two ways; reading back takes the one Georgian has."""
+        assert transliterate("თშ", "ka/iso_9984") == transliterate("ცჰ", "ka/iso_9984") == "tsh"
+        assert transliterate("დჟ", "ka/iso_9984") == transliterate("ძჰ", "ka/iso_9984") == "dzh"
+        assert to_script("tsh", "ka/iso_9984") == "თშ"
+        assert to_script("dzh", "ka/iso_9984") == "დჟ"
+
+    @pytest.mark.parametrize(
+        ("text", "latin"),
+        [
+            ("საათში", "saatshi"),
+            ("წუთში", "ts'utshi"),
+            ("საფრანგეთში", "saprangetshi"),
+            ("ხუთშაბათი", "khutshabati"),
+            ("თვითშეფასება", "tvitshepaseba"),
+            ("ადჟარია", "adzharia"),
+        ],
+    )
+    def test_georgian_words_with_those_sequences_round_trip(self, text: str, latin: str) -> None:
+        assert transliterate(text, "ka/iso_9984") == latin
+        assert to_script(latin, "ka/iso_9984") == text
+
+    @pytest.mark.parametrize(
+        ("text", "latin", "read"),
+        [
+            ("ალცჰაიმერი", "altshaimeri", "ალთშაიმერი"),
+            ("ერცჰერცოგი", "ertshertsogi", "ერთშერცოგი"),
+            ("აძჰილი", "adzhili", "ადჟილი"),
+        ],
+    )
+    def test_borrowed_names_with_the_other_reading_do_not(
+        self, text: str, latin: str, read: str
+    ) -> None:
+        """The standard's defect, declared: these stay wrong until it is amended."""
+        assert transliterate(text, "ka/iso_9984") == latin
+        assert to_script(latin, "ka/iso_9984") == read
+
+    def test_a_typed_middle_dot_settles_either_reading(self) -> None:
+        assert to_script("alts·haimeri", "ka/iso_9984") == "ალცჰაიმერი"
+        assert to_script("saat·shi", "ka/iso_9984") == "საათში"
+        assert to_script("adz·hili", "ka/iso_9984") == "აძჰილი"
+
+    def test_the_ejectives_are_not_caught_by_those_readings(self) -> None:
+        assert to_script("ts'h", "ka/iso_9984") == "წჰ"
+        assert to_script("t'sh", "ka/iso_9984") == "ტშ"
+        assert to_script("TSH", "ka/iso_9984") == "თშ"
 
 
 # The ALA-LC 2022 Armenian table's own examples: its punctuation rules

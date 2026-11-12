@@ -31,6 +31,7 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from itertools import pairwise
 
 
 @dataclass(frozen=True)
@@ -178,6 +179,11 @@ class Scheme:
             ``z·h`` for ``ზ`` and ``ჰ`` so that it is not ``zh``, ``ჟ``.
             Skipped when reading back.
         separate: The pairs of units, in order, that take the separator.
+        readings: Latin sequences a reversible standard's own rules leave
+            with two readings, each to the letters reading back takes for
+            it, as ISO 9984:2026's ``tsh`` is read ``თშ`` and not ``ცჰ``.
+            Rendering is not affected. Each entry must be what the table
+            writes for those letters.
         rules: Conditional renderings, tried before the table (see
             :class:`Rule`).
         punctuation: Marks the standard renders where they stand, to their
@@ -204,6 +210,7 @@ class Scheme:
     after_vowel: Mapping[str, str] = field(default_factory=dict)
     separator: str = ""
     separate: frozenset[tuple[str, str]] = frozenset()
+    readings: Mapping[str, str] = field(default_factory=dict)
     rules: tuple[Rule, ...] = ()
     punctuation: Mapping[str, str] = field(default_factory=dict)
     sentence_final: Mapping[str, str] = field(default_factory=dict)
@@ -240,6 +247,20 @@ class Scheme:
         )
         if stray:
             raise ValueError(f"{self.id} separate names unknown units {stray!r}")
+        if self.readings and not self.reversible:
+            raise ValueError(f"{self.id} names readings but is not reversible")
+        for latin, units in self.readings.items():
+            stray = sorted(set(units) - set(self.letters))
+            if stray:
+                raise ValueError(f"{self.id} reading {latin!r} names unknown units {stray!r}")
+            if any(pair in self.separate for pair in pairwise(units)):
+                raise ValueError(f"{self.id} reading {latin!r} is of letters the table separates")
+            written = "".join(self.letters[unit] for unit in units)
+            if written != latin:
+                raise ValueError(
+                    f"{self.id} reading {latin!r} is not what the table writes for "
+                    f"{units!r}, which is {written!r}"
+                )
         stray = sorted({rule.unit for rule in self.rules} - set(self.letters) - set(self.digraphs))
         if stray:
             raise ValueError(f"{self.id} rules name unknown units {stray!r}")

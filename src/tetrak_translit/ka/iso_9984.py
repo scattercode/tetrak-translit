@@ -14,8 +14,18 @@ renderings would otherwise read as a digraph: ``z·h`` for ``ზ`` and
 ``ჰ``, which is not ``zh`` (``ჟ``). The standard lists the pairs: ``გ``,
 ``ზ``, ``ს`` or ``ქ`` before ``ჰ``, ``თ`` before ``ს`` and ``დ`` before
 ``ზ``. Two sequences the list does not cover still read two ways:
-``dzh`` is ``ძ`` and ``ჰ`` or ``დ`` and ``ჟ``, and ``tsh`` is ``ც`` and
-``ჰ`` or ``თ`` and ``შ``; reading back takes the first.
+``tsh`` is ``თ`` and ``შ`` or ``ც`` and ``ჰ``, and ``dzh`` is ``დ`` and
+``ჟ`` or ``ძ`` and ``ჰ``. The table is written as published, with no dot
+in either, and reading back takes the first of each, which is the one
+Georgian itself has: ``თშ`` is in every noun in ``-თ`` that takes the
+postposition ``-ში`` (``საათში``, in an hour; ``საფრანგეთში``, in
+France) and in compounds (``ხუთშაბათი``, Thursday). The other reading
+turns up only in borrowed names, mostly German (``ალცჰაიმერი``,
+Alzheimer; ``ერცჰერცოგი``, archduke), and those do not read back: the
+titles of the Georgian Wikipedia in November 2026 had 82 words with
+``თშ`` against 19 with ``ცჰ``, and seven with ``დჟ`` against one with
+``ძჰ``. A middle dot typed by hand settles either one, since the dot is
+skipped in reading: ``ts·h`` reads as ``ცჰ``.
 
 Table 5 gives the historical and phonetic letters that standard Georgian
 does not use. The first six are unchanged from the first edition.
@@ -89,9 +99,14 @@ ISO_9984 = Scheme(
     },
     separator="·",
     separate=frozenset({("გ", "ჰ"), ("ზ", "ჰ"), ("ს", "ჰ"), ("ქ", "ჰ"), ("თ", "ს"), ("დ", "ზ")}),
+    # The two sequences the standard's list leaves ambiguous, read as the
+    # letters Georgian words have (see the module docstring).
+    readings={"tsh": "თშ", "dzh": "დჟ"},
     notes=(
         "Reversible, and since 2026 built on the national system: the apostrophe marks "
         "the ejective, and a middle dot separates letters that would read as a digraph "
-        "(z·h is ზჰ, not ჟ). Choose it for round-tripping and data exchange."
+        "(z·h is ზჰ, not ჟ). Choose it for round-tripping and data exchange. Two "
+        "sequences the standard leaves ambiguous are read as Georgian words have them: "
+        "tsh as თშ and dzh as დჟ, so a borrowed name with ცჰ or ძჰ does not read back."
     ),
 )
