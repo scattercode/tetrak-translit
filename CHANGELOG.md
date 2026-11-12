@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.5.0] - 2026-11-12
+
+### Changed
+
+- Grant permissions per job and pass the branch through env
+- Bump pytest from 9.1.1 to 9.2.0
+- Bump ruff from 0.17.1 to 0.17.3
+- Bump mypy from 2.4.0 to 2.4.1
+- Read ISO 9984 tsh and dzh back as the letters Georgian words have
+
 ## [4.4.0] - 2026-10-28
 
 ### Added
