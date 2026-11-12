@@ -128,11 +128,11 @@ Per scheme:
 - **ISO 9984** (`iso_9984`, the 2026 edition) is the national system made
   reversible: a middle dot separates the letter pairs the standard lists
   (`z·h` is `ზჰ`, not `ჟ`), and `read()` skips it. The list misses two
-  sequences, `dzh` (`ძჰ` or `დჟ`) and `tsh` (`ცჰ` or `თშ`); reading back
-  takes the first, and a test pins that. Its Table 4 example for every
-  letter is a test in `tests/test_transliterate.py`. Choose it for
-  round-tripping, but see the defect below: it is reversible except for
-  those two sequences.
+  sequences, `tsh` (`თშ` or `ცჰ`) and `dzh` (`დჟ` or `ძჰ`); reading back
+  takes the first of each, the one Georgian words have, and tests pin
+  that. Its Table 4 example for every letter is a test in
+  `tests/test_transliterate.py`. Choose it for round-tripping, but see
+  the defect below: borrowed names with `ცჰ` or `ძჰ` do not read back.
 
 ### The defect in ISO 9984:2026
 
@@ -140,19 +140,32 @@ The standard claims full reversibility, and **it is not reversible as
 published**. Its middle-dot list (4.2) leaves out `დ` before `ჟ` and `თ`
 before `შ`, so `dzh` and `tsh` each read back two ways:
 
-| Latin | Reading 1 | Reading 2 |
+| Latin | In Georgian words | In borrowed names only |
 |---|---|---|
-| `dzh` | `ძ` + `ჰ` | `დ` + `ჟ` |
-| `tsh` | `ც` + `ჰ` | `თ` + `შ` |
+| `tsh` | `თ` + `შ` | `ც` + `ჰ` |
+| `dzh` | `დ` + `ჟ` | `ძ` + `ჰ` |
 
-Neither pair in reading 1 is listed, so `ძჰ` and `ცჰ` get no dot. Reading
-2 is `d` + `zh` and `t` + `sh`, which are not listed either.
+None of the four pairs is listed, so none gets a dot.
+
+**`tsh` is everywhere in real text.** The postposition `-ში` ("in")
+attaches to any noun in `-თ`: `საათში` (in an hour), `წუთში` (in a
+minute), `საფრანგეთში` (in France). Compounds have it too: `ხუთშაბათი`
+(Thursday), `თვითშეფასება`. `ცჰ` appears only in borrowed names, mostly
+German: `ალცჰაიმერი` (Alzheimer), `ერცჰერცოგი` (archduke, *Erzherzog*),
+`ლანცჰუთი` (Landshut). `დჟ` and `ძჰ` are both rare and both foreign
+(`ადჟარია`, `რედჟეპოვა`; `აძჰილი`). Counted in the titles of the Georgian
+Wikipedia, November 2026: 82 distinct words with `თშ` against 19 with
+`ცჰ`; seven with `დჟ` against one with `ძჰ`.
 
 This was found with an exhaustive check of every two- and three-letter
 Georgian sequence: render it, read it back, compare. Those are the only two
 collisions. **Adding the pairs `დჟ` and `თშ` to the list fixes both**, and
 with them the check comes back clean. Stephen reported this to BSI on
-2026-10-12.
+2026-10-12. The reply, in November 2026, agreed that the list should have
+included `tsh` and `dzh`, said it will be corrected when the standard is
+next revised, and called the sequences "purely theoretical". For `tsh`
+that is wrong, as the words above show. The reply did not say which
+letters the revision will dot.
 
 What the library does about it:
 
@@ -160,17 +173,30 @@ What the library does about it:
   `ka/iso_9984.py` holds only the standard's pairs. Don't add `დჟ` and `თშ`
   on our own initiative: output would then differ from what a conforming
   implementation writes.
-- **Reading back takes the first reading** (`ძჰ`, `ცჰ`), and
-  `test_sequences_the_standards_list_leaves_ambiguous` pins that, so a
-  change in behaviour can't slip through unnoticed.
+- **Reading back takes the reading Georgian words have** (`თშ`, `დჟ`),
+  through the scheme's `readings` field (`{"tsh": "თშ", "dzh": "დჟ"}`),
+  which the engine tries before the shorter units. Until this was added
+  the engine took the digraph first (`ცჰ`, `ძჰ`) and every word with
+  `-თში` read back wrong. Rendering is not touched.
+- **Borrowed names with `ცჰ` or `ძჰ` do not read back**
+  (`altshaimeri` → `ალთშაიმერი`), and
+  `test_borrowed_names_with_the_other_reading_do_not` declares that. A
+  middle dot typed by hand settles it (`alts·haimeri`), because `read()`
+  skips the dot wherever it stands. Don't try to guess from context:
+  `ხუთშაბათი` and `ალცჰაიმერი` both have `tsha`.
 - `reversible=True` stays, because that is what the standard claims. The
-  module docstring and `docs/schemes.md` name the two exceptions.
+  module docstring and `docs/schemes.md` name the exceptions.
 - **When an amendment or corrigendum is published**, add the pairs it
-  gives to `separate`, and bump the scheme `version`. Change the pinned
-  test to round-trip `დჟ` and `თშ`, then update this section, the
-  docstring and `docs/schemes.md`. Rendering `დჟ` and `თშ` changes (a dot
+  gives to `separate`, and bump the scheme `version`. If it dots the
+  common pairs (`თშ`, `დჟ`), swap `readings` to the other pair, since an
+  undotted `tsh` then means `ცჰ`; if it dots `ცჰ` and `ძჰ`, leave
+  `readings` as it is (the validator refuses a reading of a separated
+  pair, so the wrong choice fails at import). Then all four round-trip:
+  move the borrowed names into the round-trip test and update this
+  section, the docstring and `docs/schemes.md`. Rendering changes (a dot
   appears), so the commit is `feat(ka)!` with a `BREAKING CHANGE`
-  footer. `fold()` is not affected, because it never sees the dot.
+  footer. `fold()` is not affected, because it never sees the dot and
+  both readings of each sequence reach one key.
 - **ISO 9984:1996** (`iso_9984_1996`) is one letter per letter with háčeks:
   `j` is `ძ` and `ǰ` is `ჯ`; `c` is `წ` and `c'` is `ც`; `x` is `ხ`. Kept for
   data made under it.
@@ -223,8 +249,8 @@ scheme it belongs to.
 
 - **The apostrophe direction**, above. Check which system a Latin form came
   from before deciding a table is wrong.
-- **"Fixing" ISO 9984:2026's dot list**: `dzh` and `tsh` reading back as
-  `ძჰ` and `ცჰ` is the standard's defect, not ours. Leave `separate` alone
+- **"Fixing" ISO 9984:2026's dot list**: `altshaimeri` reading back as
+  `ალთშაიმერი` is the standard's defect, not ours. Leave `separate` alone
   until an amendment is published (see the defect section above).
 - **ISO `x` and `j`**: `x` is `ხ` (not a *ks*), `j` is `ძ` (not `ჯ`). Both are
   mapped in `_LETTERS` so the fold is unaffected, but a reader will trip.

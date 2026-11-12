@@ -185,6 +185,13 @@ class TestSchemeHint:
         assert fold("Mc'xet'a", scheme="ka/iso_9984_1996") == fold("მცხეთა")
         assert fold("Mtskheta", scheme="ka/iso_9984") == fold("მცხეთა")
 
+    def test_either_reading_of_iso_9984s_ambiguous_sequences_folds_the_same(self) -> None:
+        """tsh is თშ or ცჰ and dzh is დჟ or ძჰ; the key does not depend on which."""
+        assert fold("saatshi", scheme="ka/iso_9984") == fold("საათში")
+        assert fold("altshaimeri", scheme="ka/iso_9984") == fold("ალცჰაიმერი")
+        assert fold("adzharia", scheme="ka/iso_9984") == fold("ადჟარია")
+        assert fold("adzhili", scheme="ka/iso_9984") == fold("აძჰილი")
+
     def test_separators_are_gone_before_the_digraphs_are_merged(self) -> None:
         """ISO 9984:2026's middle dot and ALA-LC 2022's soft sign."""
         for latin, georgian in (("t·s", "თს"), ("d·z", "დზ"), ("z·h", "ზჰ")):

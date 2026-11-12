@@ -209,11 +209,22 @@ ejective, so for most words it gives exactly the national spelling
 (U+00B7) between two letters that would otherwise read as a digraph:
 `z·h` is `ზ` and `ჰ`, not `ჟ`. The standard lists the pairs (`გ`, `ზ`,
 `ს` or `ქ` before `ჰ`; `თ` before `ს`; `დ` before `ზ`), and the dot is
-skipped when reading back. Two sequences the list does not cover still
-read two ways, `dzh` (`ძჰ` or `დჟ`) and `tsh` (`ცჰ` or `თშ`); reading
-back takes the first of each. It also defines fourteen letters that
+skipped when reading back. It also defines fourteen letters that
 standard Georgian does not use, the five archaic letters as ALA-LC has
 them among them.
+
+Two sequences the list does not cover still read two ways: `tsh` is `თშ`
+or `ცჰ`, and `dzh` is `დჟ` or `ძჰ`. We write them as the standard does,
+with no dot, and read each back as the first of its pair, which is the
+one Georgian words have. `თშ` is in every noun ending in `თ` that takes
+the postposition `-ში` (`საათში`, in an hour; `საფრანგეთში`, in France)
+and in compounds such as `ხუთშაბათი`, Thursday. `ცჰ` and `ძჰ` turn up
+only in borrowed names, mostly German: `ალცჰაიმერი` (Alzheimer) is
+written `altshaimeri` and reads back as `ალთშაიმერი`. Among the titles of
+the Georgian Wikipedia in November 2026 we counted 82 words with `თშ`
+against 19 with `ცჰ`, and seven with `დჟ` against one with `ძჰ`. To read
+one of those names back, put a middle dot in by hand: `alts·haimeri`
+reads as `ალცჰაიმერი`. The fold gives the same key for either reading.
 
 ### ISO 9984:1996
 
