@@ -37,7 +37,8 @@ uv venv .venv && source .venv/bin/activate
 uv pip install -e '.[dev,apidocs]'
 ```
 
-(`python -m venv` and `pip` work too.) Then activate the git hooks — one of:
+(`python -m venv` and `pip` work too. The `apidocs` extra installs only on
+Python 3.11.5 or later; on 3.10 it is skipped and the docs will not build.) Then activate the git hooks — one of:
 
 ```bash
 lefthook install                          # if you have lefthook (brew install lefthook)
