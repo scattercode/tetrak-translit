@@ -22,10 +22,10 @@ postposition ``-ში`` (``საათში``, in an hour; ``საფრა�
 France) and in compounds (``ხუთშაბათი``, Thursday). The other reading
 turns up only in borrowed names, mostly German (``ალცჰაიმერი``,
 Alzheimer; ``ერცჰერცოგი``, archduke), and those do not read back: the
-titles of the Georgian Wikipedia in November 2026 had 82 words with
-``თშ`` against 19 with ``ცჰ``, and seven with ``დჟ`` against one with
-``ძჰ``. A middle dot typed by hand settles either one, since the dot is
-skipped in reading: ``ts·h`` reads as ``ცჰ``.
+article titles of the Georgian Wikipedia in November 2026, redirects
+set aside, had 72 words with ``თშ`` against 14 with ``ცჰ``, and five
+with ``დჟ`` against none with ``ძჰ``. A middle dot typed by hand settles
+either one, since the dot is skipped in reading: ``ts·h`` reads as ``ცჰ``.
 
 Table 5 gives the historical and phonetic letters that standard Georgian
 does not use. The first six are unchanged from the first edition.

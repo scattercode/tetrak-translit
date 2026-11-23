@@ -220,9 +220,10 @@ one Georgian words have. `თშ` is in every noun ending in `თ` that takes
 the postposition `-ში` (`საათში`, in an hour; `საფრანგეთში`, in France)
 and in compounds such as `ხუთშაბათი`, Thursday. `ცჰ` and `ძჰ` turn up
 only in borrowed names, mostly German: `ალცჰაიმერი` (Alzheimer) is
-written `altshaimeri` and reads back as `ალთშაიმერი`. Among the titles of
-the Georgian Wikipedia in November 2026 we counted 82 words with `თშ`
-against 19 with `ცჰ`, and seven with `დჟ` against one with `ძჰ`. To read
+written `altshaimeri` and reads back as `ალთშაიმერი`. Among the article
+titles of the Georgian Wikipedia in November 2026, redirects set aside,
+we counted 72 words with `თშ` against 14 with `ცჰ`, and five with `დჟ`
+against none with `ძჰ`. To read
 one of those names back, put a middle dot in by hand: `alts·haimeri`
 reads as `ალცჰაიმერი`. The fold gives the same key for either reading.
 

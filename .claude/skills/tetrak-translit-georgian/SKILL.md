@@ -152,10 +152,18 @@ attaches to any noun in `-თ`: `საათში` (in an hour), `წუთშ
 minute), `საფრანგეთში` (in France). Compounds have it too: `ხუთშაბათი`
 (Thursday), `თვითშეფასება`. `ცჰ` appears only in borrowed names, mostly
 German: `ალცჰაიმერი` (Alzheimer), `ერცჰერცოგი` (archduke, *Erzherzog*),
-`ლანცჰუთი` (Landshut). `დჟ` and `ძჰ` are both rare and both foreign
-(`ადჟარია`, `რედჟეპოვა`; `აძჰილი`). Counted in the titles of the Georgian
-Wikipedia, November 2026: 82 distinct words with `თშ` against 19 with
-`ცჰ`; seven with `დჟ` against one with `ძჰ`.
+`პფორცჰაიმი` (Pforzheim). `დჟ` is rare and foreign: names spelled
+letter by letter from another alphabet (`დჟარსარი`, an Armenian
+mountain; `ნიდჟე`), where Georgian usually writes `ჯ`. `ძჰ` was not
+found in any article. Counted in the article titles of the Georgian
+Wikipedia, November 2026, with redirects set aside: 72 distinct words
+with `თშ` against 14 with `ცჰ`; five with `დჟ` against none with `ძჰ`.
+Redirects add 85, 6, 2 and 1 titles, and are often rejected spellings:
+`ესმა რედჟეპოვა` redirects to `ესმა რეჯეპოვა`, and `აძჰილი`, the one
+title with `ძჰ`, to `აჟილი`. A Georgian linguist consulted in November
+2026 confirmed that `დჟ` spellings such as `ადჟარია` (for `აჭარა`) are
+Russian-influenced and not correct Georgian, and that every word with
+`ჰ` apart from the personal markers is a loanword.
 
 This was found with an exhaustive check of every two- and three-letter
 Georgian sequence: render it, read it back, compare. Those are the only two
